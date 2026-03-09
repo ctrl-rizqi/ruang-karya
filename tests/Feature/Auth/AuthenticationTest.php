@@ -34,19 +34,6 @@ test('siswa can authenticate using the login screen', function () {
     $response->assertRedirect(route('home', absolute: false));
 });
 
-test('admin can not authenticate using the login screen', function () {
-    $user = User::factory()->admin()->create();
-
-    $response = $this->from(route('login'))->post(route('login.store'), [
-        'email' => $user->email,
-        'password' => 'password',
-    ]);
-
-    $this->assertGuest();
-    $response->assertRedirect(route('login'));
-    $response->assertSessionHasErrors('email');
-});
-
 test('users with two factor enabled are redirected to two factor challenge', function () {
     if (! Features::canManageTwoFactorAuthentication()) {
         $this->markTestSkipped('Two-factor authentication is not enabled.');
