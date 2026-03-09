@@ -11,7 +11,7 @@ test('login screen can be rendered', function () {
 });
 
 test('users can authenticate using the login screen', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->guru()->create();
 
     $response = $this->post(route('login.store'), [
         'email' => $user->email,
@@ -20,6 +20,31 @@ test('users can authenticate using the login screen', function () {
 
     $this->assertAuthenticated();
     $response->assertRedirect(route('dashboard', absolute: false));
+});
+
+test('siswa can authenticate using the login screen', function () {
+    $user = User::factory()->siswa()->create();
+
+    $response = $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(route('home', absolute: false));
+});
+
+test('admin can not authenticate using the login screen', function () {
+    $user = User::factory()->admin()->create();
+
+    $response = $this->from(route('login'))->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertGuest();
+    $response->assertRedirect(route('login'));
+    $response->assertSessionHasErrors('email');
 });
 
 test('users with two factor enabled are redirected to two factor challenge', function () {
