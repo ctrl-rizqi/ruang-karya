@@ -2,23 +2,22 @@
 
 namespace App\Http\Requests\Web;
 
-use App\Enums\UserRole;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateWebSettingRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return $this->user()?->role === UserRole::Guru;
-    }
-
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         return [
             'site_title' => ['required', 'string', 'max:255'],
-            'site_logo_url' => ['nullable', 'url', 'max:255'],
+            'site_logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'site_tagline' => ['nullable', 'string', 'max:255'],
-            'site_description' => ['nullable', 'string', 'max:1000'],
+            'site_description' => ['nullable', 'string'],
         ];
     }
 }

@@ -1,6 +1,21 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import StudentLayout from '@/layouts/student-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { 
+    Search, 
+    Users, 
+    Filter, 
+    X, 
+    ChevronRight, 
+    GraduationCap, 
+    BookOpen,
+    MapPin,
+    Sparkles
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
 import type { FormEvent } from 'react';
 
 type StudentDirectoryProps = {
@@ -11,6 +26,7 @@ type StudentDirectoryProps = {
             name: string;
             student_class: string | null;
             major: string | null;
+            address: string | null;
         }[];
         links: {
             url: string | null;
@@ -64,149 +80,168 @@ export default function StudentDirectory({
     const paginationLabel = (label: string): string => {
         return label
             .replace(/<[^>]*>/g, '')
-            .replaceAll('&laquo;', '<<')
-            .replaceAll('&raquo;', '>>');
+            .replaceAll('&laquo;', '')
+            .replaceAll('&raquo;', '');
     };
 
     return (
-        <>
-            <Head title="Daftar Siswa" />
+        <StudentLayout>
+            <Head title="Daftar Siswa - Ruang Karya" />
 
-            <main className="mx-auto max-w-6xl space-y-4 p-6">
-                <section className="rounded-xl border border-sidebar-border/70 p-6 dark:border-sidebar-border">
-                    <h1 className="text-2xl font-semibold">Daftar Siswa</h1>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                        Cari siswa berdasarkan nama, NISN, kelas, dan jurusan.
-                    </p>
-                </section>
+            <div className="mx-auto max-w-6xl px-6 py-12">
+                {/* Header */}
+                <div className="mb-12">
+                    <div className="flex items-center gap-2 text-blue-600 font-bold text-xs uppercase tracking-[0.2em] mb-4">
+                        <Users className="size-4" /> Student Community
+                    </div>
+                    <h1 className="text-4xl font-black tracking-tight mb-2">Daftar Siswa</h1>
+                    <p className="text-muted-foreground text-lg font-medium">Jelajahi profil dan temukan inspirasi dari teman-temanmu.</p>
+                </div>
 
-                <section className="rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border">
-                    <form
-                        className="grid gap-3 md:grid-cols-5"
-                        onSubmit={submit}
-                    >
-                        <Input
-                            placeholder="Filter nama"
-                            value={filterForm.data.name}
-                            onChange={(event) =>
-                                filterForm.setData('name', event.target.value)
-                            }
-                        />
-                        <Input
-                            placeholder="Filter NISN"
-                            value={filterForm.data.nisn}
-                            onChange={(event) =>
-                                filterForm.setData('nisn', event.target.value)
-                            }
-                        />
-                        <Input
-                            placeholder="Filter Kelas"
-                            value={filterForm.data.student_class}
-                            onChange={(event) =>
-                                filterForm.setData(
-                                    'student_class',
-                                    event.target.value,
-                                )
-                            }
-                        />
-                        <Input
-                            placeholder="Filter Jurusan"
-                            value={filterForm.data.major}
-                            onChange={(event) =>
-                                filterForm.setData('major', event.target.value)
-                            }
-                        />
-                        <div className="flex gap-2">
-                            <Button
-                                disabled={filterForm.processing}
-                                type="submit"
-                                variant="outline"
-                            >
-                                Terapkan
-                            </Button>
-                            <Button
-                                disabled={filterForm.processing}
+                {/* Search & Filter Section */}
+                <section className="bg-white dark:bg-[#161615] p-8 rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-xl shadow-blue-500/5 mb-12">
+                    <form onSubmit={submit} className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                            <div className="md:col-span-5 relative">
+                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+                                <Input
+                                    placeholder="Cari nama siswa..."
+                                    className="h-14 pl-12 rounded-2xl bg-gray-50/50 border-transparent focus:bg-white transition-all text-base"
+                                    value={filterForm.data.name}
+                                    onChange={(e) => filterForm.setData('name', e.target.value)}
+                                />
+                            </div>
+                            <div className="md:col-span-3 relative">
+                                <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+                                <Input
+                                    placeholder="NISN"
+                                    className="h-14 pl-12 rounded-2xl bg-gray-50/50 border-transparent focus:bg-white transition-all"
+                                    value={filterForm.data.nisn}
+                                    onChange={(e) => filterForm.setData('nisn', e.target.value)}
+                                />
+                            </div>
+                            <div className="md:col-span-2 relative">
+                                <BookOpen className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+                                <Input
+                                    placeholder="Kelas"
+                                    className="h-14 pl-12 rounded-2xl bg-gray-50/50 border-transparent focus:bg-white transition-all"
+                                    value={filterForm.data.student_class}
+                                    onChange={(e) => filterForm.setData('student_class', e.target.value)}
+                                />
+                            </div>
+                            <div className="md:col-span-2">
+                                <Button 
+                                    type="submit" 
+                                    className="w-full h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02]"
+                                >
+                                    Filter
+                                </Button>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-gray-50 dark:border-white/5">
+                            <div className="flex items-center gap-2">
+                                <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground mr-2">Jurusan:</Label>
+                                <Input
+                                    placeholder="Semua Jurusan"
+                                    className="h-10 w-48 rounded-xl bg-gray-50/50 border-transparent focus:bg-white"
+                                    value={filterForm.data.major}
+                                    onChange={(e) => filterForm.setData('major', e.target.value)}
+                                />
+                            </div>
+                            <Button 
+                                type="button" 
+                                variant="ghost" 
                                 onClick={reset}
-                                type="button"
-                                variant="ghost"
+                                className="text-xs font-bold uppercase tracking-widest text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl px-4"
                             >
-                                Reset
+                                <X className="size-4 mr-2" /> Reset Filter
                             </Button>
                         </div>
                     </form>
                 </section>
 
-                <section className="rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border">
-                    <div className="overflow-x-auto">
-                        <table className="w-full min-w-[760px] border-collapse text-sm">
-                            <thead>
-                                <tr className="border-b">
-                                    <th className="px-3 py-2 text-left font-medium">
-                                        NISN
-                                    </th>
-                                    <th className="px-3 py-2 text-left font-medium">
-                                        Nama
-                                    </th>
-                                    <th className="px-3 py-2 text-left font-medium">
-                                        Kelas
-                                    </th>
-                                    <th className="px-3 py-2 text-left font-medium">
-                                        Jurusan
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {students.data.length === 0 && (
-                                    <tr>
-                                        <td
-                                            className="px-3 py-4 text-muted-foreground"
-                                            colSpan={4}
-                                        >
-                                            Tidak ada siswa ditemukan.
-                                        </td>
-                                    </tr>
-                                )}
+                {/* Results Section */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {students.data.length === 0 ? (
+                        <div className="col-span-full py-32 text-center bg-gray-50/50 dark:bg-white/5 rounded-[3rem] border-2 border-dashed border-gray-100 dark:border-white/10">
+                            <Users className="size-16 mx-auto text-gray-200 mb-6" />
+                            <h3 className="text-xl font-bold mb-2">Yah, tidak ada hasil...</h3>
+                            <p className="text-muted-foreground max-w-xs mx-auto">Coba ubah filter pencarianmu untuk menemukan teman yang lain.</p>
+                        </div>
+                    ) : (
+                        students.data.map((student) => (
+                            <Card key={student.id} className="group border-none shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 bg-white dark:bg-[#161615] rounded-[2.5rem] overflow-hidden">
+                                <CardContent className="p-8">
+                                    <div className="flex flex-col items-center text-center">
+                                        <div className="relative mb-6">
+                                            <Avatar className="size-24 rounded-3xl border-4 border-blue-50 dark:border-blue-900/20 group-hover:scale-110 transition-transform duration-500">
+                                                <AvatarImage src={`https://i.pravatar.cc/150?u=${student.name}`} />
+                                                <AvatarFallback className="bg-blue-50 text-blue-600 font-bold text-xl uppercase">
+                                                    {student.name.charAt(0)}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div className="absolute -bottom-2 -right-2 size-8 rounded-2xl bg-white dark:bg-black shadow-lg flex items-center justify-center">
+                                                <Sparkles className="size-4 text-blue-600" />
+                                            </div>
+                                        </div>
 
-                                {students.data.map((student) => (
-                                    <tr className="border-b" key={student.id}>
-                                        <td className="px-3 py-2">
-                                            {student.nisn ?? '-'}
-                                        </td>
-                                        <td className="px-3 py-2">
-                                            {student.name}
-                                        </td>
-                                        <td className="px-3 py-2">
-                                            {student.student_class ?? '-'}
-                                        </td>
-                                        <td className="px-3 py-2">
-                                            {student.major ?? '-'}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                                        <h3 className="text-xl font-bold mb-1 group-hover:text-blue-600 transition-colors">{student.name}</h3>
+                                        <div className="flex items-center gap-2 mb-4">
+                                            <span className="px-2 py-0.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 text-[10px] font-bold uppercase tracking-widest">
+                                                {student.student_class || 'XI'}
+                                            </span>
+                                            <span className="px-2 py-0.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 text-[10px] font-bold uppercase tracking-widest">
+                                                {student.major || 'RPL'}
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-8">
+                                            <MapPin className="size-3.5 text-blue-600" />
+                                            <span className="truncate max-w-[180px]">{student.address || 'Edinburgh, Scotland'}</span>
+                                        </div>
 
-                    <div className="mt-4 flex flex-wrap gap-2">
-                        {students.links.map((link) => (
-                            <Button
-                                asChild={Boolean(link.url)}
-                                key={`${link.label}-${link.url ?? 'no-url'}`}
-                                size="sm"
-                                variant={link.active ? 'default' : 'outline'}
-                            >
-                                {link.url ? (
-                                    <Link href={link.url} preserveScroll>
-                                        {paginationLabel(link.label)}
-                                    </Link>
-                                ) : (
-                                    <span>{paginationLabel(link.label)}</span>
-                                )}
-                            </Button>
-                        ))}
+                                        <Button asChild variant="outline" className="w-full rounded-2xl h-12 border-gray-100 dark:border-white/5 hover:bg-blue-600 hover:border-blue-600 hover:text-white group/btn transition-all">
+                                            <Link href={`/siswa/profiles/${student.id}`} prefetch>
+                                                Lihat Profil <ChevronRight className="ml-2 size-4 transition-transform group-hover/btn:translate-x-1" />
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))
+                    )}
+                </div>
+
+                {/* Pagination */}
+                {students.links.length > 3 && (
+                    <div className="mt-20 flex justify-center gap-3">
+                        {students.links.map((link, i) => {
+                            if (i === 0 || i === students.links.length - 1) return null;
+                            return (
+                                <Button
+                                    asChild={Boolean(link.url)}
+                                    key={i}
+                                    size="icon"
+                                    variant={link.active ? 'default' : 'ghost'}
+                                    className={cn(
+                                        "size-12 rounded-2xl font-bold text-sm transition-all",
+                                        link.active ? "bg-blue-600 shadow-xl shadow-blue-500/20 scale-110" : "text-muted-foreground hover:bg-white dark:hover:bg-white/5 shadow-sm border border-gray-100 dark:border-white/5"
+                                    )}
+                                >
+                                    {link.url ? (
+                                        <Link href={link.url} preserveScroll>
+                                            {paginationLabel(link.label)}
+                                        </Link>
+                                    ) : (
+                                        <span>{paginationLabel(link.label)}</span>
+                                    )}
+                                </Button>
+                            );
+                        })}
                     </div>
-                </section>
-            </main>
-        </>
+                )}
+            </div>
+        </StudentLayout>
     );
 }
