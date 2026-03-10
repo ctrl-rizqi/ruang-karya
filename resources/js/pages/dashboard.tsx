@@ -18,25 +18,26 @@ export default function Dashboard() {
 
             <div className="grid gap-4 p-4 md:grid-cols-2">
                 <section className="rounded-xl border border-sidebar-border/70 p-6 dark:border-sidebar-border">
-                    <h2 className="text-lg font-semibold">Manajemen Siswa</h2>
+                    <h2 className="text-lg font-semibold">Manajemen Users</h2>
                     <p className="mt-2 text-sm text-muted-foreground">
-                        Kelola daftar siswa, ubah data, dan hapus akun siswa.
+                        Kelola daftar user, ubah data, dan hapus akun user.
                     </p>
                     <Button asChild className="mt-4">
-                        <Link href="/dashboard/students" prefetch>
-                            Lihat Daftar Siswa
+                        <Link href="/dashboard/users" prefetch>
+                            Lihat Daftar Users
                         </Link>
                     </Button>
                 </section>
 
                 <section className="rounded-xl border border-sidebar-border/70 p-6 dark:border-sidebar-border">
-                    <h2 className="text-lg font-semibold">Input Siswa Baru</h2>
+                    <h2 className="text-lg font-semibold">Input User Baru</h2>
                     <p className="mt-2 text-sm text-muted-foreground">
-                        Tambahkan siswa baru dengan NISN, nama, dan password.
+                        Tambahkan user baru dengan role, NISN, nama, dan
+                        password.
                     </p>
                     <Button asChild className="mt-4" variant="outline">
-                        <Link href="/dashboard/students/create" prefetch>
-                            Buka Form Siswa
+                        <Link href="/dashboard/users/create" prefetch>
+                            Buka Form User
                         </Link>
                     </Button>
                 </section>

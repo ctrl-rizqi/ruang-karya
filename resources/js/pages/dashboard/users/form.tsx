@@ -8,8 +8,11 @@ import type { BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
 import type { FormEvent } from 'react';
 
-type Student = {
+type UserRole = 'GURU' | 'SISWA';
+
+type UserFormData = {
     id: number;
+    role: UserRole;
     nisn: string;
     name: string;
     birth_date: string | null;
@@ -17,22 +20,24 @@ type Student = {
     social_link: string | null;
 };
 
-type StudentFormProps = {
+type UserFormProps = {
     mode: 'create' | 'edit';
-    student: Student | null;
+    user: UserFormData | null;
+    roleOptions: UserRole[];
 };
 
-export default function StudentForm({ mode, student }: StudentFormProps) {
-    const isEditMode = mode === 'edit' && student !== null;
+export default function UserForm({ mode, user, roleOptions }: UserFormProps) {
+    const isEditMode = mode === 'edit' && user !== null;
 
     const form = useForm({
-        nisn: student?.nisn ?? '',
-        name: student?.name ?? '',
+        role: user?.role ?? 'SISWA',
+        nisn: user?.nisn ?? '',
+        name: user?.name ?? '',
         password: '',
         password_confirmation: '',
-        birth_date: student?.birth_date ?? '',
-        address: student?.address ?? '',
-        social_link: student?.social_link ?? '',
+        birth_date: user?.birth_date ?? '',
+        address: user?.address ?? '',
+        social_link: user?.social_link ?? '',
     });
 
     const breadcrumbs: BreadcrumbItem[] = [
@@ -41,47 +46,70 @@ export default function StudentForm({ mode, student }: StudentFormProps) {
             href: dashboard(),
         },
         {
-            title: 'Siswa',
-            href: '/dashboard/students',
+            title: 'Users',
+            href: '/dashboard/users',
         },
         {
-            title: isEditMode ? 'Edit Siswa' : 'Tambah Siswa',
-            href: isEditMode
-                ? `/dashboard/students/${student.id}/edit`
-                : '/dashboard/students/create',
+            title: isEditMode ? 'Edit User' : 'Tambah User',
+            href:
+                isEditMode && user
+                    ? `/dashboard/users/${user.id}/edit`
+                    : '/dashboard/users/create',
         },
     ];
 
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (isEditMode) {
-            form.put(`/dashboard/students/${student.id}`);
+        if (isEditMode && user) {
+            form.put(`/dashboard/users/${user.id}`);
 
             return;
         }
 
-        form.post('/dashboard/students');
+        form.post('/dashboard/users');
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={isEditMode ? 'Edit Siswa' : 'Tambah Siswa'} />
+            <Head title={isEditMode ? 'Edit User' : 'Tambah User'} />
 
             <div className="p-4">
                 <section className="mx-auto max-w-3xl rounded-xl border border-sidebar-border/70 p-6 dark:border-sidebar-border">
                     <h1 className="text-lg font-semibold">
-                        {isEditMode ? 'Edit Siswa' : 'Tambah Siswa'}
+                        {isEditMode ? 'Edit User' : 'Tambah User'}
                     </h1>
                     <p className="mt-2 mb-6 text-sm text-muted-foreground">
-                        Field wajib: NISN, nama, password. Untuk mode edit,
-                        password boleh dikosongkan.
+                        Kelola user dengan role GURU atau SISWA. Field wajib:
+                        role, NISN, nama, dan password.
                     </p>
 
                     <form
                         className="grid gap-4 md:grid-cols-2"
                         onSubmit={submit}
                     >
+                        <div className="grid gap-2">
+                            <Label htmlFor="role">Role</Label>
+                            <select
+                                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                                id="role"
+                                value={form.data.role}
+                                onChange={(event) =>
+                                    form.setData(
+                                        'role',
+                                        event.target.value as UserRole,
+                                    )
+                                }
+                            >
+                                {roleOptions.map((roleOption) => (
+                                    <option key={roleOption} value={roleOption}>
+                                        {roleOption}
+                                    </option>
+                                ))}
+                            </select>
+                            <InputError message={form.errors.role} />
+                        </div>
+
                         <div className="grid gap-2">
                             <Label htmlFor="nisn">NISN</Label>
                             <Input
@@ -187,10 +215,10 @@ export default function StudentForm({ mode, student }: StudentFormProps) {
                             <Button disabled={form.processing} type="submit">
                                 {isEditMode
                                     ? 'Simpan Perubahan'
-                                    : 'Simpan Siswa'}
+                                    : 'Simpan User'}
                             </Button>
                             <Button asChild type="button" variant="outline">
-                                <Link href="/dashboard/students" prefetch>
+                                <Link href="/dashboard/users" prefetch>
                                     Kembali
                                 </Link>
                             </Button>

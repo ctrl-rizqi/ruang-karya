@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Students;
+namespace App\Http\Requests\Users;
 
 use App\Enums\UserRole;
 use App\Models\User;
@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
-class StoreStudentRequest extends FormRequest
+class StoreUserRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -18,6 +18,7 @@ class StoreStudentRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'role' => ['required', Rule::enum(UserRole::class)],
             'nisn' => ['required', 'digits:10', Rule::unique(User::class, 'nisn')],
             'name' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', Password::default(), 'confirmed'],

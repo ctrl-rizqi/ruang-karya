@@ -6,8 +6,9 @@ import type { BreadcrumbItem } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import type { FormEvent } from 'react';
 
-type Student = {
+type UserRow = {
     id: number;
+    role: 'GURU' | 'SISWA';
     nisn: string;
     name: string;
     birth_date: string | null;
@@ -15,9 +16,9 @@ type Student = {
     social_link: string | null;
 };
 
-type StudentIndexProps = {
-    students: {
-        data: Student[];
+type UserIndexProps = {
+    users: {
+        data: UserRow[];
         links: {
             url: string | null;
             label: string;
@@ -36,12 +37,12 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: dashboard(),
     },
     {
-        title: 'Siswa',
-        href: '/dashboard/students',
+        title: 'Users',
+        href: '/dashboard/users',
     },
 ];
 
-export default function StudentIndex({ students, filters }: StudentIndexProps) {
+export default function UserIndex({ users, filters }: UserIndexProps) {
     const filterForm = useForm({
         name: filters.name ?? '',
         nisn: filters.nisn ?? '',
@@ -50,7 +51,7 @@ export default function StudentIndex({ students, filters }: StudentIndexProps) {
     const applyFilters = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        filterForm.get('/dashboard/students', {
+        filterForm.get('/dashboard/users', {
             preserveState: true,
             preserveScroll: true,
             replace: true,
@@ -64,18 +65,18 @@ export default function StudentIndex({ students, filters }: StudentIndexProps) {
         });
 
         router.get(
-            '/dashboard/students',
+            '/dashboard/users',
             {},
             { preserveState: true, preserveScroll: true, replace: true },
         );
     };
 
-    const deleteStudent = (student: Student) => {
-        if (!window.confirm(`Hapus siswa ${student.name}?`)) {
+    const deleteUser = (user: UserRow) => {
+        if (!window.confirm(`Hapus user ${user.name}?`)) {
             return;
         }
 
-        router.delete(`/dashboard/students/${student.id}`, {
+        router.delete(`/dashboard/users/${user.id}`, {
             preserveScroll: true,
         });
     };
@@ -89,20 +90,20 @@ export default function StudentIndex({ students, filters }: StudentIndexProps) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Siswa" />
+            <Head title="Users" />
 
             <div className="space-y-4 p-4">
                 <section className="flex items-center justify-between rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border">
                     <div>
-                        <h1 className="text-lg font-semibold">Daftar Siswa</h1>
+                        <h1 className="text-lg font-semibold">Daftar Users</h1>
                         <p className="text-sm text-muted-foreground">
-                            Kelola data siswa dari dashboard.
+                            Kelola data user role GURU dan SISWA dari dashboard.
                         </p>
                     </div>
 
                     <Button asChild>
-                        <Link href="/dashboard/students/create" prefetch>
-                            Tambah Siswa
+                        <Link href="/dashboard/users/create" prefetch>
+                            Tambah User
                         </Link>
                     </Button>
                 </section>
@@ -146,9 +147,12 @@ export default function StudentIndex({ students, filters }: StudentIndexProps) {
                     </form>
 
                     <div className="overflow-x-auto">
-                        <table className="w-full min-w-[760px] border-collapse text-sm">
+                        <table className="w-full min-w-190 border-collapse text-sm">
                             <thead>
                                 <tr className="border-b">
+                                    <th className="px-3 py-2 text-left font-medium">
+                                        Role
+                                    </th>
                                     <th className="px-3 py-2 text-left font-medium">
                                         NISN
                                     </th>
@@ -170,33 +174,36 @@ export default function StudentIndex({ students, filters }: StudentIndexProps) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {students.data.length === 0 && (
+                                {users.data.length === 0 && (
                                     <tr>
                                         <td
                                             className="px-3 py-4 text-muted-foreground"
-                                            colSpan={6}
+                                            colSpan={7}
                                         >
-                                            Belum ada data siswa.
+                                            Belum ada data user.
                                         </td>
                                     </tr>
                                 )}
 
-                                {students.data.map((student) => (
-                                    <tr className="border-b" key={student.id}>
+                                {users.data.map((user) => (
+                                    <tr className="border-b" key={user.id}>
                                         <td className="px-3 py-2">
-                                            {student.nisn}
+                                            {user.role}
                                         </td>
                                         <td className="px-3 py-2">
-                                            {student.name}
+                                            {user.nisn}
                                         </td>
                                         <td className="px-3 py-2">
-                                            {student.birth_date ?? '-'}
+                                            {user.name}
                                         </td>
                                         <td className="px-3 py-2">
-                                            {student.address ?? '-'}
+                                            {user.birth_date ?? '-'}
                                         </td>
                                         <td className="px-3 py-2">
-                                            {student.social_link ?? '-'}
+                                            {user.address ?? '-'}
+                                        </td>
+                                        <td className="px-3 py-2">
+                                            {user.social_link ?? '-'}
                                         </td>
                                         <td className="px-3 py-2">
                                             <div className="flex gap-2">
@@ -207,7 +214,7 @@ export default function StudentIndex({ students, filters }: StudentIndexProps) {
                                                     variant="outline"
                                                 >
                                                     <Link
-                                                        href={`/dashboard/students/${student.id}/edit`}
+                                                        href={`/dashboard/users/${user.id}/edit`}
                                                         prefetch
                                                     >
                                                         Edit
@@ -218,7 +225,7 @@ export default function StudentIndex({ students, filters }: StudentIndexProps) {
                                                     type="button"
                                                     variant="destructive"
                                                     onClick={() =>
-                                                        deleteStudent(student)
+                                                        deleteUser(user)
                                                     }
                                                 >
                                                     Hapus
@@ -232,7 +239,7 @@ export default function StudentIndex({ students, filters }: StudentIndexProps) {
                     </div>
 
                     <div className="mt-4 flex flex-wrap gap-2">
-                        {students.links.map((link) => (
+                        {users.links.map((link) => (
                             <Button
                                 asChild={Boolean(link.url)}
                                 key={`${link.label}-${link.url ?? 'no-url'}`}

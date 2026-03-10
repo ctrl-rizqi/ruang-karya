@@ -23,8 +23,8 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Siswa',
-        href: '/dashboard/students',
+        title: 'Users',
+        href: '/dashboard/users',
         icon: Users,
         matchSubpaths: true,
     },

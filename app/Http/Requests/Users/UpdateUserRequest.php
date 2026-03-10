@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Students;
+namespace App\Http\Requests\Users;
 
 use App\Enums\UserRole;
 use App\Models\User;
@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
-class UpdateStudentRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -17,10 +17,11 @@ class UpdateStudentRequest extends FormRequest
 
     public function rules(): array
     {
-        $student = $this->route('student');
+        $user = $this->route('user');
 
         return [
-            'nisn' => ['required', 'digits:10', Rule::unique(User::class, 'nisn')->ignore($student?->id)],
+            'role' => ['required', Rule::enum(UserRole::class)],
+            'nisn' => ['required', 'digits:10', Rule::unique(User::class, 'nisn')->ignore($user?->id)],
             'name' => ['required', 'string', 'max:255'],
             'password' => ['nullable', 'string', Password::default(), 'confirmed'],
             'birth_date' => ['nullable', 'date'],
