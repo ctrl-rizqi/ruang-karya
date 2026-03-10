@@ -28,7 +28,9 @@ type UserIndexProps = {
     filters: {
         name: string;
         nisn: string;
+        role: '' | 'GURU' | 'SISWA';
     };
+    roleOptions: Array<'GURU' | 'SISWA'>;
 };
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -42,10 +44,15 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function UserIndex({ users, filters }: UserIndexProps) {
+export default function UserIndex({
+    users,
+    filters,
+    roleOptions,
+}: UserIndexProps) {
     const filterForm = useForm({
         name: filters.name ?? '',
         nisn: filters.nisn ?? '',
+        role: filters.role ?? '',
     });
 
     const applyFilters = (event: FormEvent<HTMLFormElement>) => {
@@ -62,6 +69,7 @@ export default function UserIndex({ users, filters }: UserIndexProps) {
         filterForm.setData({
             name: '',
             nisn: '',
+            role: '',
         });
 
         router.get(
@@ -110,7 +118,7 @@ export default function UserIndex({ users, filters }: UserIndexProps) {
 
                 <section className="rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border">
                     <form
-                        className="mb-4 grid gap-3 md:grid-cols-3"
+                        className="mb-4 grid gap-3 md:grid-cols-4"
                         onSubmit={applyFilters}
                     >
                         <Input
@@ -127,6 +135,23 @@ export default function UserIndex({ users, filters }: UserIndexProps) {
                                 filterForm.setData('nisn', event.target.value)
                             }
                         />
+                        <select
+                            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                            value={filterForm.data.role}
+                            onChange={(event) =>
+                                filterForm.setData(
+                                    'role',
+                                    event.target.value as '' | 'GURU' | 'SISWA',
+                                )
+                            }
+                        >
+                            <option value="">Semua Role</option>
+                            {roleOptions.map((roleOption) => (
+                                <option key={roleOption} value={roleOption}>
+                                    {roleOption}
+                                </option>
+                            ))}
+                        </select>
                         <div className="flex gap-2">
                             <Button
                                 disabled={filterForm.processing}

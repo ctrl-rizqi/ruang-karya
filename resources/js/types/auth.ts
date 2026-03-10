@@ -2,6 +2,11 @@ export type User = {
     id: number;
     name: string;
     email: string;
+    role: 'GURU' | 'SISWA';
+    nisn?: string | null;
+    birth_date?: string | null;
+    address?: string | null;
+    social_link?: string | null;
     avatar?: string;
     email_verified_at: string | null;
     two_factor_enabled?: boolean;

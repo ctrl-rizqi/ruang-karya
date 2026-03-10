@@ -176,6 +176,26 @@ test('guru can filter users by nisn', function () {
     $response->assertDontSee('User B');
 });
 
+test('guru can filter users by role', function () {
+    $guru = User::factory()->guru()->create();
+
+    User::factory()->guru()->create([
+        'name' => 'Guru Filtered',
+        'nisn' => '3333333333',
+    ]);
+
+    User::factory()->siswa()->create([
+        'name' => 'Siswa Filtered',
+        'nisn' => '4444444444',
+    ]);
+
+    $response = $this->actingAs($guru)->get(route('dashboard.users.index', ['role' => UserRole::Guru->value]));
+
+    $response->assertOk();
+    $response->assertSee('Guru Filtered');
+    $response->assertDontSee('Siswa Filtered');
+});
+
 test('user list is paginated with ten records per page', function () {
     $guru = User::factory()->guru()->create();
 

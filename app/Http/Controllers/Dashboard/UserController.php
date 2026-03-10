@@ -18,11 +18,18 @@ class UserController extends Controller
     {
         $name = trim((string) $request->query('name', ''));
         $nisn = trim((string) $request->query('nisn', ''));
+        $roleOptions = UserRole::authenticationValues();
+        $role = strtoupper(trim((string) $request->query('role', '')));
+
+        if (! in_array($role, $roleOptions, true)) {
+            $role = '';
+        }
 
         $users = User::query()
             ->whereIn('role', [UserRole::Guru, UserRole::Siswa])
             ->when($name !== '', fn ($query) => $query->where('name', 'like', "%{$name}%"))
             ->when($nisn !== '', fn ($query) => $query->where('nisn', 'like', "%{$nisn}%"))
+            ->when($role !== '', fn ($query) => $query->where('role', $role))
             ->orderBy('name')
             ->paginate(10)
             ->withQueryString()
@@ -33,7 +40,9 @@ class UserController extends Controller
             'filters' => [
                 'name' => $name,
                 'nisn' => $nisn,
+                'role' => $role,
             ],
+            'roleOptions' => $roleOptions,
         ]);
     }
 

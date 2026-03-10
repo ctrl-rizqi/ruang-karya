@@ -21,6 +21,10 @@ class LoginResponse implements LoginResponseContract
             return route('dashboard');
         }
 
+        if ($role instanceof UserRole && $role === UserRole::Siswa) {
+            return route('student.home');
+        }
+
         return route('home');
     }
 }
