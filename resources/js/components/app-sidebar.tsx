@@ -3,6 +3,7 @@ import {
     BookOpen,
     FolderGit2,
     LayoutGrid,
+    School,
     UserCircle2,
     Users,
     WalletCards,
@@ -52,6 +53,18 @@ export function AppSidebar() {
                   title: 'Users',
                   href: '/dashboard/users',
                   icon: Users,
+                  matchSubpaths: true,
+              },
+              {
+                  title: 'Classrooms',
+                  href: '/dashboard/classrooms',
+                  icon: School,
+                  matchSubpaths: true,
+              },
+              {
+                  title: 'Majors',
+                  href: '/dashboard/majors',
+                  icon: BookOpen,
                   matchSubpaths: true,
               },
               {

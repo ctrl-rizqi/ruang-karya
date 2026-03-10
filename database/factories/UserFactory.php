@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Enums\UserRole;
+use App\Models\Classroom;
+use App\Models\Major;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -32,8 +34,8 @@ class UserFactory extends Factory
             'birth_date' => null,
             'address' => null,
             'social_link' => null,
-            'student_class' => fake()->randomElement(['X', 'XI', 'XII']),
-            'major' => fake()->randomElement(['RPL', 'TKJ', 'MM']),
+            'classroom_id' => Classroom::factory(),
+            'major_id' => Major::factory(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
@@ -69,8 +71,8 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'nisn' => null,
-            'student_class' => null,
-            'major' => null,
+            'classroom_id' => null,
+            'major_id' => null,
             'role' => UserRole::Guru,
         ]);
     }

@@ -3,30 +3,28 @@
 namespace App\Http\Requests\Users;
 
 use App\Enums\UserRole;
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password;
 
 class StoreUserRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return $this->user()?->role === UserRole::Guru;
-    }
-
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         return [
-            'role' => ['required', Rule::enum(UserRole::class)],
-            'nisn' => ['required', 'digits:10', Rule::unique(User::class, 'nisn')],
             'name' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string', Password::default(), 'confirmed'],
+            'nisn' => ['required', 'string', 'max:20', 'unique:users,nisn'],
+            'role' => ['required', Rule::in(UserRole::authenticationValues())],
+            'password' => ['required', 'string', 'min:8'],
+            'classroom_id' => ['nullable', 'exists:classrooms,id'],
+            'major_id' => ['nullable', 'exists:majors,id'],
             'birth_date' => ['nullable', 'date'],
-            'address' => ['nullable', 'string', 'max:1000'],
-            'social_link' => ['nullable', 'url', 'max:255'],
-            'student_class' => ['nullable', 'string', 'max:100'],
-            'major' => ['nullable', 'string', 'max:100'],
+            'address' => ['nullable', 'string'],
+            'social_link' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

@@ -6,6 +6,8 @@ use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\StoreUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
+use App\Models\Classroom;
+use App\Models\Major;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,8 +20,8 @@ class UserController extends Controller
     {
         $name = trim((string) $request->query('name', ''));
         $nisn = trim((string) $request->query('nisn', ''));
-        $studentClass = trim((string) $request->query('student_class', ''));
-        $major = trim((string) $request->query('major', ''));
+        $classroomId = $request->query('classroom_id', '');
+        $majorId = $request->query('major_id', '');
         $roleOptions = UserRole::authenticationValues();
         $role = strtoupper(trim((string) $request->query('role', '')));
 
@@ -28,11 +30,12 @@ class UserController extends Controller
         }
 
         $users = User::query()
+            ->with(['classroom', 'major'])
             ->whereIn('role', [UserRole::Guru, UserRole::Siswa])
             ->when($name !== '', fn ($query) => $query->where('name', 'like', "%{$name}%"))
             ->when($nisn !== '', fn ($query) => $query->where('nisn', 'like', "%{$nisn}%"))
-            ->when($studentClass !== '', fn ($query) => $query->where('student_class', 'like', "%{$studentClass}%"))
-            ->when($major !== '', fn ($query) => $query->where('major', 'like', "%{$major}%"))
+            ->when($classroomId !== '', fn ($query) => $query->where('classroom_id', $classroomId))
+            ->when($majorId !== '', fn ($query) => $query->where('major_id', $majorId))
             ->when($role !== '', fn ($query) => $query->where('role', $role))
             ->orderBy('name')
             ->paginate(10)
@@ -45,10 +48,12 @@ class UserController extends Controller
                 'name' => $name,
                 'nisn' => $nisn,
                 'role' => $role,
-                'student_class' => $studentClass,
-                'major' => $major,
+                'classroom_id' => $classroomId,
+                'major_id' => $majorId,
             ],
             'roleOptions' => $roleOptions,
+            'classrooms' => Classroom::orderBy('name')->get(['id', 'name']),
+            'majors' => Major::orderBy('name')->get(['id', 'name']),
         ]);
     }
 
@@ -58,6 +63,8 @@ class UserController extends Controller
             'mode' => 'create',
             'user' => null,
             'roleOptions' => UserRole::authenticationValues(),
+            'classrooms' => Classroom::orderBy('name')->get(['id', 'name']),
+            'majors' => Major::orderBy('name')->get(['id', 'name']),
         ]);
     }
 
@@ -72,11 +79,12 @@ class UserController extends Controller
             'name' => $attributes['name'],
             'email' => $this->emailFromIdentity($attributes['nisn'], $role),
             'password' => $attributes['password'],
+            'classroom_id' => $attributes['classroom_id'] ?? null,
+            'major_id' => $attributes['major_id'] ?? null,
+            // Optional fields can be empty during creation by teacher/admin
             'birth_date' => $attributes['birth_date'] ?? null,
             'address' => $attributes['address'] ?? null,
             'social_link' => $attributes['social_link'] ?? null,
-            'student_class' => $attributes['student_class'] ?? null,
-            'major' => $attributes['major'] ?? null,
         ]);
 
         return to_route('dashboard.users.index')->with('status', 'user-created');
@@ -90,6 +98,8 @@ class UserController extends Controller
             'mode' => 'edit',
             'user' => $this->userData($user),
             'roleOptions' => UserRole::authenticationValues(),
+            'classrooms' => Classroom::orderBy('name')->get(['id', 'name']),
+            'majors' => Major::orderBy('name')->get(['id', 'name']),
         ]);
     }
 
@@ -137,8 +147,10 @@ class UserController extends Controller
             'birth_date' => $user->birth_date?->toDateString(),
             'address' => $user->address,
             'social_link' => $user->social_link,
-            'student_class' => $user->student_class,
-            'major' => $user->major,
+            'classroom_id' => $user->classroom_id,
+            'major_id' => $user->major_id,
+            'classroom_name' => $user->classroom?->name,
+            'major_name' => $user->major?->name,
         ];
     }
 

@@ -7,7 +7,6 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { 
     Search, 
     Users, 
-    Filter, 
     X, 
     ChevronRight, 
     GraduationCap, 
@@ -17,6 +16,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { FormEvent } from 'react';
+import { Label } from '@/components/ui/label';
 
 type StudentDirectoryProps = {
     students: {
@@ -37,20 +37,24 @@ type StudentDirectoryProps = {
     filters: {
         name: string;
         nisn: string;
-        student_class: string;
-        major: string;
+        classroom_id: string;
+        major_id: string;
     };
+    classrooms: { id: number; name: string }[];
+    majors: { id: number; name: string }[];
 };
 
 export default function StudentDirectory({
     students,
     filters,
+    classrooms,
+    majors,
 }: StudentDirectoryProps) {
     const filterForm = useForm({
         name: filters.name ?? '',
         nisn: filters.nisn ?? '',
-        student_class: filters.student_class ?? '',
-        major: filters.major ?? '',
+        classroom_id: filters.classroom_id ?? '',
+        major_id: filters.major_id ?? '',
     });
 
     const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -66,8 +70,8 @@ export default function StudentDirectory({
         filterForm.setData({
             name: '',
             nisn: '',
-            student_class: '',
-            major: '',
+            classroom_id: '',
+            major_id: '',
         });
 
         filterForm.get('/daftar-siswa', {
@@ -121,13 +125,17 @@ export default function StudentDirectory({
                                 />
                             </div>
                             <div className="md:col-span-2 relative">
-                                <BookOpen className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
-                                <Input
-                                    placeholder="Kelas"
-                                    className="h-14 pl-12 rounded-2xl bg-gray-50/50 border-transparent focus:bg-white transition-all"
-                                    value={filterForm.data.student_class}
-                                    onChange={(e) => filterForm.setData('student_class', e.target.value)}
-                                />
+                                <BookOpen className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground z-10" />
+                                <select
+                                    className="w-full h-14 pl-12 rounded-2xl bg-gray-50/50 border-transparent focus:bg-white transition-all text-sm outline-none appearance-none"
+                                    value={filterForm.data.classroom_id}
+                                    onChange={(e) => filterForm.setData('classroom_id', e.target.value)}
+                                >
+                                    <option value="">Semua Kelas</option>
+                                    {classrooms.map((c) => (
+                                        <option key={c.id} value={c.id}>{c.name}</option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="md:col-span-2">
                                 <Button 
@@ -142,21 +150,24 @@ export default function StudentDirectory({
                         <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-gray-50 dark:border-white/5">
                             <div className="flex items-center gap-2">
                                 <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground mr-2">Jurusan:</Label>
-                                <Input
-                                    placeholder="Semua Jurusan"
-                                    className="h-10 w-48 rounded-xl bg-gray-50/50 border-transparent focus:bg-white"
-                                    value={filterForm.data.major}
-                                    onChange={(e) => filterForm.setData('major', e.target.value)}
-                                />
+                                <select
+                                    className="h-10 px-4 rounded-xl bg-gray-50/50 border-transparent focus:bg-white text-xs outline-none"
+                                    value={filterForm.data.major_id}
+                                    onChange={(e) => filterForm.setData('major_id', e.target.value)}
+                                >
+                                    <option value="">Semua Jurusan</option>
+                                    {majors.map((m) => (
+                                        <option key={m.id} value={m.id}>{m.name}</option>
+                                    ))}
+                                </select>
                             </div>
-                            <Button 
+                            <button 
                                 type="button" 
-                                variant="ghost" 
                                 onClick={reset}
-                                className="text-xs font-bold uppercase tracking-widest text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl px-4"
+                                className="text-xs font-bold uppercase tracking-widest text-rose-500 hover:text-rose-600 transition-colors flex items-center gap-2"
                             >
-                                <X className="size-4 mr-2" /> Reset Filter
-                            </Button>
+                                <X className="size-4" /> Reset Filter
+                            </button>
                         </div>
                     </form>
                 </section>
@@ -189,16 +200,16 @@ export default function StudentDirectory({
                                         <h3 className="text-xl font-bold mb-1 group-hover:text-blue-600 transition-colors">{student.name}</h3>
                                         <div className="flex items-center gap-2 mb-4">
                                             <span className="px-2 py-0.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 text-[10px] font-bold uppercase tracking-widest">
-                                                {student.student_class || 'XI'}
+                                                {student.student_class || '-'}
                                             </span>
                                             <span className="px-2 py-0.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 text-[10px] font-bold uppercase tracking-widest">
-                                                {student.major || 'RPL'}
+                                                {student.major || '-'}
                                             </span>
                                         </div>
                                         
                                         <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-8">
                                             <MapPin className="size-3.5 text-blue-600" />
-                                            <span className="truncate max-w-[180px]">{student.address || 'Edinburgh, Scotland'}</span>
+                                            <span className="truncate max-w-45">{student.address || '-'}</span>
                                         </div>
 
                                         <Button asChild variant="outline" className="w-full rounded-2xl h-12 border-gray-100 dark:border-white/5 hover:bg-blue-600 hover:border-blue-600 hover:text-white group/btn transition-all">

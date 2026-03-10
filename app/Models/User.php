@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -24,12 +25,12 @@ class User extends Authenticatable
         'name',
         'email',
         'nisn',
+        'classroom_id',
+        'major_id',
         'role',
         'birth_date',
         'address',
         'social_link',
-        'student_class',
-        'major',
         'password',
     ];
 
@@ -59,6 +60,16 @@ class User extends Authenticatable
             'role' => UserRole::class,
             'two_factor_confirmed_at' => 'datetime',
         ];
+    }
+
+    public function classroom(): BelongsTo
+    {
+        return $this->belongsTo(Classroom::class);
+    }
+
+    public function major(): BelongsTo
+    {
+        return $this->belongsTo(Major::class);
     }
 
     public function karyas(): HasMany

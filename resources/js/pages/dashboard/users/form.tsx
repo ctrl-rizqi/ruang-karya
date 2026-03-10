@@ -18,17 +18,24 @@ type UserFormData = {
     birth_date: string | null;
     address: string | null;
     social_link: string | null;
-    student_class: string | null;
-    major: string | null;
+    classroom_id: number | null;
+    major_id: number | null;
+};
+
+type Option = {
+    id: number;
+    name: string;
 };
 
 type UserFormProps = {
     mode: 'create' | 'edit';
     user: UserFormData | null;
     roleOptions: UserRole[];
+    classrooms: Option[];
+    majors: Option[];
 };
 
-export default function UserForm({ mode, user, roleOptions }: UserFormProps) {
+export default function UserForm({ mode, user, roleOptions, classrooms, majors }: UserFormProps) {
     const isEditMode = mode === 'edit' && user !== null;
 
     const form = useForm({
@@ -40,8 +47,9 @@ export default function UserForm({ mode, user, roleOptions }: UserFormProps) {
         birth_date: user?.birth_date ?? '',
         address: user?.address ?? '',
         social_link: user?.social_link ?? '',
-        student_class: user?.student_class ?? '',
-        major: user?.major ?? '',
+        classroom_id: user?.classroom_id ?? '',
+        major_id: user?.major_id ?? '',
+        _method: isEditMode ? 'PUT' : 'POST',
     });
 
     const breadcrumbs: BreadcrumbItem[] = [
@@ -66,8 +74,9 @@ export default function UserForm({ mode, user, roleOptions }: UserFormProps) {
         event.preventDefault();
 
         if (isEditMode && user) {
-            form.put(`/dashboard/users/${user.id}`);
-
+            form.post(`/dashboard/users/${user.id}`, {
+                onSuccess: () => form.reset('password', 'password_confirmation'),
+            });
             return;
         }
 
@@ -84,8 +93,8 @@ export default function UserForm({ mode, user, roleOptions }: UserFormProps) {
                         {isEditMode ? 'Edit User' : 'Tambah User'}
                     </h1>
                     <p className="mt-2 mb-6 text-sm text-muted-foreground">
-                        Kelola user dengan role GURU atau SISWA. Field wajib:
-                        role, NISN, nama, dan password.
+                        Kelola user dengan role GURU atau SISWA. Field wajib untuk siswa:
+                        role, NISN, nama, kelas, jurusan dan password.
                     </p>
 
                     <form
@@ -128,7 +137,7 @@ export default function UserForm({ mode, user, roleOptions }: UserFormProps) {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="name">Nama</Label>
+                            <Label htmlFor="name">Nama Lengkap</Label>
                             <Input
                                 id="name"
                                 value={form.data.name}
@@ -138,6 +147,56 @@ export default function UserForm({ mode, user, roleOptions }: UserFormProps) {
                             />
                             <InputError message={form.errors.name} />
                         </div>
+
+                        {form.data.role === 'SISWA' && (
+                            <>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="classroom_id">Kelas</Label>
+                                    <select
+                                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none md:text-sm"
+                                        id="classroom_id"
+                                        value={form.data.classroom_id}
+                                        onChange={(event) =>
+                                            form.setData(
+                                                'classroom_id',
+                                                event.target.value,
+                                            )
+                                        }
+                                    >
+                                        <option value="">Pilih Kelas</option>
+                                        {classrooms.map((c) => (
+                                            <option key={c.id} value={c.id}>
+                                                {c.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <InputError message={form.errors.classroom_id} />
+                                </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="major_id">Jurusan</Label>
+                                    <select
+                                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none md:text-sm"
+                                        id="major_id"
+                                        value={form.data.major_id}
+                                        onChange={(event) =>
+                                            form.setData(
+                                                'major_id',
+                                                event.target.value,
+                                            )
+                                        }
+                                    >
+                                        <option value="">Pilih Jurusan</option>
+                                        {majors.map((m) => (
+                                            <option key={m.id} value={m.id}>
+                                                {m.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <InputError message={form.errors.major_id} />
+                                </div>
+                            </>
+                        )}
 
                         <div className="grid gap-2">
                             <Label htmlFor="password">Password</Label>
@@ -169,6 +228,10 @@ export default function UserForm({ mode, user, roleOptions }: UserFormProps) {
                             />
                         </div>
 
+                        <div className="border-t border-gray-100 dark:border-white/5 pt-4 md:col-span-2">
+                            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4">Informasi Opsional (Bisa diisi oleh siswa sendiri)</p>
+                        </div>
+
                         <div className="grid gap-2">
                             <Label htmlFor="birth_date">Tanggal Lahir</Label>
                             <Input
@@ -183,33 +246,6 @@ export default function UserForm({ mode, user, roleOptions }: UserFormProps) {
                                 }
                             />
                             <InputError message={form.errors.birth_date} />
-                        </div>
-
-                        <div className="grid gap-2">
-                            <Label htmlFor="student_class">Kelas</Label>
-                            <Input
-                                id="student_class"
-                                value={form.data.student_class}
-                                onChange={(event) =>
-                                    form.setData(
-                                        'student_class',
-                                        event.target.value,
-                                    )
-                                }
-                            />
-                            <InputError message={form.errors.student_class} />
-                        </div>
-
-                        <div className="grid gap-2">
-                            <Label htmlFor="major">Jurusan</Label>
-                            <Input
-                                id="major"
-                                value={form.data.major}
-                                onChange={(event) =>
-                                    form.setData('major', event.target.value)
-                                }
-                            />
-                            <InputError message={form.errors.major} />
                         </div>
 
                         <div className="grid gap-2">
@@ -231,7 +267,7 @@ export default function UserForm({ mode, user, roleOptions }: UserFormProps) {
                         </div>
 
                         <div className="grid gap-2 md:col-span-2">
-                            <Label htmlFor="address">Alamat</Label>
+                            <Label htmlFor="address">Alamat / Bio</Label>
                             <Input
                                 id="address"
                                 value={form.data.address}
@@ -242,11 +278,11 @@ export default function UserForm({ mode, user, roleOptions }: UserFormProps) {
                             <InputError message={form.errors.address} />
                         </div>
 
-                        <div className="flex gap-2 md:col-span-2">
+                        <div className="flex gap-2 md:col-span-2 pt-4">
                             <Button disabled={form.processing} type="submit">
                                 {isEditMode
                                     ? 'Simpan Perubahan'
-                                    : 'Simpan User'}
+                                    : 'Buat User Baru'}
                             </Button>
                             <Button asChild type="button" variant="outline">
                                 <Link href="/dashboard/users" prefetch>

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Dashboard\ClassroomController;
+use App\Http\Controllers\Dashboard\MajorController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\WebSettingController;
 use App\Http\Controllers\PublicPageController;
@@ -29,6 +31,20 @@ Route::middleware(['auth', 'verified', 'role:GURU'])->group(function () {
 
     Route::get('dashboard/web-settings', [WebSettingController::class, 'edit'])->name('dashboard.web-settings.edit');
     Route::patch('dashboard/web-settings', [WebSettingController::class, 'update'])->name('dashboard.web-settings.update');
+
+    Route::resource('dashboard/classrooms', ClassroomController::class)->names([
+        'index' => 'dashboard.classrooms.index',
+        'store' => 'dashboard.classrooms.store',
+        'update' => 'dashboard.classrooms.update',
+        'destroy' => 'dashboard.classrooms.destroy',
+    ])->only(['index', 'store', 'update', 'destroy']);
+
+    Route::resource('dashboard/majors', MajorController::class)->names([
+        'index' => 'dashboard.majors.index',
+        'store' => 'dashboard.majors.store',
+        'update' => 'dashboard.majors.update',
+        'destroy' => 'dashboard.majors.destroy',
+    ])->only(['index', 'store', 'update', 'destroy']);
 });
 
 Route::middleware(['auth', 'verified', 'role:SISWA'])->group(function () {
