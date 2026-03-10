@@ -113,7 +113,7 @@ export default function ClassroomIndex({ classrooms, filters, status }: Props) {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     {/* Create Form */}
                     <div className="lg:col-span-4">
-                        <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-[2rem] sticky top-24">
+                        <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-4xl sticky top-24">
                             <CardContent className="p-8">
                                 <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
                                     <Plus className="size-5 text-blue-600" /> Tambah Kelas

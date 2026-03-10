@@ -414,7 +414,7 @@ export default function Welcome({ canRegister = true }: WelcomeProps) {
 
                 {/* Top Students */}
                 <section className="relative overflow-hidden bg-[#050505] py-24 text-white">
-                    <div className="absolute top-0 right-0 h-full w-1/3 bg-gradient-to-l from-blue-900/10 to-transparent" />
+                    <div className="absolute top-0 right-0 h-full w-1/3 bg-linear-to-l from-blue-900/10 to-transparent" />
                     <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
                         <div className="mb-16 flex items-end justify-between">
                             <div>
@@ -719,7 +719,7 @@ function ProjectCard({
 }) {
     return (
         <div className="group cursor-pointer">
-            <div className="relative mb-6 aspect-[4/3] overflow-hidden rounded-2xl">
+            <div className="relative mb-6 aspect-4/3 overflow-hidden rounded-2xl">
                 <img
                     src={image}
                     alt={title}
