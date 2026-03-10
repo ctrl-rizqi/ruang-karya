@@ -1,7 +1,7 @@
-# TASK 3
+#  TASK 3
 
-[ ] Siswa tidak bisa mengkases dashboard karena dashboard hanya untuk guru.
-[ ] Halaman khusus SISWA setelah login.
-[ ] Halaman siswa untuk mengatur profil/data diri.
-[ ] Halaman post Karya SISWA.
-[ ] Halaman halaman profil SISWA.
+ - [x] Siswa tidak bisa mengkases dashboard karena dashboard hanya untuk guru.
+ - [x] Halaman khusus SISWA setelah login.
+ - [x] Halaman siswa untuk mengatur profil/data diri.
+ - [x] Halaman post Karya SISWA.
+ - [x] Halaman halaman profil SISWA.

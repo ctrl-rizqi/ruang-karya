@@ -18,6 +18,8 @@ type UserFormData = {
     birth_date: string | null;
     address: string | null;
     social_link: string | null;
+    student_class: string | null;
+    major: string | null;
 };
 
 type UserFormProps = {
@@ -38,6 +40,8 @@ export default function UserForm({ mode, user, roleOptions }: UserFormProps) {
         birth_date: user?.birth_date ?? '',
         address: user?.address ?? '',
         social_link: user?.social_link ?? '',
+        student_class: user?.student_class ?? '',
+        major: user?.major ?? '',
     });
 
     const breadcrumbs: BreadcrumbItem[] = [
@@ -179,6 +183,33 @@ export default function UserForm({ mode, user, roleOptions }: UserFormProps) {
                                 }
                             />
                             <InputError message={form.errors.birth_date} />
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="student_class">Kelas</Label>
+                            <Input
+                                id="student_class"
+                                value={form.data.student_class}
+                                onChange={(event) =>
+                                    form.setData(
+                                        'student_class',
+                                        event.target.value,
+                                    )
+                                }
+                            />
+                            <InputError message={form.errors.student_class} />
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="major">Jurusan</Label>
+                            <Input
+                                id="major"
+                                value={form.data.major}
+                                onChange={(event) =>
+                                    form.setData('major', event.target.value)
+                                }
+                            />
+                            <InputError message={form.errors.major} />
                         </div>
 
                         <div className="grid gap-2">

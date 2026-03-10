@@ -1,22 +1,22 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import { dashboard, login, register } from '@/routes';
-import { 
-    MapPin, 
-    Quote, 
-    Palette, 
-    Microscope, 
-    Scale, 
-    Music, 
-    Dumbbell, 
-    ArrowUpRight, 
-    Heart, 
+import {
+    MapPin,
+    Quote,
+    Palette,
+    Microscope,
+    Scale,
+    Music,
+    Dumbbell,
+    ArrowUpRight,
+    Heart,
     Eye,
     ChevronRight,
     Search,
     User,
     LogOut,
     Plus,
-    School
+    School,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -31,10 +31,13 @@ export default function Welcome({ canRegister = true }: WelcomeProps) {
     const { auth } = usePage().props;
 
     return (
-        <div className="min-h-screen bg-[#FDFDFC] text-[#1b1b18] font-sans selection:bg-blue-100 selection:text-blue-900">
+        <div className="min-h-screen bg-[#FDFDFC] font-sans text-[#1b1b18] selection:bg-blue-100 selection:text-blue-900">
             <Head title="St. Andrews Academy Showcase">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
-                <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600|instrument-serif:400,400i" rel="stylesheet" />
+                <link
+                    href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600|instrument-serif:400,400i"
+                    rel="stylesheet"
+                />
             </Head>
 
             {/* Navigation */}
@@ -45,16 +48,40 @@ export default function Welcome({ canRegister = true }: WelcomeProps) {
                             <School className="size-6" />
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-lg font-bold tracking-tight text-[#003366] leading-none">ST. ANDREWS</span>
-                            <span className="text-[10px] font-medium tracking-[0.2em] text-gray-400 uppercase">Academy Showcase</span>
+                            <span className="text-lg leading-none font-bold tracking-tight text-[#003366]">
+                                ST. ANDREWS
+                            </span>
+                            <span className="text-[10px] font-medium tracking-[0.2em] text-gray-400 uppercase">
+                                Academy Showcase
+                            </span>
                         </div>
                     </div>
 
-                    <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-500">
-                        <Link href="#" className="hover:text-[#003366] transition-colors">Curriculum</Link>
-                        <Link href="#" className="hover:text-[#003366] transition-colors">Departments</Link>
-                        <Link href="#" className="hover:text-[#003366] transition-colors">Alumni</Link>
-                        <Link href="#" className="hover:text-[#003366] transition-colors">Exhibitions</Link>
+                    <nav className="hidden items-center gap-8 text-sm font-medium text-gray-500 md:flex">
+                        <Link
+                            href="/tentang"
+                            className="transition-colors hover:text-[#003366]"
+                        >
+                            Tentang
+                        </Link>
+                        <Link
+                            href="/daftar-siswa"
+                            className="transition-colors hover:text-[#003366]"
+                        >
+                            Daftar Siswa
+                        </Link>
+                        <Link
+                            href="#"
+                            className="transition-colors hover:text-[#003366]"
+                        >
+                            Alumni
+                        </Link>
+                        <Link
+                            href="#"
+                            className="transition-colors hover:text-[#003366]"
+                        >
+                            Exhibitions
+                        </Link>
                     </nav>
 
                     <div className="flex items-center gap-4">
@@ -63,13 +90,22 @@ export default function Welcome({ canRegister = true }: WelcomeProps) {
                                 <Link href={dashboard()}>Dashboard</Link>
                             </Button>
                         ) : (
-                            <Link href={login()} className="text-sm font-medium text-gray-500 hover:text-[#003366]">
+                            <Link
+                                href={login()}
+                                className="text-sm font-medium text-gray-500 hover:text-[#003366]"
+                            >
                                 School ID Login
                             </Link>
                         )}
-                        <Button asChild className="bg-[#1b1b18] hover:bg-black text-white rounded-lg px-6">
+                        <Button
+                            asChild
+                            className="rounded-lg bg-[#1b1b18] px-6 text-white hover:bg-black"
+                        >
                             <Link href={auth.user ? dashboard() : register()}>
-                                {auth.user ? 'Submit Portfolio' : 'Join Academy'} <ArrowUpRight className="ml-2 size-4" />
+                                {auth.user
+                                    ? 'Submit Portfolio'
+                                    : 'Join Academy'}{' '}
+                                <ArrowUpRight className="ml-2 size-4" />
                             </Link>
                         </Button>
                     </div>
@@ -79,27 +115,44 @@ export default function Welcome({ canRegister = true }: WelcomeProps) {
             <main>
                 {/* Hero Section */}
                 <section className="mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-24">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                    <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12">
                         <div className="lg:col-span-8">
                             <div className="mb-6 flex items-center gap-2 text-sm font-medium text-blue-600">
                                 <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
                                 Official Student Gallery • Class of 2024
                             </div>
-                            <h1 className="mb-8 font-serif text-6xl lg:text-7xl leading-[1.1] text-[#1b1b18]">
+                            <h1 className="mb-8 font-serif text-6xl leading-[1.1] text-[#1b1b18] lg:text-7xl">
                                 The Future of <br />
-                                <span className="italic font-normal text-[#003366]">St. Andrews</span> Excellence
+                                <span className="font-normal text-[#003366] italic">
+                                    St. Andrews
+                                </span>{' '}
+                                Excellence
                             </h1>
                             <p className="mb-10 max-w-xl text-lg leading-relaxed text-gray-500">
-                                An exclusive digital archives showcasing the innovative works of St. Andrews Academy students. 
-                                From Grade 9 foundations to Grade 12 capstone projects, we celebrate academic rigor and creative passion.
+                                An exclusive digital archives showcasing the
+                                innovative works of St. Andrews Academy
+                                students. From Grade 9 foundations to Grade 12
+                                capstone projects, we celebrate academic rigor
+                                and creative passion.
                             </p>
                             <div className="flex flex-wrap items-center gap-4">
-                                <Button asChild size="lg" className="bg-[#003366] hover:bg-[#002244] text-white rounded-xl h-14 px-8">
-                                    <Link href={auth.user ? dashboard() : login()}>
-                                        Upload via Student Portal <Plus className="ml-2 size-5" />
+                                <Button
+                                    asChild
+                                    size="lg"
+                                    className="h-14 rounded-xl bg-[#003366] px-8 text-white hover:bg-[#002244]"
+                                >
+                                    <Link
+                                        href={auth.user ? dashboard() : login()}
+                                    >
+                                        Upload via Student Portal{' '}
+                                        <Plus className="ml-2 size-5" />
                                     </Link>
                                 </Button>
-                                <Button variant="outline" size="lg" className="rounded-xl h-14 px-8 border-gray-200">
+                                <Button
+                                    variant="outline"
+                                    size="lg"
+                                    className="h-14 rounded-xl border-gray-200 px-8"
+                                >
                                     View All Departments
                                 </Button>
                             </div>
@@ -108,8 +161,13 @@ export default function Welcome({ canRegister = true }: WelcomeProps) {
                             <div className="mt-16 flex items-center gap-4">
                                 <div className="flex -space-x-3">
                                     {[1, 2, 3].map((i) => (
-                                        <Avatar key={i} className="border-2 border-white size-10">
-                                            <AvatarImage src={`https://i.pravatar.cc/150?u=${i}`} />
+                                        <Avatar
+                                            key={i}
+                                            className="size-10 border-2 border-white"
+                                        >
+                                            <AvatarImage
+                                                src={`https://i.pravatar.cc/150?u=${i}`}
+                                            />
                                             <AvatarFallback>U</AvatarFallback>
                                         </Avatar>
                                     ))}
@@ -118,43 +176,63 @@ export default function Welcome({ canRegister = true }: WelcomeProps) {
                                     </div>
                                 </div>
                                 <p className="text-xs font-medium text-gray-400">
-                                    Verified access for St. Andrews Academy students and faculty only
+                                    Verified access for St. Andrews Academy
+                                    students and faculty only
                                 </p>
                             </div>
                         </div>
 
                         {/* Academy Profile Card */}
                         <div className="lg:col-span-4">
-                            <Card className="border-none shadow-[0_20px_50px_rgba(0,0,0,0.04)] rounded-2xl overflow-hidden bg-white">
+                            <Card className="overflow-hidden rounded-2xl border-none bg-white shadow-[0_20px_50px_rgba(0,0,0,0.04)]">
                                 <CardContent className="p-8">
                                     <div className="flex flex-col gap-6">
                                         <div>
-                                            <h3 className="text-[10px] font-bold tracking-[0.2em] text-blue-600 uppercase mb-4">Academy Profile</h3>
+                                            <h3 className="mb-4 text-[10px] font-bold tracking-[0.2em] text-blue-600 uppercase">
+                                                Academy Profile
+                                            </h3>
                                             <div className="flex items-start gap-3 text-gray-500">
                                                 <MapPin className="size-5 shrink-0 text-gray-300" />
-                                                <span className="text-sm">Edinburgh, United Kingdom</span>
+                                                <span className="text-sm">
+                                                    Edinburgh, United Kingdom
+                                                </span>
                                             </div>
                                         </div>
 
-                                        <div className="relative pt-6 border-t border-gray-100">
-                                            <Quote className="absolute -top-3 left-0 size-6 text-blue-50 bg-white" />
-                                            <p className="italic text-gray-500 leading-relaxed text-sm">
-                                                "To inspire excellence, cultivate curiosity, and empower students to lead with integrity in a global community."
+                                        <div className="relative border-t border-gray-100 pt-6">
+                                            <Quote className="absolute -top-3 left-0 size-6 bg-white text-blue-50" />
+                                            <p className="text-sm leading-relaxed text-gray-500 italic">
+                                                "To inspire excellence,
+                                                cultivate curiosity, and empower
+                                                students to lead with integrity
+                                                in a global community."
                                             </p>
                                         </div>
 
-                                        <div className="grid grid-cols-2 gap-y-6 pt-6 border-t border-gray-100">
+                                        <div className="grid grid-cols-2 gap-y-6 border-t border-gray-100 pt-6">
                                             <div>
-                                                <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">Founded</p>
-                                                <p className="font-bold text-[#1b1b18]">1842</p>
+                                                <p className="mb-1 text-[10px] tracking-wider text-gray-400 uppercase">
+                                                    Founded
+                                                </p>
+                                                <p className="font-bold text-[#1b1b18]">
+                                                    1842
+                                                </p>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">Enrollment</p>
-                                                <p className="font-bold text-[#1b1b18]">1,200 Students</p>
+                                                <p className="mb-1 text-[10px] tracking-wider text-gray-400 uppercase">
+                                                    Enrollment
+                                                </p>
+                                                <p className="font-bold text-[#1b1b18]">
+                                                    1,200 Students
+                                                </p>
                                             </div>
                                             <div>
-                                                <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">Exhibition Cycle</p>
-                                                <p className="font-bold text-[#1b1b18]">Termly Showcase</p>
+                                                <p className="mb-1 text-[10px] tracking-wider text-gray-400 uppercase">
+                                                    Exhibition Cycle
+                                                </p>
+                                                <p className="font-bold text-[#1b1b18]">
+                                                    Termly Showcase
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -166,48 +244,90 @@ export default function Welcome({ canRegister = true }: WelcomeProps) {
 
                 {/* Category Grid */}
                 <section className="mx-auto max-w-7xl px-6 pb-24 lg:px-8">
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                        <CategoryCard icon={Palette} label="Visual Arts" color="bg-blue-50 text-blue-600" />
-                        <CategoryCard icon={Microscope} label="STEM Projects" color="bg-orange-50 text-orange-600" />
-                        <CategoryCard icon={Scale} label="Humanities" color="bg-emerald-50 text-emerald-600" />
-                        <CategoryCard icon={Music} label="Performance" color="bg-rose-50 text-rose-600" />
-                        <CategoryCard icon={Dumbbell} label="Athletics" color="bg-sky-50 text-sky-600" />
+                    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+                        <CategoryCard
+                            icon={Palette}
+                            label="Visual Arts"
+                            color="bg-blue-50 text-blue-600"
+                        />
+                        <CategoryCard
+                            icon={Microscope}
+                            label="STEM Projects"
+                            color="bg-orange-50 text-orange-600"
+                        />
+                        <CategoryCard
+                            icon={Scale}
+                            label="Humanities"
+                            color="bg-emerald-50 text-emerald-600"
+                        />
+                        <CategoryCard
+                            icon={Music}
+                            label="Performance"
+                            color="bg-rose-50 text-rose-600"
+                        />
+                        <CategoryCard
+                            icon={Dumbbell}
+                            label="Athletics"
+                            color="bg-sky-50 text-sky-600"
+                        />
                     </div>
                 </section>
 
                 {/* Featured Projects */}
                 <section className="bg-gray-50/50 py-24">
                     <div className="mx-auto max-w-7xl px-6 lg:px-8">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                        <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
                             <div>
-                                <h2 className="font-serif text-4xl text-[#1b1b18] mb-4">Featured Grade 12 Projects</h2>
-                                <p className="text-gray-500">Senior capstone projects representing the pinnacle of our academic year.</p>
+                                <h2 className="mb-4 font-serif text-4xl text-[#1b1b18]">
+                                    Featured Grade 12 Projects
+                                </h2>
+                                <p className="text-gray-500">
+                                    Senior capstone projects representing the
+                                    pinnacle of our academic year.
+                                </p>
                             </div>
-                            <div className="flex gap-2 p-1 bg-white border border-gray-100 rounded-lg">
-                                <Button variant="ghost" size="sm" className="rounded-md h-8 text-xs font-medium">All Grades</Button>
-                                <Button size="sm" className="rounded-md h-8 text-xs font-medium bg-[#003366] hover:bg-[#002244] text-white">Seniors</Button>
-                                <Button variant="ghost" size="sm" className="rounded-md h-8 text-xs font-medium text-gray-400">Award Winners</Button>
+                            <div className="flex gap-2 rounded-lg border border-gray-100 bg-white p-1">
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 rounded-md text-xs font-medium"
+                                >
+                                    All Grades
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    className="h-8 rounded-md bg-[#003366] text-xs font-medium text-white hover:bg-[#002244]"
+                                >
+                                    Seniors
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 rounded-md text-xs font-medium text-gray-400"
+                                >
+                                    Award Winners
+                                </Button>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                            <ProjectCard 
-                                title="EcoFlow: Product Identity" 
-                                category="Design Technology" 
+                        <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                            <ProjectCard
+                                title="EcoFlow: Product Identity"
+                                category="Design Technology"
                                 grade="Grade 12"
                                 image="https://images.unsplash.com/photo-1586717791821-3f44a563de4c?q=80&w=800&auto=format&fit=crop"
                                 likes="Top Merit"
                             />
-                            <ProjectCard 
-                                title="Synthetics of Nature" 
-                                category="Fine Arts Honors" 
+                            <ProjectCard
+                                title="Synthetics of Nature"
+                                category="Fine Arts Honors"
                                 grade="Grade 11"
                                 image="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop"
                                 likes="840"
                             />
-                            <ProjectCard 
-                                title="Nebula: Open-Source Engine" 
-                                category="Computer Science AP" 
+                            <ProjectCard
+                                title="Nebula: Open-Source Engine"
+                                category="Computer Science AP"
                                 grade="Grade 12"
                                 image="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop"
                                 likes="3.4k"
@@ -215,7 +335,10 @@ export default function Welcome({ canRegister = true }: WelcomeProps) {
                         </div>
 
                         <div className="flex justify-center">
-                            <Button variant="outline" className="rounded-xl h-12 px-8 border-gray-200 text-sm font-medium">
+                            <Button
+                                variant="outline"
+                                className="h-12 rounded-xl border-gray-200 px-8 text-sm font-medium"
+                            >
                                 Load More Student Work
                             </Button>
                         </div>
@@ -224,55 +347,64 @@ export default function Welcome({ canRegister = true }: WelcomeProps) {
 
                 {/* Empowering Section */}
                 <section className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                    <div className="grid grid-cols-1 items-center gap-20 lg:grid-cols-2">
                         <div>
-                            <h2 className="font-serif text-5xl text-[#1b1b18] leading-tight mb-12">
+                            <h2 className="mb-12 font-serif text-5xl leading-tight text-[#1b1b18]">
                                 Empowering <br />
-                                <span className="italic font-normal text-[#003366]">St. Andrews Scholars</span>
+                                <span className="font-normal text-[#003366] italic">
+                                    St. Andrews Scholars
+                                </span>
                             </h2>
                             <div className="space-y-10">
-                                <StepItem 
-                                    number="1" 
-                                    title="School ID Authentication" 
-                                    description="Use your official academy credentials to log in. Our ecosystem is restricted to verified students, staff, and alumni." 
+                                <StepItem
+                                    number="1"
+                                    title="School ID Authentication"
+                                    description="Use your official academy credentials to log in. Our ecosystem is restricted to verified students, staff, and alumni."
                                 />
-                                <StepItem 
-                                    number="2" 
-                                    title="Tag Your Department" 
-                                    description="Categorize your work by Grade level and Department (Arts, STEM, Humanities) to ensure it reaches the right faculty evaluators." 
+                                <StepItem
+                                    number="2"
+                                    title="Tag Your Department"
+                                    description="Categorize your work by Grade level and Department (Arts, STEM, Humanities) to ensure it reaches the right faculty evaluators."
                                 />
-                                <StepItem 
-                                    number="3" 
-                                    title="Build Your Academic Legacy" 
-                                    description="Your showcase profile serves as a digital transcript of your creative growth, ready for university applications." 
+                                <StepItem
+                                    number="3"
+                                    title="Build Your Academic Legacy"
+                                    description="Your showcase profile serves as a digital transcript of your creative growth, ready for university applications."
                                 />
                             </div>
                         </div>
                         <div className="relative">
-                            <div className="absolute -inset-4 bg-blue-50/50 rounded-3xl -z-10" />
-                            <Card className="border-none shadow-[0_40px_100px_rgba(0,0,0,0.08)] rounded-2xl overflow-hidden bg-white">
+                            <div className="absolute -inset-4 -z-10 rounded-3xl bg-blue-50/50" />
+                            <Card className="overflow-hidden rounded-2xl border-none bg-white shadow-[0_40px_100px_rgba(0,0,0,0.08)]">
                                 <CardContent className="p-10">
                                     <div className="flex flex-col gap-8">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-3">
-                                                <div className="size-10 rounded-full bg-gray-100 flex items-center justify-center">
+                                                <div className="flex size-10 items-center justify-center rounded-full bg-gray-100">
                                                     <User className="size-5 text-gray-400" />
                                                 </div>
                                                 <div className="flex flex-col">
-                                                    <div className="h-2 w-24 bg-gray-100 rounded-full mb-2" />
-                                                    <div className="h-2 w-16 bg-gray-50 rounded-full" />
+                                                    <div className="mb-2 h-2 w-24 rounded-full bg-gray-100" />
+                                                    <div className="h-2 w-16 rounded-full bg-gray-50" />
                                                 </div>
                                             </div>
-                                            <Badge variant="secondary" className="bg-blue-50 text-blue-600 text-[10px] uppercase tracking-wider border-none">Verified Student</Badge>
+                                            <Badge
+                                                variant="secondary"
+                                                className="border-none bg-blue-50 text-[10px] tracking-wider text-blue-600 uppercase"
+                                            >
+                                                Verified Student
+                                            </Badge>
                                         </div>
-                                        <div className="aspect-video bg-gray-50 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-100">
+                                        <div className="flex aspect-video items-center justify-center rounded-xl border-2 border-dashed border-gray-100 bg-gray-50">
                                             <Plus className="size-8 text-gray-300" />
                                         </div>
                                         <div className="space-y-4">
-                                            <div className="h-3 w-full bg-gray-100 rounded-full" />
-                                            <div className="h-3 w-3/4 bg-gray-50 rounded-full" />
+                                            <div className="h-3 w-full rounded-full bg-gray-100" />
+                                            <div className="h-3 w-3/4 rounded-full bg-gray-50" />
                                         </div>
-                                        <Button className="w-full bg-[#003366] hover:bg-[#002244] h-12 rounded-lg">Submit for Review</Button>
+                                        <Button className="h-12 w-full rounded-lg bg-[#003366] hover:bg-[#002244]">
+                                            Submit for Review
+                                        </Button>
                                     </div>
                                 </CardContent>
                             </Card>
@@ -281,24 +413,48 @@ export default function Welcome({ canRegister = true }: WelcomeProps) {
                 </section>
 
                 {/* Top Students */}
-                <section className="bg-[#050505] py-24 text-white overflow-hidden relative">
-                    <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-blue-900/10 to-transparent" />
-                    <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-                        <div className="flex items-end justify-between mb-16">
+                <section className="relative overflow-hidden bg-[#050505] py-24 text-white">
+                    <div className="absolute top-0 right-0 h-full w-1/3 bg-gradient-to-l from-blue-900/10 to-transparent" />
+                    <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+                        <div className="mb-16 flex items-end justify-between">
                             <div>
-                                <h3 className="text-[10px] font-bold tracking-[0.2em] text-blue-400 uppercase mb-4">Scholarship</h3>
-                                <h2 className="font-serif text-4xl mb-4">Top Students of the Month</h2>
+                                <h3 className="mb-4 text-[10px] font-bold tracking-[0.2em] text-blue-400 uppercase">
+                                    Scholarship
+                                </h3>
+                                <h2 className="mb-4 font-serif text-4xl">
+                                    Top Students of the Month
+                                </h2>
                             </div>
-                            <Button variant="link" className="text-gray-400 hover:text-white group">
-                                View all merit recipients <ChevronRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
+                            <Button
+                                variant="link"
+                                className="group text-gray-400 hover:text-white"
+                            >
+                                View all merit recipients{' '}
+                                <ChevronRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
                             </Button>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <StudentCard name="Alex Rivera" focus="Architectural Design" grade="Grade 12" />
-                            <StudentCard name="Elena Chen" focus="UX Design" grade="Grade 11" />
-                            <StudentCard name="Marcus Thorne" focus="Engineering" grade="Grade 12" />
-                            <StudentCard name="Sarah Jenkins" focus="Creative Writing" grade="Grade 10" />
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+                            <StudentCard
+                                name="Alex Rivera"
+                                focus="Architectural Design"
+                                grade="Grade 12"
+                            />
+                            <StudentCard
+                                name="Elena Chen"
+                                focus="UX Design"
+                                grade="Grade 11"
+                            />
+                            <StudentCard
+                                name="Marcus Thorne"
+                                focus="Engineering"
+                                grade="Grade 12"
+                            />
+                            <StudentCard
+                                name="Sarah Jenkins"
+                                focus="Creative Writing"
+                                grade="Grade 10"
+                            />
                         </div>
                     </div>
                 </section>
@@ -307,24 +463,54 @@ export default function Welcome({ canRegister = true }: WelcomeProps) {
                 <section className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
                     <div className="relative overflow-hidden rounded-[2.5rem] bg-[#003366] px-8 py-24 text-center text-white lg:px-16">
                         {/* Decorative background curves */}
-                        <svg className="absolute inset-0 size-full opacity-10" viewBox="0 0 1440 400" preserveAspectRatio="none">
-                            <path d="M0 200 C 200 100, 400 300, 600 200 C 800 100, 1000 300, 1200 200 C 1400 100, 1600 300, 1800 200" stroke="white" strokeWidth="2" fill="none" />
-                            <path d="M0 250 C 200 150, 400 350, 600 250 C 800 150, 1000 350, 1200 250 C 1400 150, 1600 350, 1800 250" stroke="white" strokeWidth="2" fill="none" />
+                        <svg
+                            className="absolute inset-0 size-full opacity-10"
+                            viewBox="0 0 1440 400"
+                            preserveAspectRatio="none"
+                            aria-hidden="true"
+                            focusable="false"
+                        >
+                            <path
+                                d="M0 200 C 200 100, 400 300, 600 200 C 800 100, 1000 300, 1200 200 C 1400 100, 1600 300, 1800 200"
+                                stroke="white"
+                                strokeWidth="2"
+                                fill="none"
+                            />
+                            <path
+                                d="M0 250 C 200 150, 400 350, 600 250 C 800 150, 1000 350, 1200 250 C 1400 150, 1600 350, 1800 250"
+                                stroke="white"
+                                strokeWidth="2"
+                                fill="none"
+                            />
                         </svg>
 
                         <div className="relative z-10">
                             <h2 className="mb-8 font-serif text-5xl lg:text-6xl">
                                 Ready to join the <br />
-                                <span className="italic">academy archives?</span>
+                                <span className="italic">
+                                    academy archives?
+                                </span>
                             </h2>
-                            <p className="mx-auto mb-12 max-w-2xl text-lg text-blue-100 opacity-80 leading-relaxed font-medium">
-                                Exclusively for St. Andrews Academy students. Log in with your <br /> school ID to begin documenting your journey.
+                            <p className="mx-auto mb-12 max-w-2xl text-lg leading-relaxed font-medium text-blue-100 opacity-80">
+                                Exclusively for St. Andrews Academy students.
+                                Log in with your <br /> school ID to begin
+                                documenting your journey.
                             </p>
                             <div className="flex flex-wrap justify-center gap-4">
-                                <Button asChild size="lg" className="bg-white text-[#003366] hover:bg-blue-50 rounded-xl h-14 px-10 font-bold">
-                                    <Link href={login()}>Login with School ID</Link>
+                                <Button
+                                    asChild
+                                    size="lg"
+                                    className="h-14 rounded-xl bg-white px-10 font-bold text-[#003366] hover:bg-blue-50"
+                                >
+                                    <Link href={login()}>
+                                        Login with School ID
+                                    </Link>
                                 </Button>
-                                <Button variant="outline" size="lg" className="rounded-xl h-14 px-10 border-white/20 bg-white/10 hover:bg-white/20 text-white font-bold backdrop-blur-sm">
+                                <Button
+                                    variant="outline"
+                                    size="lg"
+                                    className="h-14 rounded-xl border-white/20 bg-white/10 px-10 font-bold text-white backdrop-blur-sm hover:bg-white/20"
+                                >
                                     Visitor Access
                                 </Button>
                             </div>
@@ -336,16 +522,20 @@ export default function Welcome({ canRegister = true }: WelcomeProps) {
             {/* Footer */}
             <footer className="border-t border-gray-100 pt-24 pb-12">
                 <div className="mx-auto max-w-7xl px-6 lg:px-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-20">
+                    <div className="mb-20 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
                         <div className="lg:col-span-4">
-                            <div className="flex items-center gap-2 mb-6">
+                            <div className="mb-6 flex items-center gap-2">
                                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#003366] text-white">
                                     <School className="size-5" />
                                 </div>
-                                <span className="text-lg font-bold text-[#003366]">ST. ANDREWS</span>
+                                <span className="text-lg font-bold text-[#003366]">
+                                    ST. ANDREWS
+                                </span>
                             </div>
-                            <p className="text-sm leading-relaxed text-gray-400 max-w-sm mb-8">
-                                The official creative archives of St. Andrews Academy, Edinburgh. Dedicated to showcasing the best of our student body.
+                            <p className="mb-8 max-w-sm text-sm leading-relaxed text-gray-400">
+                                The official creative archives of St. Andrews
+                                Academy, Edinburgh. Dedicated to showcasing the
+                                best of our student body.
                             </p>
                             <div className="flex gap-4">
                                 <SocialIcon icon={Eye} />
@@ -353,43 +543,138 @@ export default function Welcome({ canRegister = true }: WelcomeProps) {
                                 <SocialIcon icon={MapPin} />
                             </div>
                         </div>
-                        
+
                         <div className="lg:col-span-2">
-                            <h4 className="font-bold text-sm mb-6">Departments</h4>
+                            <h4 className="mb-6 text-sm font-bold">
+                                Departments
+                            </h4>
                             <ul className="space-y-4 text-sm text-gray-400">
-                                <li><Link href="#" className="hover:text-blue-600 transition-colors">Visual Arts</Link></li>
-                                <li><Link href="#" className="hover:text-blue-600 transition-colors">Science & Tech</Link></li>
-                                <li><Link href="#" className="hover:text-blue-600 transition-colors">Classical Studies</Link></li>
-                                <li><Link href="#" className="hover:text-blue-600 transition-colors">Music Conservatory</Link></li>
+                                <li>
+                                    <Link
+                                        href="#"
+                                        className="transition-colors hover:text-blue-600"
+                                    >
+                                        Visual Arts
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        href="#"
+                                        className="transition-colors hover:text-blue-600"
+                                    >
+                                        Science & Tech
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        href="#"
+                                        className="transition-colors hover:text-blue-600"
+                                    >
+                                        Classical Studies
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        href="#"
+                                        className="transition-colors hover:text-blue-600"
+                                    >
+                                        Music Conservatory
+                                    </Link>
+                                </li>
                             </ul>
                         </div>
 
                         <div className="lg:col-span-2">
-                            <h4 className="font-bold text-sm mb-6">Academy</h4>
+                            <h4 className="mb-6 text-sm font-bold">Academy</h4>
                             <ul className="space-y-4 text-sm text-gray-400">
-                                <li><Link href="#" className="hover:text-blue-600 transition-colors">Our History</Link></li>
-                                <li><Link href="#" className="hover:text-blue-600 transition-colors">Campus Life</Link></li>
-                                <li><Link href="#" className="hover:text-blue-600 transition-colors">Student Council</Link></li>
-                                <li><Link href="#" className="hover:text-blue-600 transition-colors">Events Calendar</Link></li>
+                                <li>
+                                    <Link
+                                        href="#"
+                                        className="transition-colors hover:text-blue-600"
+                                    >
+                                        Our History
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        href="#"
+                                        className="transition-colors hover:text-blue-600"
+                                    >
+                                        Campus Life
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        href="#"
+                                        className="transition-colors hover:text-blue-600"
+                                    >
+                                        Student Council
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        href="#"
+                                        className="transition-colors hover:text-blue-600"
+                                    >
+                                        Events Calendar
+                                    </Link>
+                                </li>
                             </ul>
                         </div>
 
                         <div className="lg:col-span-4">
-                            <h4 className="font-bold text-sm mb-6">Resources</h4>
+                            <h4 className="mb-6 text-sm font-bold">
+                                Resources
+                            </h4>
                             <ul className="space-y-4 text-sm text-gray-400">
-                                <li><Link href="#" className="hover:text-blue-600 transition-colors">Submission Guide</Link></li>
-                                <li><Link href="#" className="hover:text-blue-600 transition-colors">Teacher Portal</Link></li>
-                                <li><Link href="#" className="hover:text-blue-600 transition-colors">Parent Portal</Link></li>
-                                <li><Link href="#" className="hover:text-blue-600 transition-colors">IT Help Desk</Link></li>
+                                <li>
+                                    <Link
+                                        href="#"
+                                        className="transition-colors hover:text-blue-600"
+                                    >
+                                        Submission Guide
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        href="#"
+                                        className="transition-colors hover:text-blue-600"
+                                    >
+                                        Teacher Portal
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        href="#"
+                                        className="transition-colors hover:text-blue-600"
+                                    >
+                                        Parent Portal
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        href="#"
+                                        className="transition-colors hover:text-blue-600"
+                                    >
+                                        IT Help Desk
+                                    </Link>
+                                </li>
                             </ul>
                         </div>
                     </div>
-                    
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-12 border-t border-gray-100 text-[10px] font-medium text-gray-400 tracking-wider uppercase">
-                        <p>© 2024 St. Andrews Academy. For internal educational use only.</p>
+
+                    <div className="flex flex-col items-center justify-between gap-6 border-t border-gray-100 pt-12 text-[10px] font-medium tracking-wider text-gray-400 uppercase md:flex-row">
+                        <p>
+                            © 2024 St. Andrews Academy. For internal educational
+                            use only.
+                        </p>
                         <div className="flex gap-8">
-                            <Link href="#" className="hover:text-blue-600">Academy Ethics</Link>
-                            <Link href="#" className="hover:text-blue-600">Privacy Policy</Link>
+                            <Link href="#" className="hover:text-blue-600">
+                                Academy Ethics
+                            </Link>
+                            <Link href="#" className="hover:text-blue-600">
+                                Privacy Policy
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -398,32 +683,66 @@ export default function Welcome({ canRegister = true }: WelcomeProps) {
     );
 }
 
-function CategoryCard({ icon: Icon, label, color }: { icon: any, label: string, color: string }) {
+function CategoryCard({
+    icon: Icon,
+    label,
+    color,
+}: {
+    icon: any;
+    label: string;
+    color: string;
+}) {
     return (
-        <div className={`flex flex-col items-center justify-center gap-4 p-8 rounded-2xl transition-all hover:scale-105 cursor-pointer ${color.split(' ')[0]}`}>
+        <div
+            className={`flex cursor-pointer flex-col items-center justify-center gap-4 rounded-2xl p-8 transition-all hover:scale-105 ${color.split(' ')[0]}`}
+        >
             <Icon className={`size-6 ${color.split(' ')[1]}`} />
-            <span className="text-xs font-bold uppercase tracking-widest text-[#1b1b18]">{label}</span>
+            <span className="text-xs font-bold tracking-widest text-[#1b1b18] uppercase">
+                {label}
+            </span>
         </div>
     );
 }
 
-function ProjectCard({ title, category, grade, image, likes }: { title: string, category: string, grade: string, image: string, likes: string }) {
+function ProjectCard({
+    title,
+    category,
+    grade,
+    image,
+    likes,
+}: {
+    title: string;
+    category: string;
+    grade: string;
+    image: string;
+    likes: string;
+}) {
     return (
         <div className="group cursor-pointer">
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6">
-                <img src={image} alt={title} className="size-full object-cover transition-transform duration-500 group-hover:scale-110" />
+            <div className="relative mb-6 aspect-[4/3] overflow-hidden rounded-2xl">
+                <img
+                    src={image}
+                    alt={title}
+                    className="size-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
                 <div className="absolute top-4 right-4">
-                    <Badge className="bg-white/90 backdrop-blur-md text-[#1b1b18] hover:bg-white/90 border-none font-bold text-[10px] py-1 px-3 flex items-center gap-1.5 shadow-sm">
-                        {likes === 'Top Merit' ? <Quote className="size-3 fill-orange-400 text-orange-400" /> : <Heart className="size-3 fill-rose-500 text-rose-500" />}
+                    <Badge className="flex items-center gap-1.5 border-none bg-white/90 px-3 py-1 text-[10px] font-bold text-[#1b1b18] shadow-sm backdrop-blur-md hover:bg-white/90">
+                        {likes === 'Top Merit' ? (
+                            <Quote className="size-3 fill-orange-400 text-orange-400" />
+                        ) : (
+                            <Heart className="size-3 fill-rose-500 text-rose-500" />
+                        )}
                         {likes}
                     </Badge>
                 </div>
             </div>
             <div className="flex flex-col">
-                <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-xl font-medium text-[#1b1b18] group-hover:text-[#003366] transition-colors">{title}</h4>
+                <div className="mb-2 flex items-center justify-between">
+                    <h4 className="text-xl font-medium text-[#1b1b18] transition-colors group-hover:text-[#003366]">
+                        {title}
+                    </h4>
                 </div>
-                <div className="flex items-center gap-2 text-xs font-medium text-gray-400 uppercase tracking-widest">
+                <div className="flex items-center gap-2 text-xs font-medium tracking-widest text-gray-400 uppercase">
                     <span>{grade}</span>
                     <span className="size-1 rounded-full bg-gray-200" />
                     <span>{category}</span>
@@ -433,37 +752,69 @@ function ProjectCard({ title, category, grade, image, likes }: { title: string, 
     );
 }
 
-function StepItem({ number, title, description }: { number: string, title: string, description: string }) {
+function StepItem({
+    number,
+    title,
+    description,
+}: {
+    number: string;
+    title: string;
+    description: string;
+}) {
     return (
         <div className="flex gap-6">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 font-bold text-sm">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-sm font-bold text-blue-600">
                 {number}
             </div>
             <div className="flex flex-col pt-1">
-                <h4 className="text-lg font-bold text-[#1b1b18] mb-2">{title}</h4>
-                <p className="text-gray-400 text-sm leading-relaxed max-w-sm">{description}</p>
+                <h4 className="mb-2 text-lg font-bold text-[#1b1b18]">
+                    {title}
+                </h4>
+                <p className="max-w-sm text-sm leading-relaxed text-gray-400">
+                    {description}
+                </p>
             </div>
         </div>
     );
 }
 
-function StudentCard({ name, focus, grade }: { name: string, focus: string, grade: string }) {
+function StudentCard({
+    name,
+    focus,
+    grade,
+}: {
+    name: string;
+    focus: string;
+    grade: string;
+}) {
     return (
-        <Card className="bg-white/5 border-none rounded-2xl hover:bg-white/10 transition-colors group cursor-pointer">
+        <Card className="group cursor-pointer rounded-2xl border-none bg-white/5 transition-colors hover:bg-white/10">
             <CardContent className="p-6">
                 <div className="flex flex-col gap-6">
-                    <Avatar className="size-16 rounded-2xl border border-white/10 group-hover:border-blue-500/50 transition-colors">
-                        <AvatarImage src={`https://i.pravatar.cc/150?u=${name}`} />
+                    <Avatar className="size-16 rounded-2xl border border-white/10 transition-colors group-hover:border-blue-500/50">
+                        <AvatarImage
+                            src={`https://i.pravatar.cc/150?u=${name}`}
+                        />
                         <AvatarFallback>{name[0]}</AvatarFallback>
                     </Avatar>
                     <div>
-                        <h4 className="font-bold text-lg mb-1">{name}</h4>
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-widest mb-4">
+                        <h4 className="mb-1 text-lg font-bold">{name}</h4>
+                        <p className="mb-4 text-xs font-medium tracking-widest text-gray-500 uppercase">
                             {grade} <span className="mx-1">•</span> {focus}
                         </p>
                         <div className="flex flex-wrap gap-2">
-                            <Badge variant="outline" className="bg-white/5 border-none text-[8px] uppercase tracking-wider text-gray-400 px-2">Dean's List</Badge>
-                            <Badge variant="outline" className="bg-blue-500/10 border-none text-[8px] uppercase tracking-wider text-blue-400 px-2">Art Merit</Badge>
+                            <Badge
+                                variant="outline"
+                                className="border-none bg-white/5 px-2 text-[8px] tracking-wider text-gray-400 uppercase"
+                            >
+                                Dean's List
+                            </Badge>
+                            <Badge
+                                variant="outline"
+                                className="border-none bg-blue-500/10 px-2 text-[8px] tracking-wider text-blue-400 uppercase"
+                            >
+                                Art Merit
+                            </Badge>
                         </div>
                     </div>
                 </div>
@@ -474,7 +825,7 @@ function StudentCard({ name, focus, grade }: { name: string, focus: string, grad
 
 function SocialIcon({ icon: Icon }: { icon: any }) {
     return (
-        <div className="size-8 rounded-full border border-gray-100 flex items-center justify-center text-gray-300 hover:text-[#003366] hover:border-blue-100 hover:bg-blue-50 cursor-pointer transition-all">
+        <div className="flex size-8 cursor-pointer items-center justify-center rounded-full border border-gray-100 text-gray-300 transition-all hover:border-blue-100 hover:bg-blue-50 hover:text-[#003366]">
             <Icon className="size-4" />
         </div>
     );

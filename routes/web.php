@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Dashboard\UserController;
+use App\Http\Controllers\Dashboard\WebSettingController;
+use App\Http\Controllers\PublicPageController;
 use App\Http\Controllers\Student\HomeController;
 use App\Http\Controllers\Student\KaryaController;
 use App\Http\Controllers\Student\ProfileController;
@@ -12,6 +14,9 @@ Route::inertia('/', 'welcome', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
 
+Route::get('tentang', [PublicPageController::class, 'about'])->name('about');
+Route::get('daftar-siswa', [PublicPageController::class, 'studentDirectory'])->name('student-directory');
+
 Route::middleware(['auth', 'verified', 'role:GURU'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 
@@ -21,6 +26,9 @@ Route::middleware(['auth', 'verified', 'role:GURU'])->group(function () {
     Route::get('dashboard/users/{user}/edit', [UserController::class, 'edit'])->name('dashboard.users.edit');
     Route::put('dashboard/users/{user}', [UserController::class, 'update'])->name('dashboard.users.update');
     Route::delete('dashboard/users/{user}', [UserController::class, 'destroy'])->name('dashboard.users.destroy');
+
+    Route::get('dashboard/web-settings', [WebSettingController::class, 'edit'])->name('dashboard.web-settings.edit');
+    Route::patch('dashboard/web-settings', [WebSettingController::class, 'update'])->name('dashboard.web-settings.update');
 });
 
 Route::middleware(['auth', 'verified', 'role:SISWA'])->group(function () {

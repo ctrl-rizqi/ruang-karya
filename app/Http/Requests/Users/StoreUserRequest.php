@@ -25,6 +25,8 @@ class StoreUserRequest extends FormRequest
             'birth_date' => ['nullable', 'date'],
             'address' => ['nullable', 'string', 'max:1000'],
             'social_link' => ['nullable', 'url', 'max:255'],
+            'student_class' => ['nullable', 'string', 'max:100'],
+            'major' => ['nullable', 'string', 'max:100'],
         ];
     }
 }

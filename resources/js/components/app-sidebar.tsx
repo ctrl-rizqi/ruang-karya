@@ -54,6 +54,12 @@ export function AppSidebar() {
                   icon: Users,
                   matchSubpaths: true,
               },
+              {
+                  title: 'Web Settings',
+                  href: '/dashboard/web-settings',
+                  icon: UserCircle2,
+                  matchSubpaths: true,
+              },
           ]
         : [
               {

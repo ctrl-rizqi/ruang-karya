@@ -32,6 +32,8 @@ class UserFactory extends Factory
             'birth_date' => null,
             'address' => null,
             'social_link' => null,
+            'student_class' => fake()->randomElement(['X', 'XI', 'XII']),
+            'major' => fake()->randomElement(['RPL', 'TKJ', 'MM']),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
@@ -67,6 +69,8 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'nisn' => null,
+            'student_class' => null,
+            'major' => null,
             'role' => UserRole::Guru,
         ]);
     }

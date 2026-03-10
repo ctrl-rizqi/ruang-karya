@@ -28,6 +28,8 @@ class User extends Authenticatable
         'birth_date',
         'address',
         'social_link',
+        'student_class',
+        'major',
         'password',
     ];
 

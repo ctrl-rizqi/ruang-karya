@@ -12,6 +12,8 @@ type UserRow = {
     nisn: string;
     name: string;
     birth_date: string | null;
+    student_class: string | null;
+    major: string | null;
     address: string | null;
     social_link: string | null;
 };
@@ -29,6 +31,8 @@ type UserIndexProps = {
         name: string;
         nisn: string;
         role: '' | 'GURU' | 'SISWA';
+        student_class: string;
+        major: string;
     };
     roleOptions: Array<'GURU' | 'SISWA'>;
 };
@@ -53,6 +57,8 @@ export default function UserIndex({
         name: filters.name ?? '',
         nisn: filters.nisn ?? '',
         role: filters.role ?? '',
+        student_class: filters.student_class ?? '',
+        major: filters.major ?? '',
     });
 
     const applyFilters = (event: FormEvent<HTMLFormElement>) => {
@@ -70,6 +76,8 @@ export default function UserIndex({
             name: '',
             nisn: '',
             role: '',
+            student_class: '',
+            major: '',
         });
 
         router.get(
@@ -118,7 +126,7 @@ export default function UserIndex({
 
                 <section className="rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border">
                     <form
-                        className="mb-4 grid gap-3 md:grid-cols-4"
+                        className="mb-4 grid gap-3 md:grid-cols-6"
                         onSubmit={applyFilters}
                     >
                         <Input
@@ -152,6 +160,23 @@ export default function UserIndex({
                                 </option>
                             ))}
                         </select>
+                        <Input
+                            placeholder="Filter Kelas"
+                            value={filterForm.data.student_class}
+                            onChange={(event) =>
+                                filterForm.setData(
+                                    'student_class',
+                                    event.target.value,
+                                )
+                            }
+                        />
+                        <Input
+                            placeholder="Filter Jurusan"
+                            value={filterForm.data.major}
+                            onChange={(event) =>
+                                filterForm.setData('major', event.target.value)
+                            }
+                        />
                         <div className="flex gap-2">
                             <Button
                                 disabled={filterForm.processing}
@@ -186,6 +211,12 @@ export default function UserIndex({
                                     </th>
                                     <th className="px-3 py-2 text-left font-medium">
                                         Tanggal Lahir
+                                    </th>
+                                    <th className="px-3 py-2 text-left font-medium">
+                                        Kelas
+                                    </th>
+                                    <th className="px-3 py-2 text-left font-medium">
+                                        Jurusan
                                     </th>
                                     <th className="px-3 py-2 text-left font-medium">
                                         Alamat
@@ -223,6 +254,12 @@ export default function UserIndex({
                                         </td>
                                         <td className="px-3 py-2">
                                             {user.birth_date ?? '-'}
+                                        </td>
+                                        <td className="px-3 py-2">
+                                            {user.student_class ?? '-'}
+                                        </td>
+                                        <td className="px-3 py-2">
+                                            {user.major ?? '-'}
                                         </td>
                                         <td className="px-3 py-2">
                                             {user.address ?? '-'}

@@ -18,6 +18,8 @@ class UserController extends Controller
     {
         $name = trim((string) $request->query('name', ''));
         $nisn = trim((string) $request->query('nisn', ''));
+        $studentClass = trim((string) $request->query('student_class', ''));
+        $major = trim((string) $request->query('major', ''));
         $roleOptions = UserRole::authenticationValues();
         $role = strtoupper(trim((string) $request->query('role', '')));
 
@@ -29,6 +31,8 @@ class UserController extends Controller
             ->whereIn('role', [UserRole::Guru, UserRole::Siswa])
             ->when($name !== '', fn ($query) => $query->where('name', 'like', "%{$name}%"))
             ->when($nisn !== '', fn ($query) => $query->where('nisn', 'like', "%{$nisn}%"))
+            ->when($studentClass !== '', fn ($query) => $query->where('student_class', 'like', "%{$studentClass}%"))
+            ->when($major !== '', fn ($query) => $query->where('major', 'like', "%{$major}%"))
             ->when($role !== '', fn ($query) => $query->where('role', $role))
             ->orderBy('name')
             ->paginate(10)
@@ -41,6 +45,8 @@ class UserController extends Controller
                 'name' => $name,
                 'nisn' => $nisn,
                 'role' => $role,
+                'student_class' => $studentClass,
+                'major' => $major,
             ],
             'roleOptions' => $roleOptions,
         ]);
@@ -69,6 +75,8 @@ class UserController extends Controller
             'birth_date' => $attributes['birth_date'] ?? null,
             'address' => $attributes['address'] ?? null,
             'social_link' => $attributes['social_link'] ?? null,
+            'student_class' => $attributes['student_class'] ?? null,
+            'major' => $attributes['major'] ?? null,
         ]);
 
         return to_route('dashboard.users.index')->with('status', 'user-created');
@@ -129,6 +137,8 @@ class UserController extends Controller
             'birth_date' => $user->birth_date?->toDateString(),
             'address' => $user->address,
             'social_link' => $user->social_link,
+            'student_class' => $user->student_class,
+            'major' => $user->major,
         ];
     }
 
