@@ -9,7 +9,7 @@ import {
     Save
 } from 'lucide-react';
 import { useState  } from 'react';
-import type {FormEvent} from 'react';
+import type {SubmitEvent} from 'react';
 import InputError from '@/components/input-error';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -53,7 +53,7 @@ export default function MajorIndex({ majors, filters, status }: Props) {
         search: filters.search ?? '',
     });
 
-    const handleSearch = (e: FormEvent) => {
+    const handleSearch = (e: SubmitEvent) => {
         e.preventDefault();
         searchForm.get('/dashboard/majors', {
             preserveState: true,
@@ -61,7 +61,7 @@ export default function MajorIndex({ majors, filters, status }: Props) {
         });
     };
 
-    const handleCreate = (e: FormEvent) => {
+    const handleCreate = (e: SubmitEvent) => {
         e.preventDefault();
         createForm.post('/dashboard/majors', {
             onSuccess: () => createForm.reset(),
@@ -81,8 +81,7 @@ export default function MajorIndex({ majors, filters, status }: Props) {
         editForm.reset();
     };
 
-    const handleUpdate = (e: FormEvent, id: number) => {
-        e.preventDefault();
+    const handleUpdate = (id: number) => {
         editForm.put(`/dashboard/majors/${id}`, {
             onSuccess: () => setEditingId(null),
         });
@@ -118,29 +117,29 @@ export default function MajorIndex({ majors, filters, status }: Props) {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     {/* Create Form */}
                     <div className="lg:col-span-4">
-                        <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-[2rem] sticky top-24">
+                        <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-2xl sticky top-24">
                             <CardContent className="p-8">
                                 <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
                                     <Plus className="size-5 text-indigo-600" /> Tambah Jurusan
                                 </h2>
                                 <form onSubmit={handleCreate} className="space-y-4">
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 flex flex-col gap-1.2">
                                         <Label htmlFor="name" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Nama Jurusan</Label>
                                         <Input 
                                             id="name"
                                             placeholder="Rekayasa Perangkat Lunak"
-                                            className="h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white"
+                                            className="rounded-xl bg-gray-50/50 border-transparent focus:bg-white dark:bg-accent/50 dark:focus:bg-accent"
                                             value={createForm.data.name}
                                             onChange={e => createForm.setData('name', e.target.value)}
                                         />
                                         <InputError message={createForm.errors.name} />
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 flex flex-col gap-1.2">
                                         <Label htmlFor="code" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Kode Jurusan</Label>
                                         <Input 
                                             id="code"
                                             placeholder="RPL"
-                                            className="h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white"
+                                            className="rounded-xl bg-gray-50/50 border-transparent focus:bg-white dark:bg-accent/50 dark:focus:bg-accent"
                                             value={createForm.data.code}
                                             onChange={e => createForm.setData('code', e.target.value)}
                                         />
@@ -148,7 +147,7 @@ export default function MajorIndex({ majors, filters, status }: Props) {
                                     </div>
                                     <Button 
                                         disabled={createForm.processing}
-                                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl h-12 shadow-lg shadow-indigo-500/20 font-bold uppercase tracking-widest text-[10px]"
+                                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-lg shadow-indigo-500/20 font-bold uppercase tracking-widest text-[10px]"
                                     >
                                         {createForm.processing ? 'Proses...' : 'Simpan Jurusan'}
                                     </Button>
@@ -173,7 +172,7 @@ export default function MajorIndex({ majors, filters, status }: Props) {
                             </div>
                         </div>
 
-                        <div className="bg-white dark:bg-[#161615] rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-sm overflow-hidden">
+                        <div className="bg-white dark:bg-[#161615] rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm overflow-hidden">
                             <table className="w-full text-sm">
                                 <thead>
                                     <tr className="border-b border-gray-50 dark:border-white/5 bg-gray-50/30 dark:bg-white/5">
@@ -223,7 +222,7 @@ export default function MajorIndex({ majors, filters, status }: Props) {
                                                             <Button 
                                                                 size="sm" 
                                                                 className="h-8 rounded-lg bg-indigo-600 hover:bg-indigo-700"
-                                                                onClick={(e) => handleUpdate(e, major.id)}
+                                                                onClick={() => handleUpdate(major.id)}
                                                                 disabled={editForm.processing}
                                                             >
                                                                 <Save className="size-3 mr-1" /> Save

@@ -111,18 +111,18 @@ export default function ClassroomIndex({ classrooms, filters, status }: Props) {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     {/* Create Form */}
                     <div className="lg:col-span-4">
-                        <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-4xl sticky top-24">
+                        <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-2xl sticky top-24">
                             <CardContent className="p-8">
                                 <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
                                     <Plus className="size-5 text-blue-600" /> Tambah Kelas
                                 </h2>
                                 <form onSubmit={handleCreate} className="space-y-4">
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 flex flex-col gap-1.2">
                                         <Label htmlFor="name" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Nama Kelas</Label>
                                         <Input 
                                             id="name"
                                             placeholder="Contoh: X RPL 1"
-                                            className="h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white"
+                                            className="rounded-xl bg-gray-50/50 border-transparent focus:bg-white dark:bg-accent/50 dark:focus:bg-accent"
                                             value={createForm.data.name}
                                             onChange={e => createForm.setData('name', e.target.value)}
                                         />
@@ -130,7 +130,7 @@ export default function ClassroomIndex({ classrooms, filters, status }: Props) {
                                     </div>
                                     <Button 
                                         disabled={createForm.processing}
-                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-12 shadow-lg shadow-blue-500/20 font-bold uppercase tracking-widest text-[10px]"
+                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-lg shadow-blue-500/20 font-bold uppercase tracking-widest text-[10px]"
                                     >
                                         {createForm.processing ? 'Proses...' : 'Simpan Kelas'}
                                     </Button>
@@ -155,7 +155,7 @@ export default function ClassroomIndex({ classrooms, filters, status }: Props) {
                             </div>
                         </div>
 
-                        <div className="bg-white dark:bg-[#161615] rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-sm overflow-hidden">
+                        <div className="bg-white dark:bg-[#161615] rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm overflow-hidden">
                             <table className="w-full text-sm">
                                 <thead>
                                     <tr className="border-b border-gray-50 dark:border-white/5 bg-gray-50/30 dark:bg-white/5">

@@ -1,9 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import StudentLayout from '@/layouts/student-layout';
-import { cn } from '@/lib/utils';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { 
     Calendar, 
     Edit, 
@@ -19,6 +14,11 @@ import {
     Trophy 
 } from 'lucide-react';
 import { useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import StudentLayout from '@/layouts/student-layout';
+import { cn } from '@/lib/utils';
 
 type Karya = {
     id: number;
@@ -43,7 +43,6 @@ type StudentHomeProps = {
 };
 
 export default function StudentHome({ karyaCount, recentKarya, student }: StudentHomeProps) {
-    const { auth } = usePage().props;
     const [activeTab, setActiveTab] = useState<'karya' | 'about'>('karya');
 
     const initials = student.name
@@ -60,7 +59,7 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
                 {/* Profile Header */}
                 <div className="relative overflow-hidden bg-white dark:bg-[#0a0a0a] rounded-b-3xl shadow-sm border-x border-b border-gray-100 dark:border-white/5">
                     {/* Cover Photo */}
-                    <div className="h-48 w-full bg-linear-to-r from-blue-600 via-indigo-500 to-purple-600 relative">
+                    <div className="h-2 w-full bg-linear-to-r from-blue-600 via-indigo-500 to-purple-600 relative">
                         <div className="absolute inset-0 bg-black/10" />
                         <div className="absolute top-4 right-4 flex gap-2">
                             <Button size="sm" variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-none backdrop-blur-md rounded-full">
@@ -71,7 +70,7 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
 
                     {/* Profile Info Section */}
                     <div className="px-6 pb-6">
-                        <div className="relative flex flex-col md:flex-row md:items-end justify-between -mt-12 md:-mt-16 gap-6">
+                        <div className="relative flex flex-col md:flex-row md:items-end justify-between mt-3 gap-6">
                             <div className="flex flex-col md:flex-row items-start md:items-end gap-4">
                                 <div className="relative group">
                                     <Avatar className="size-24 md:size-32 border-4 border-white dark:border-[#0a0a0a] shadow-xl rounded-2xl transition-transform group-hover:scale-105 duration-300">

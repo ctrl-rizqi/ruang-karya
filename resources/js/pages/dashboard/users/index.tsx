@@ -14,6 +14,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
@@ -117,7 +124,7 @@ export default function StudentUsersIndex({
                         <h1 className="text-3xl font-black tracking-tight">Manajemen Users</h1>
                         <p className="text-muted-foreground mt-1 text-sm font-medium">Kelola akses guru dan data dasar siswa sekolah.</p>
                     </div>
-                    <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-12 px-6 shadow-lg shadow-blue-500/20">
+                    <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 shadow-lg shadow-blue-500/20">
                         <Link href="/dashboard/users/create">
                             <Plus className="mr-2 size-5" /> Tambah User Baru
                         </Link>
@@ -125,7 +132,7 @@ export default function StudentUsersIndex({
                 </div>
 
                 {/* Filters */}
-                <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-4xl mb-8 overflow-hidden">
+                <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-2xl mb-8 overflow-hidden">
                     <CardContent className="p-8">
                         <form onSubmit={submit} className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
@@ -133,7 +140,7 @@ export default function StudentUsersIndex({
                                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                                     <Input
                                         placeholder="Cari nama..."
-                                        className="pl-10 h-11 rounded-xl bg-gray-50/50 border-transparent focus:bg-white"
+                                        className="pl-10 rounded-xl bg-gray-50/50 border-transparent focus:bg-white dark:bg-accent/50 dark:focus:bg-accent"
                                         value={filterForm.data.name}
                                         onChange={(e) => filterForm.setData('name', e.target.value)}
                                     />
@@ -142,25 +149,29 @@ export default function StudentUsersIndex({
                                     <GraduationCap className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                                     <Input
                                         placeholder="NISN"
-                                        className="pl-10 h-11 rounded-xl bg-gray-50/50 border-transparent focus:bg-white"
+                                        className="pl-10 rounded-xl bg-gray-50/50 border-transparent focus:bg-white dark:bg-accent/50 dark:focus:bg-accent"
                                         value={filterForm.data.nisn}
                                         onChange={(e) => filterForm.setData('nisn', e.target.value)}
                                     />
                                 </div>
                                 <div className="md:col-span-3">
-                                    <select
-                                        className="flex h-11 w-full rounded-xl border-none bg-gray-50/50 px-3 py-1 text-sm focus:bg-white outline-none transition-all"
-                                        value={filterForm.data.role}
-                                        onChange={(e) => filterForm.setData('role', e.target.value)}
+                                    <Select
+                                        value={filterForm.data.role || 'all'}
+                                        onValueChange={(value) => filterForm.setData('role', value === 'all' ? '' : value)}
                                     >
-                                        <option value="">Semua Role</option>
-                                        {roleOptions.map((role) => (
-                                            <option key={role} value={role}>{role}</option>
-                                        ))}
-                                    </select>
+                                        <SelectTrigger className="h-11 w-full rounded-xl border-transparent bg-gray-50/50 px-3 text-sm focus:bg-white outline-none transition-all dark:bg-accent/50 dark:focus:bg-accent border-none shadow-none">
+                                            <SelectValue placeholder="Semua Role" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all">Semua Role</SelectItem>
+                                            {roleOptions.map((role) => (
+                                                <SelectItem key={role} value={role}>{role}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                                 <div className="md:col-span-2">
-                                    <Button type="submit" variant="secondary" className="w-full h-11 rounded-xl font-bold uppercase tracking-widest text-[10px]">
+                                    <Button type="submit" variant="secondary" className="w-full rounded-xl font-bold uppercase tracking-widest text-[10px]">
                                         <Filter className="mr-2 size-3" /> Filter
                                     </Button>
                                 </div>
@@ -168,32 +179,40 @@ export default function StudentUsersIndex({
 
                             <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-gray-50 dark:border-white/5">
                                 <div className="flex items-center gap-2">
-                                    <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Kelas:</Label>
-                                    <select
-                                        className="h-9 rounded-lg border-none bg-gray-50/50 px-3 text-xs focus:bg-white outline-none"
-                                        value={filterForm.data.classroom_id}
-                                        onChange={(e) => filterForm.setData('classroom_id', e.target.value)}
+                                    <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground shrink-0">Kelas:</Label>
+                                    <Select
+                                        value={filterForm.data.classroom_id || 'all'}
+                                        onValueChange={(value) => filterForm.setData('classroom_id', value === 'all' ? '' : value)}
                                     >
-                                        <option value="">Semua Kelas</option>
-                                        {classrooms.map((c) => (
-                                            <option key={c.id} value={c.id}>{c.name}</option>
-                                        ))}
-                                    </select>
+                                        <SelectTrigger className="h-9 rounded-lg border-none bg-gray-50/50 px-3 text-xs focus:bg-white outline-none shadow-none min-w-35">
+                                            <SelectValue placeholder="Semua Kelas" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all">Semua Kelas</SelectItem>
+                                            {classrooms.map((c) => (
+                                                <SelectItem key={c.id} value={c.id.toString()}>{c.name}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Jurusan:</Label>
-                                    <select
-                                        className="h-9 rounded-lg border-none bg-gray-50/50 px-3 text-xs focus:bg-white outline-none"
-                                        value={filterForm.data.major_id}
-                                        onChange={(e) => filterForm.setData('major_id', e.target.value)}
+                                    <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground shrink-0">Jurusan:</Label>
+                                    <Select
+                                        value={filterForm.data.major_id || 'all'}
+                                        onValueChange={(value) => filterForm.setData('major_id', value === 'all' ? '' : value)}
                                     >
-                                        <option value="">Semua Jurusan</option>
-                                        {majors.map((m) => (
-                                            <option key={m.id} value={m.id}>{m.name}</option>
-                                        ))}
-                                    </select>
+                                        <SelectTrigger className="h-9 rounded-lg border-none bg-gray-50/50 px-3 text-xs focus:bg-white outline-none shadow-none min-w-35">
+                                            <SelectValue placeholder="Semua Jurusan" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all">Semua Jurusan</SelectItem>
+                                            {majors.map((m) => (
+                                                <SelectItem key={m.id} value={m.id.toString()}>{m.name}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
-                                <Button type="button" variant="ghost" onClick={reset} className="ml-auto text-[10px] font-bold uppercase tracking-widest text-rose-500 hover:text-rose-600 rounded-lg">
+                                <Button type="button" variant="destructive" onClick={reset} className="ml-auto text-[10px] font-bold uppercase tracking-widest rounded-lg">
                                     <X className="mr-2 size-3" /> Reset Filter
                                 </Button>
                             </div>
@@ -202,7 +221,7 @@ export default function StudentUsersIndex({
                 </Card>
 
                 {/* Table */}
-                <div className="bg-white dark:bg-[#161615] rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-sm overflow-hidden">
+                <div className="bg-white dark:bg-[#161615] rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>

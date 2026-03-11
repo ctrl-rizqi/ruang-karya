@@ -1,6 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
 import { Globe, Image as ImageIcon, Save, Sparkles, Upload } from 'lucide-react';
-import type { FormEvent } from 'react';
+import type { SubmitEvent } from 'react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -40,7 +40,7 @@ export default function WebSettings({ webSetting, status }: WebSettingProps) {
         _method: 'PATCH', // Spoofing for multipart/form-data with PATCH
     });
 
-    const submit = (event: FormEvent<HTMLFormElement>) => {
+    const submit = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault();
         
         // Use post with _method spoofing because PATCH doesn't support files in some environments/configurations
@@ -74,7 +74,7 @@ export default function WebSettings({ webSetting, status }: WebSettingProps) {
 
                 <form onSubmit={submit} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     <div className="lg:col-span-8 space-y-8">
-                        <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-[2.5rem]">
+                        <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-2xl">
                             <CardHeader className="px-8 pt-8">
                                 <CardTitle className="text-lg font-bold flex items-center gap-2">
                                     <Sparkles className="size-5 text-blue-600" /> Identitas Dasar
@@ -82,11 +82,11 @@ export default function WebSettings({ webSetting, status }: WebSettingProps) {
                                 <CardDescription>Tentukan judul dan tagline yang akan muncul di seluruh halaman.</CardDescription>
                             </CardHeader>
                             <CardContent className="p-8 pt-4 space-y-6">
-                                <div className="space-y-2">
+                                <div className="space-y-2 flex flex-col gap-1.2">
                                     <Label htmlFor="site_title" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Judul Website</Label>
                                     <Input
                                         id="site_title"
-                                        className="h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all font-bold"
+                                        className="rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all font-bold dark:bg-accent/50 dark:focus:bg-accent"
                                         placeholder="Contoh: Ruang Karya SMA 1"
                                         value={data.site_title}
                                         onChange={(e) => setData('site_title', e.target.value)}
@@ -94,11 +94,11 @@ export default function WebSettings({ webSetting, status }: WebSettingProps) {
                                     <InputError message={errors.site_title} />
                                 </div>
 
-                                <div className="space-y-2">
+                                <div className="space-y-2 flex flex-col gap-1.2">
                                     <Label htmlFor="site_tagline" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Tagline / Slogan</Label>
                                     <Input
                                         id="site_tagline"
-                                        className="h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all"
+                                        className="rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent"
                                         placeholder="Contoh: Wadah Kreativitas Tanpa Batas"
                                         value={data.site_tagline}
                                         onChange={(e) => setData('site_tagline', e.target.value)}
@@ -106,11 +106,11 @@ export default function WebSettings({ webSetting, status }: WebSettingProps) {
                                     <InputError message={errors.site_tagline} />
                                 </div>
 
-                                <div className="space-y-2">
+                                <div className="space-y-2 flex flex-col gap-1.2">
                                     <Label htmlFor="site_description" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Deskripsi Global</Label>
                                     <textarea
                                         id="site_description"
-                                        className="min-h-32 w-full rounded-2xl bg-gray-50/50 border-none focus:bg-white transition-all p-4 text-sm resize-none leading-relaxed"
+                                        className="min-h-32 w-full rounded-2xl bg-gray-50/50 border-none focus:bg-white transition-all p-4 text-sm resize-none leading-relaxed dark:bg-accent/50 dark:focus:bg-accent"
                                         placeholder="Jelaskan secara singkat tentang platform ini..."
                                         value={data.site_description}
                                         onChange={(e) => setData('site_description', e.target.value)}
@@ -124,7 +124,7 @@ export default function WebSettings({ webSetting, status }: WebSettingProps) {
                             <Button 
                                 disabled={processing} 
                                 type="submit"
-                                className="bg-blue-600 hover:bg-blue-700 text-white rounded-2xl h-14 px-10 shadow-xl shadow-blue-500/20 transition-all hover:scale-105 active:scale-95"
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-10 shadow-xl shadow-blue-500/20 transition-all hover:scale-105 active:scale-95"
                             >
                                 {processing ? 'Menyimpan...' : (
                                     <span className="flex items-center gap-2 uppercase tracking-widest text-xs font-bold">
@@ -136,7 +136,7 @@ export default function WebSettings({ webSetting, status }: WebSettingProps) {
                     </div>
 
                     <div className="lg:col-span-4 space-y-8">
-                        <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-[2.5rem] overflow-hidden">
+                        <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-2xl overflow-hidden">
                             <CardHeader className="p-8 pb-4">
                                 <CardTitle className="text-sm font-bold uppercase tracking-widest flex items-center gap-2">
                                     <ImageIcon className="size-4 text-blue-600" /> Logo Situs
@@ -145,14 +145,14 @@ export default function WebSettings({ webSetting, status }: WebSettingProps) {
                             <CardContent className="p-8 pt-0 space-y-6">
                                 <div className="flex flex-col items-center gap-6">
                                     <div className="relative group">
-                                        <div className="size-32 rounded-[2rem] bg-gray-50 dark:bg-white/5 border-2 border-dashed border-gray-200 dark:border-white/10 flex items-center justify-center overflow-hidden">
+                                        <div className="size-32 rounded-2xl bg-gray-50 dark:bg-white/5 border-2 border-dashed border-gray-200 dark:border-white/10 flex items-center justify-center overflow-hidden">
                                             {webSetting.site_logo_url ? (
                                                 <img src={webSetting.site_logo_url} alt="Logo Preview" className="size-full object-contain p-4" />
                                             ) : (
                                                 <ImageIcon className="size-10 text-gray-300" />
                                             )}
                                         </div>
-                                        <div className="absolute inset-0 bg-blue-600/80 text-white flex items-center justify-center rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                        <div className="absolute inset-0 bg-blue-600/80 text-white flex items-center justify-center rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                                             <Upload className="size-6" />
                                         </div>
                                         <input 
@@ -171,7 +171,7 @@ export default function WebSettings({ webSetting, status }: WebSettingProps) {
                             </CardContent>
                         </Card>
 
-                        <div className="p-8 bg-blue-600 rounded-[2.5rem] text-white shadow-xl shadow-blue-500/20">
+                        <div className="p-8 bg-blue-600 rounded-2xl text-white shadow-xl shadow-blue-500/20">
                             <h3 className="font-bold text-sm uppercase tracking-widest mb-3 flex items-center gap-2">
                                 <Sparkles className="size-4" /> Tips Branding
                             </h3>

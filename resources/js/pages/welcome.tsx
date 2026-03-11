@@ -20,13 +20,23 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { dashboard, login, register } from '@/routes';
+import student from '@/routes/student';
 
-export default function Welcome() {
+interface WelcomeProps {
+    webSetting: {
+        site_title: string;
+        site_logo_url: string | null;
+        site_tagline: string | null;
+        site_description: string | null;
+    };
+}
+
+export default function Welcome({ webSetting }: WelcomeProps) {
     const { auth } = usePage().props;
 
     return (
         <div className="min-h-screen bg-[#FDFDFC] font-sans text-[#1b1b18] selection:bg-blue-100 selection:text-blue-900">
-            <Head title="St. Andrews Academy Showcase">
+            <Head title={`${webSetting.site_title} - ${webSetting.site_tagline}`}>
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link
                     href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600|instrument-serif:400,400i"
@@ -38,15 +48,19 @@ export default function Welcome() {
             <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/80 backdrop-blur-md">
                 <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
                     <div className="flex items-center gap-2">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#003366] text-white">
-                            <School className="size-6" />
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg overflow-hidden">
+                            {webSetting.site_logo_url ? (
+                                <img src={"/storage/"+ webSetting.site_logo_url} alt={webSetting.site_title} className="size-full object-cover" />
+                            ) : (
+                                <School className="size-6" />
+                            )}
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-lg leading-none font-bold tracking-tight text-[#003366]">
-                                ST. ANDREWS
+                            <span className="text-lg leading-none font-bold tracking-tight text-[#003366] uppercase">
+                                {webSetting.site_title}
                             </span>
                             <span className="text-[10px] font-medium tracking-[0.2em] text-gray-400 uppercase">
-                                Academy Showcase
+                                {webSetting.site_tagline}
                             </span>
                         </div>
                     </div>
@@ -81,7 +95,17 @@ export default function Welcome() {
                     <div className="flex items-center gap-4">
                         {auth.user ? (
                             <Button asChild variant="ghost" size="sm">
-                                <Link href={dashboard()}>Dashboard</Link>
+                                <Link
+                                    href={
+                                        auth.user.role === 'SISWA'
+                                            ? student.home()
+                                            : dashboard()
+                                    }
+                                >
+                                    {auth.user.role === 'SISWA'
+                                        ? 'Beranda Siswa'
+                                        : 'Dashboard'}
+                                </Link>
                             </Button>
                         ) : (
                             <Link
@@ -95,7 +119,15 @@ export default function Welcome() {
                             asChild
                             className="rounded-lg bg-[#1b1b18] px-6 text-white hover:bg-black"
                         >
-                            <Link href={auth.user ? dashboard() : register()}>
+                            <Link
+                                href={
+                                    auth.user
+                                        ? auth.user.role === 'SISWA'
+                                            ? student.home()
+                                            : dashboard()
+                                        : register()
+                                }
+                            >
                                 {auth.user
                                     ? 'Submit Portfolio'
                                     : 'Join Academy'}{' '}
@@ -113,21 +145,17 @@ export default function Welcome() {
                         <div className="lg:col-span-8">
                             <div className="mb-6 flex items-center gap-2 text-sm font-medium text-blue-600">
                                 <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
-                                Official Student Gallery • Class of 2024
+                                Official Student Gallery • {webSetting.site_title}
                             </div>
                             <h1 className="mb-8 font-serif text-6xl leading-[1.1] text-[#1b1b18] lg:text-7xl">
                                 The Future of <br />
                                 <span className="font-normal text-[#003366] italic">
-                                    St. Andrews
+                                    {webSetting.site_title}
                                 </span>{' '}
                                 Excellence
                             </h1>
                             <p className="mb-10 max-w-xl text-lg leading-relaxed text-gray-500">
-                                An exclusive digital archives showcasing the
-                                innovative works of St. Andrews Academy
-                                students. From Grade 9 foundations to Grade 12
-                                capstone projects, we celebrate academic rigor
-                                and creative passion.
+                                {webSetting.site_description}
                             </p>
                             <div className="flex flex-wrap items-center gap-4">
                                 <Button
@@ -136,7 +164,13 @@ export default function Welcome() {
                                     className="h-14 rounded-xl bg-[#003366] px-8 text-white hover:bg-[#002244]"
                                 >
                                     <Link
-                                        href={auth.user ? dashboard() : login()}
+                                        href={
+                                            auth.user
+                                                ? auth.user.role === 'SISWA'
+                                                    ? student.home()
+                                                    : dashboard()
+                                                : login()
+                                        }
                                     >
                                         Upload via Student Portal{' '}
                                         <Plus className="ml-2 size-5" />
@@ -170,8 +204,7 @@ export default function Welcome() {
                                     </div>
                                 </div>
                                 <p className="text-xs font-medium text-gray-400">
-                                    Verified access for St. Andrews Academy
-                                    students and faculty only
+                                    Verified access for {webSetting.site_title} students and faculty only
                                 </p>
                             </div>
                         </div>
@@ -188,7 +221,7 @@ export default function Welcome() {
                                             <div className="flex items-start gap-3 text-gray-500">
                                                 <MapPin className="size-5 shrink-0 text-gray-300" />
                                                 <span className="text-sm">
-                                                    Edinburgh, United Kingdom
+                                                    Official Online Showcase
                                                 </span>
                                             </div>
                                         </div>
@@ -346,7 +379,7 @@ export default function Welcome() {
                             <h2 className="mb-12 font-serif text-5xl leading-tight text-[#1b1b18]">
                                 Empowering <br />
                                 <span className="font-normal text-[#003366] italic">
-                                    St. Andrews Scholars
+                                    {webSetting.site_title} Scholars
                                 </span>
                             </h2>
                             <div className="space-y-10">
@@ -486,7 +519,7 @@ export default function Welcome() {
                                 </span>
                             </h2>
                             <p className="mx-auto mb-12 max-w-2xl text-lg leading-relaxed font-medium text-blue-100 opacity-80">
-                                Exclusively for St. Andrews Academy students.
+                                Exclusively for {webSetting.site_title} students.
                                 Log in with your <br /> school ID to begin
                                 documenting your journey.
                             </p>
@@ -519,17 +552,19 @@ export default function Welcome() {
                     <div className="mb-20 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
                         <div className="lg:col-span-4">
                             <div className="mb-6 flex items-center gap-2">
-                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#003366] text-white">
-                                    <School className="size-5" />
+                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#003366] text-white overflow-hidden">
+                                    {webSetting.site_logo_url ? (
+                                        <img src={webSetting.site_logo_url} alt={webSetting.site_title} className="size-full object-cover" />
+                                    ) : (
+                                        <School className="size-5" />
+                                    )}
                                 </div>
-                                <span className="text-lg font-bold text-[#003366]">
-                                    ST. ANDREWS
+                                <span className="text-lg font-bold text-[#003366] uppercase">
+                                    {webSetting.site_title}
                                 </span>
                             </div>
                             <p className="mb-8 max-w-sm text-sm leading-relaxed text-gray-400">
-                                The official creative archives of St. Andrews
-                                Academy, Edinburgh. Dedicated to showcasing the
-                                best of our student body.
+                                {webSetting.site_description}
                             </p>
                             <div className="flex gap-4">
                                 <SocialIcon icon={Eye} />
@@ -659,7 +694,7 @@ export default function Welcome() {
 
                     <div className="flex flex-col items-center justify-between gap-6 border-t border-gray-100 pt-12 text-[10px] font-medium tracking-wider text-gray-400 uppercase md:flex-row">
                         <p>
-                            © 2024 St. Andrews Academy. For internal educational
+                            © 2024 {webSetting.site_title}. For internal educational
                             use only.
                         </p>
                         <div className="flex gap-8">
