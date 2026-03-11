@@ -19,6 +19,7 @@ class UpdateProfileRequest extends FormRequest
             'birth_date' => ['nullable', 'date'],
             'address' => ['nullable', 'string', 'max:1000'],
             'social_link' => ['nullable', 'url', 'max:255'],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ];
     }
 }

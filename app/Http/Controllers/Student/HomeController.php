@@ -33,6 +33,7 @@ class HomeController extends Controller
                 'birth_date' => $student->birth_date?->toDateString(),
                 'address' => $student->address,
                 'social_link' => $student->social_link,
+                'avatar' => $student->avatar,
             ],
         ]);
     }

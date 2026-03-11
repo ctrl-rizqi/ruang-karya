@@ -27,6 +27,7 @@ class User extends Authenticatable
         'nisn',
         'classroom_id',
         'major_id',
+        'avatar_url',
         'role',
         'birth_date',
         'address',
@@ -47,6 +48,15 @@ class User extends Authenticatable
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'avatar',
+    ];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -60,6 +70,18 @@ class User extends Authenticatable
             'role' => UserRole::class,
             'two_factor_confirmed_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Get the user's avatar URL.
+     */
+    public function getAvatarAttribute(): string
+    {
+        if ($this->avatar_url) {
+            return \Illuminate\Support\Facades\Storage::url($this->avatar_url);
+        }
+
+        return 'https://www.gravatar.com/avatar/'.md5(strtolower(trim($this->email))).'?s=200&d=mp';
     }
 
     public function classroom(): BelongsTo

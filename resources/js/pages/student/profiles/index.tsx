@@ -1,7 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import StudentLayout from '@/layouts/student-layout';
 import { Head, Link } from '@inertiajs/react';
 import { 
     ChevronRight, 
@@ -10,6 +6,10 @@ import {
     Sparkles, 
     Users 
 } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import StudentLayout from '@/layouts/student-layout';
 import { cn } from '@/lib/utils';
 
 type StudentItem = {

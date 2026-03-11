@@ -1,4 +1,3 @@
-import StudentLayout from '@/layouts/student-layout';
 import { Head } from '@inertiajs/react';
 import { 
     Info, 
@@ -8,11 +7,11 @@ import {
     Mail, 
     Sparkles,
     Github,
-    Instagram,
     Users
 } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent } from '@/components/ui/card';
+import StudentLayout from '@/layouts/student-layout';
 
 type TeamMember = {
     name: string;

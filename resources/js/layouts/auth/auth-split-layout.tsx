@@ -1,6 +1,5 @@
-import { Link, usePage } from '@inertiajs/react';
-import { School, Sparkles, Quote } from 'lucide-react';
-import { home } from '@/routes';
+import { Link } from '@inertiajs/react';
+import { School, Sparkles } from 'lucide-react';
 import type { AuthLayoutProps } from '@/types';
 
 export default function AuthSplitLayout({
@@ -8,8 +7,6 @@ export default function AuthSplitLayout({
     title,
     description,
 }: AuthLayoutProps) {
-    const { name } = usePage().props;
-
     return (
         <div className="relative grid min-h-screen flex-col items-center justify-center px-8 sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0 bg-[#FDFDFC] dark:bg-[#050505]">
             {/* Left Side: Visual/Branding */}

@@ -1,11 +1,4 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AppLayout from '@/layouts/app-layout';
-import { cn } from '@/lib/utils';
-import { Head, Link, useForm, router } from '@inertiajs/react';
+import { Head, useForm, router } from '@inertiajs/react';
 import { 
     Edit, 
     Plus, 
@@ -13,11 +6,17 @@ import {
     Trash2, 
     BookOpen,
     X,
-    Save,
-    Tag
+    Save
 } from 'lucide-react';
-import { useState, type FormEvent } from 'react';
+import { useState  } from 'react';
+import type {FormEvent} from 'react';
 import InputError from '@/components/input-error';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import AppLayout from '@/layouts/app-layout';
 
 type Major = {
     id: number;

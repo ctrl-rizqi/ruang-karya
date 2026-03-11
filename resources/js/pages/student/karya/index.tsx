@@ -1,7 +1,3 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import StudentLayout from '@/layouts/student-layout';
 import { Head, Link, router } from '@inertiajs/react';
 import { 
     Calendar, 
@@ -14,12 +10,16 @@ import {
     Sparkles, 
     Trash2 
 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { 
     DropdownMenu, 
     DropdownMenuContent, 
     DropdownMenuItem, 
     DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
+import StudentLayout from '@/layouts/student-layout';
 import { cn } from '@/lib/utils';
 
 type KaryaItem = {

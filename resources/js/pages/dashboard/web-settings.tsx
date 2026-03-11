@@ -1,14 +1,14 @@
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
-import type { BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { Globe, Image as ImageIcon, Save, Sparkles, Upload } from 'lucide-react';
 import type { FormEvent } from 'react';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import AppLayout from '@/layouts/app-layout';
+import { dashboard } from '@/routes';
+import type { BreadcrumbItem } from '@/types';
 
 type WebSettingProps = {
     webSetting: {
@@ -32,7 +32,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function WebSettings({ webSetting, status }: WebSettingProps) {
-    const { data, setData, post, processing, errors, transform } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         site_title: webSetting.site_title,
         site_logo: null as File | null,
         site_tagline: webSetting.site_tagline ?? '',

@@ -38,6 +38,7 @@ type StudentHomeProps = {
         birth_date: string | null;
         address: string | null;
         social_link: string | null;
+        avatar: string;
     };
 };
 
@@ -74,7 +75,7 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
                             <div className="flex flex-col md:flex-row items-start md:items-end gap-4">
                                 <div className="relative group">
                                     <Avatar className="size-24 md:size-32 border-4 border-white dark:border-[#0a0a0a] shadow-xl rounded-2xl transition-transform group-hover:scale-105 duration-300">
-                                        <AvatarImage src={`https://i.pravatar.cc/150?u=${student.email}`} />
+                                        <AvatarImage src={student.avatar} className="bg-cover" />
                                         <AvatarFallback className="text-2xl font-bold bg-blue-50 text-blue-600">{initials}</AvatarFallback>
                                     </Avatar>
                                     <div className="absolute bottom-2 right-2 size-6 rounded-full bg-green-500 border-2 border-white dark:border-[#0a0a0a] ring-4 ring-green-500/20 animate-pulse" title="Online" />

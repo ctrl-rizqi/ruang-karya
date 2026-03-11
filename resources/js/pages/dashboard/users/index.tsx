@@ -1,3 +1,14 @@
+import { Head, Link, useForm } from '@inertiajs/react';
+import { 
+    Edit, 
+    Filter, 
+    Plus, 
+    Search, 
+    Trash2, 
+    X,
+    GraduationCap
+} from 'lucide-react';
+import type { SubmitEvent } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,20 +18,6 @@ import AppLayout from '@/layouts/app-layout';
 import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { 
-    Edit, 
-    Filter, 
-    Plus, 
-    Search, 
-    Trash2, 
-    User as UserIcon, 
-    Users,
-    X,
-    GraduationCap,
-    BookOpen
-} from 'lucide-react';
-import type { SubmitEvent } from 'react';
 
 type UserItem = {
     id: number;

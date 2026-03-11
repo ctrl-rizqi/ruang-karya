@@ -1,8 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import StudentLayout from '@/layouts/student-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { 
     Search, 
@@ -14,9 +9,14 @@ import {
     MapPin,
     Sparkles
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import type { FormEvent } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import StudentLayout from '@/layouts/student-layout';
+import { cn } from '@/lib/utils';
 
 type StudentDirectoryProps = {
     students: {

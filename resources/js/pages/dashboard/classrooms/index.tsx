@@ -1,11 +1,4 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AppLayout from '@/layouts/app-layout';
-import { cn } from '@/lib/utils';
-import { Head, Link, useForm, router } from '@inertiajs/react';
+import { Head, useForm, router } from '@inertiajs/react';
 import { 
     Edit, 
     Plus, 
@@ -13,11 +6,16 @@ import {
     Trash2, 
     School,
     X,
-    Save,
-    ChevronRight
+    Save
 } from 'lucide-react';
-import { useState, type ChangeEvent, type MouseEvent } from 'react';
+import { useState   } from 'react';
+import type {ChangeEvent, MouseEvent} from 'react';
 import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import AppLayout from '@/layouts/app-layout';
 
 type Classroom = {
     id: number;

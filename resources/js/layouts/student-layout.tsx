@@ -1,11 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { UserMenuContent } from '@/components/user-menu-content';
 import { Link, usePage } from '@inertiajs/react';
 import { 
     Bell, 
@@ -15,8 +7,16 @@ import {
     Search, 
     School
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { UserMenuContent } from '@/components/user-menu-content';
 import { useInitials } from '@/hooks/use-initials';
+import { cn } from '@/lib/utils';
 
 interface StudentLayoutProps {
     children: React.ReactNode;
@@ -71,7 +71,7 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" className="size-10 rounded-2xl p-0.5 border border-gray-100 dark:border-white/5 hover:bg-transparent">
                                     <Avatar className="size-full rounded-[0.9rem] overflow-hidden border-2 border-white dark:border-[#050505] shadow-sm">
-                                        <AvatarImage src={`https://i.pravatar.cc/150?u=${auth.user.email}`} alt={auth.user.name} />
+                                        <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
                                         <AvatarFallback className="bg-blue-50 text-blue-600 font-bold text-xs">
                                             {getInitials(auth.user.name)}
                                         </AvatarFallback>

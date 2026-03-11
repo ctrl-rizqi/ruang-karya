@@ -1,9 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import StudentLayout from '@/layouts/student-layout';
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { 
     Calendar, 
     ExternalLink, 
@@ -15,6 +10,11 @@ import {
     Trophy,
     UserPlus
 } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import StudentLayout from '@/layouts/student-layout';
 
 type KaryaItem = {
     id: number;

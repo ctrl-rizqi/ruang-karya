@@ -1,3 +1,20 @@
+import { Head, useForm, usePage, Link } from '@inertiajs/react';
+import {
+    AtSign,
+    Calendar,
+    Globe,
+    Lock,
+    MapPin,
+    Save,
+    User,
+    UserCircle,
+    Trophy,
+    ExternalLink,
+    Camera,
+    X
+} from 'lucide-react';
+import { useState,  useRef } from 'react';
+import type {FormEvent} from 'react';
 import InputError from '@/components/input-error';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -5,21 +22,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import StudentLayout from '@/layouts/student-layout';
-import { Head, useForm, usePage, Link } from '@inertiajs/react';
-import { 
-    AtSign, 
-    Calendar, 
-    Globe, 
-    Lock, 
-    MapPin, 
-    Save, 
-    User, 
-    UserCircle,
-    Edit,
-    Trophy,
-    ExternalLink
-} from 'lucide-react';
-import type { FormEvent } from 'react';
 
 type StudentProfileProps = {
     student: {
@@ -28,16 +30,22 @@ type StudentProfileProps = {
         birth_date: string | null;
         address: string | null;
         social_link: string | null;
+        avatar: string;
     };
 };
 
 export default function StudentProfile({ student }: StudentProfileProps) {
     const { auth } = usePage().props;
+    const fileInput = useRef<HTMLInputElement>(null);
+    const [preview, setPreview] = useState<string | null>(null);
+
     const form = useForm({
         name: student.name,
         birth_date: student.birth_date ?? '',
         address: student.address ?? '',
         social_link: student.social_link ?? '',
+        avatar: null as File | null,
+        _method: 'PATCH',
     });
 
     const initials = student.name
@@ -46,9 +54,35 @@ export default function StudentProfile({ student }: StudentProfileProps) {
         .join('')
         .toUpperCase();
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            form.setData('avatar', file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const clearPreview = () => {
+        setPreview(null);
+        form.setData('avatar', null);
+        if (fileInput.current) fileInput.current.value = '';
+    };
+
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        form.patch('/siswa/profile');
+
+        // Use post with _method spoofing for multipart/form-data
+        form.post('/siswa/profile', {
+            forceFormData: true,
+            onSuccess: () => {
+                setPreview(null);
+                if (fileInput.current) fileInput.current.value = '';
+            },
+        });
     };
 
     return (
@@ -61,18 +95,43 @@ export default function StudentProfile({ student }: StudentProfileProps) {
                     <div className="md:w-1/3 space-y-6">
                         <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-4xl overflow-hidden">
                             <CardContent className="p-8 text-center">
-                                <div className="relative inline-block mb-6">
-                                    <Avatar className="size-32 border-4 border-blue-50 dark:border-blue-900/20 rounded-[2.5rem]">
-                                        <AvatarImage src={`https://i.pravatar.cc/150?u=${student.name}`} />
+                                <div className="relative inline-block mb-6 group">
+                                    <Avatar className="size-32 border-4 border-blue-50 dark:border-blue-900/20 overflow-hidden">
+                                        <AvatarImage src={preview || student.avatar} />
                                         <AvatarFallback className="text-3xl font-bold bg-blue-50 text-blue-600">{initials}</AvatarFallback>
                                     </Avatar>
-                                    <Button size="icon" variant="secondary" className="absolute -bottom-2 -right-2 rounded-2xl size-10 shadow-lg border-2 border-white dark:border-[#161615]">
-                                        <Edit className="size-4" />
-                                    </Button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => fileInput.current?.click()}
+                                        className="absolute inset-0 bg-black/40 text-white flex flex-col items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                                    >
+                                        <Camera className="size-6 mb-1" />
+                                        <span className="text-[10px] font-bold uppercase tracking-widest">Update Foto</span>
+                                    </button>
+
+                                    {preview && (
+                                        <Button
+                                            size="icon"
+                                            variant="destructive"
+                                            onClick={clearPreview}
+                                            className="absolute -top-2 -right-2 rounded-full size-8 shadow-lg border-2 border-white dark:border-[#161615]"
+                                        >
+                                            <X className="size-4" />
+                                        </Button>
+                                    )}
+
+                                    <input
+                                        type="file"
+                                        ref={fileInput}
+                                        className="hidden"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                    />
                                 </div>
-                                <h2 className="text-xl font-bold mb-1">{student.name}</h2>
+                                <h2 className="text-xl font-bold mb-1 line-clamp-1">{student.name}</h2>
                                 <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-6">Student Account</p>
-                                
+
                                 <div className="space-y-3 pt-6 border-t border-gray-50 dark:border-white/5">
                                     <div className="flex items-center gap-3 text-sm text-muted-foreground text-left">
                                         <AtSign className="size-4 text-blue-600 shrink-0" />
@@ -91,8 +150,10 @@ export default function StudentProfile({ student }: StudentProfileProps) {
                                 <Trophy className="size-4" /> Tips Profil
                             </h3>
                             <p className="text-xs text-blue-100 leading-relaxed">
-                                Gunakan nama lengkap dan lengkapi media sosialmu agar karya kamu lebih mudah dikenali oleh kurator!
+                                Foto profil yang profesional membantu karyamu lebih dipercaya oleh kurator dan audiens!.
                             </p>
+
+                            <p className="text-xs text-blue-100 leading-relaxed">Ukuran sempurna untuk foto profil adalah 1:1.</p>
                         </div>
                     </div>
 
@@ -110,11 +171,11 @@ export default function StudentProfile({ student }: StudentProfileProps) {
                                     <div className="grid gap-6 md:grid-cols-2">
                                         <div className="space-y-2">
                                             <Label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Nama Lengkap</Label>
-                                            <div className="relative">
+                                            <div className="relative mt-2">
                                                 <User className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                                                 <Input
                                                     id="name"
-                                                    className="pl-10 h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all"
+                                                    className="pl-10 h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent/40"
                                                     placeholder="Nama lengkap kamu"
                                                     value={form.data.name}
                                                     onChange={(e) => form.setData('name', e.target.value)}
@@ -125,12 +186,12 @@ export default function StudentProfile({ student }: StudentProfileProps) {
 
                                         <div className="space-y-2">
                                             <Label htmlFor="birth_date" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Tanggal Lahir</Label>
-                                            <div className="relative">
+                                            <div className="relative mt-2">
                                                 <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                                                 <Input
                                                     id="birth_date"
                                                     type="date"
-                                                    className="pl-10 h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all"
+                                                    className="pl-10 h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent/40"
                                                     value={form.data.birth_date}
                                                     onChange={(e) => form.setData('birth_date', e.target.value)}
                                                 />
@@ -141,11 +202,11 @@ export default function StudentProfile({ student }: StudentProfileProps) {
 
                                     <div className="space-y-2">
                                         <Label htmlFor="address" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Alamat / Bio Singkat</Label>
-                                        <div className="relative">
+                                        <div className="relative mt-2">
                                             <MapPin className="absolute left-3.5 top-4 size-4 text-muted-foreground" />
                                             <Input
                                                 id="address"
-                                                className="pl-10 h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all"
+                                                className="pl-10 h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent/40"
                                                 placeholder="Edinburgh, Scotland"
                                                 value={form.data.address}
                                                 onChange={(e) => form.setData('address', e.target.value)}
@@ -153,6 +214,8 @@ export default function StudentProfile({ student }: StudentProfileProps) {
                                         </div>
                                         <InputError message={form.errors.address} />
                                     </div>
+
+                                    <InputError message={form.errors.avatar} />
                                 </CardContent>
                             </Card>
 
@@ -166,12 +229,12 @@ export default function StudentProfile({ student }: StudentProfileProps) {
                                 <CardContent className="p-8 pt-0 space-y-6">
                                     <div className="space-y-2">
                                         <Label htmlFor="social_link" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Link Website / Social Media</Label>
-                                        <div className="relative">
+                                        <div className="relative mt-2">
                                             <ExternalLink className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                                             <Input
                                                 id="social_link"
                                                 type="url"
-                                                className="pl-10 h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all"
+                                                className="pl-10 h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent/40"
                                                 placeholder="https://instagram.com/username"
                                                 value={form.data.social_link}
                                                 onChange={(e) => form.setData('social_link', e.target.value)}
@@ -186,8 +249,8 @@ export default function StudentProfile({ student }: StudentProfileProps) {
                                 <Button asChild variant="ghost" className="rounded-xl h-12 px-6">
                                     <Link href="/siswa">Batal</Link>
                                 </Button>
-                                <Button 
-                                    disabled={form.processing} 
+                                <Button
+                                    disabled={form.processing}
                                     type="submit"
                                     className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-12 px-10 shadow-xl shadow-blue-500/20 transition-all hover:scale-105"
                                 >

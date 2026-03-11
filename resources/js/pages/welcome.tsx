@@ -1,5 +1,4 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import { dashboard, login, register } from '@/routes';
 import {
     MapPin,
     Quote,
@@ -12,22 +11,17 @@ import {
     Heart,
     Eye,
     ChevronRight,
-    Search,
     User,
-    LogOut,
     Plus,
     School,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { dashboard, login, register } from '@/routes';
 
-interface WelcomeProps {
-    canRegister?: boolean;
-}
-
-export default function Welcome({ canRegister = true }: WelcomeProps) {
+export default function Welcome() {
     const { auth } = usePage().props;
 
     return (
