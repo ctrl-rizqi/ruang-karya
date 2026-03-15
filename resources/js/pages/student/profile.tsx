@@ -1,7 +1,6 @@
 import { Head, useForm, usePage, Link } from '@inertiajs/react';
 import {
     AtSign,
-    Calendar,
     Globe,
     Lock,
     MapPin,
@@ -22,6 +21,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import StudentLayout from '@/layouts/student-layout';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { format } from 'date-fns';
+
 
 type StudentProfileProps = {
     student: {
@@ -177,13 +180,13 @@ export default function StudentProfile({ student }: StudentProfileProps) {
                                 </CardHeader>
                                 <CardContent className="p-8 pt-0 space-y-6">
                                     <div className="grid gap-6 md:grid-cols-2">
-                                        <div className="space-y-2">
+                                        <div className="space-y-2 flex flex-col gap-1.2">
                                             <Label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Nama Lengkap</Label>
-                                            <div className="relative mt-2">
+                                            <div className="relative">
                                                 <User className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                                                 <Input
                                                     id="name"
-                                                    className="pl-10 h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent/40"
+                                                    className="pl-10 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent/40"
                                                     placeholder="Nama lengkap kamu"
                                                     value={form.data.name}
                                                     onChange={(e) => form.setData('name', e.target.value)}
@@ -192,18 +195,35 @@ export default function StudentProfile({ student }: StudentProfileProps) {
                                             <InputError message={form.errors.name} />
                                         </div>
 
-                                        <div className="space-y-2">
+                                        <div className="space-y-2 flex flex-col gap-1.2">
                                             <Label htmlFor="birth_date" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Tanggal Lahir</Label>
-                                            <div className="relative mt-2">
-                                                <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                                                <Input
-                                                    id="birth_date"
-                                                    type="date"
-                                                    className="pl-10 h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent/40"
-                                                    value={form.data.birth_date}
-                                                    onChange={(e) => form.setData('birth_date', e.target.value)}
-                                                />
-                                            </div>
+                                            <Popover>
+                                                <PopoverTrigger asChild>
+                                                    <Input
+                                                        id="birth_date"
+                                                        readOnly
+                                                        className="rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent cursor-pointer"
+                                                        value={form.data.birth_date}
+                                                    />
+                                                </PopoverTrigger>
+                                                <PopoverContent className="w-auto p-0" align="start">
+                                                    <Calendar 
+                                                        mode='single' 
+                                                        captionLayout='dropdown' 
+                                                        selected={form.data.birth_date ? new Date(form.data.birth_date) : undefined}
+                                                        onSelect={(date) => {
+                                                            if (date) {
+                                                                form.setData('birth_date', format(date, 'yyyy-MM-dd'));
+                                                            }
+                                                        }}
+                                                        disabled={(date) =>
+                                                            date > new Date() || date < new Date("1900-01-01")
+                                                        }
+                                                        autoFocus
+                                                    />
+                                                </PopoverContent>
+                                            </Popover>
+                                            
                                             <InputError message={form.errors.birth_date} />
                                         </div>
                                     </div>

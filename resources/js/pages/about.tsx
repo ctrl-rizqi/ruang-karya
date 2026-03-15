@@ -4,21 +4,23 @@ import {
     Target,
     Rocket,
     ListChecks,
-    Mail,
     Sparkles,
-    Github,
     Users,
+    ChevronRight,
+    Quote
 } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { 
+    Dialog, 
+    DialogContent, 
+    DialogHeader, 
+    DialogTitle,
+    DialogDescription 
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import StudentLayout from '@/layouts/student-layout';
-
-type TeamMember = {
-    name?: string;
-    role?: string;
-    email?: string;
-    avatar?: string;
-};
+import { ItemMember } from '@/const/member';
 
 type AboutProps = {
     webSetting?: {
@@ -27,19 +29,21 @@ type AboutProps = {
         site_tagline: string | null;
         site_description: string | null;
     };
-    team?: TeamMember[];
     purpose?: string;
     vision?: string;
     missions?: string[];
 };
 
+type Member = typeof ItemMember[number];
+
 export default function About({
     webSetting,
-    team = [],
     purpose = 'Ruang Karya dibuat untuk membantu siswa menampilkan karya terbaiknya dalam satu platform portfolio sekolah.',
     vision = 'Menjadi ruang digital sekolah yang mendorong kreativitas, kolaborasi, dan apresiasi karya siswa.',
     missions = [],
 }: AboutProps) {
+    const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+
     const siteTitle = webSetting?.site_title ?? 'Ruang Karya';
     const siteTagline =
         webSetting?.site_tagline ||
@@ -163,56 +167,99 @@ export default function About({
                     </div>
 
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
-                        {team.map((member) => {
-                            const memberName =
-                                member.name?.trim() || 'Unknown Member';
-                            const memberRole =
-                                member.role?.trim() || 'Team Member';
-                            const memberKey =
-                                member.email?.trim() ||
-                                `${memberName}-${memberRole}`;
+                        {ItemMember.map((member) => {
+                            const memberName = member.name?.trim() || 'Unknown Member';
+                            const memberRole = 'Pendamping Sekolah';
 
                             return (
                                 <Card
-                                    key={memberKey}
-                                    className="group overflow-hidden rounded-4xl border-none bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-xl dark:bg-[#161615]"
+                                    key={member.id}
+                                    className="group cursor-pointer overflow-hidden rounded-2xl border-none bg-white shadow-sm transition-all hover:shadow-xl hover:-translate-y-1 dark:bg-[#161615] p-0"
+                                    onClick={() => setSelectedMember(member)}
                                 >
-                                    <CardContent className="p-6 text-center">
-                                        <div className="relative mx-auto mb-6 w-fit">
-                                            <Avatar className="size-20 rounded-2xl border-4 border-blue-50 transition-transform duration-500 group-hover:scale-110 dark:border-blue-900/20">
-                                                <AvatarImage
-                                                    src={
-                                                        member.avatar ||
-                                                        undefined
-                                                    }
-                                                />
-                                                <AvatarFallback className="bg-blue-50 font-bold text-blue-600 uppercase">
-                                                    {memberName.charAt(0)}
-                                                </AvatarFallback>
-                                            </Avatar>
+                                    <div className="relative w-full overflow-hidden">
+                                        <img 
+                                            src={member.img} 
+                                            alt={memberName} 
+                                            className="aspect-square w-full bg-top bg-cover bg-no-repeat object-top object-cover rounded-2xl border-4 border-blue-50 transition-transform duration-500 group-hover:scale-110 dark:border-blue-900/20" 
+                                        />
+                                        <div className="absolute inset-0 flex items-center justify-center bg-blue-600/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                            <Button variant="secondary" size="sm" className="rounded-full font-bold uppercase tracking-widest text-[10px]">
+                                                Lihat Detail
+                                            </Button>
                                         </div>
-
+                                    </div>
+                                    <CardContent className="text-center p-4">
                                         <h3 className="mb-1 line-clamp-1 text-sm font-black transition-colors group-hover:text-blue-600">
                                             {memberName}
                                         </h3>
-                                        <p className="mb-4 line-clamp-1 text-[9px] font-bold tracking-widest text-muted-foreground uppercase">
+                                        <p className="mb-0 line-clamp-1 text-[9px] font-bold tracking-widest text-muted-foreground uppercase">
                                             {memberRole}
                                         </p>
-
-                                        <div className="flex justify-center gap-3 border-t border-gray-50 pt-4 dark:border-white/5">
-                                            <div className="flex size-8 cursor-pointer items-center justify-center rounded-xl bg-gray-50 text-muted-foreground transition-all hover:bg-blue-50 hover:text-blue-600 dark:bg-white/5">
-                                                <Mail className="size-3.5" />
-                                            </div>
-                                            <div className="flex size-8 cursor-pointer items-center justify-center rounded-xl bg-gray-50 text-muted-foreground transition-all hover:bg-blue-50 hover:text-blue-600 dark:bg-white/5">
-                                                <Github className="size-3.5" />
-                                            </div>
-                                        </div>
                                     </CardContent>
                                 </Card>
                             );
                         })}
                     </div>
                 </section>
+
+                {/* Team Member Dialog */}
+                <Dialog open={!!selectedMember} onOpenChange={(open) => !open && setSelectedMember(null)}>
+                    <DialogContent className="rounded-xl sm:max-w-3xl p-0 overflow-hidden border-none bg-white dark:bg-[#161615]">
+                        {selectedMember && (
+                            <div className="flex flex-col md:flex-row h-full">
+                                <div className="md:w-2/4 relative md:flex-1 overflow-hidden">
+                                    <img 
+                                        src={selectedMember.img} 
+                                        alt={selectedMember.name} 
+                                        className="h-full w-full object-cover object-top" 
+                                    />
+                                    <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
+                                    <div className="absolute bottom-6 left-6 right-6 text-white">
+                                        <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-[8px] font-bold tracking-widest uppercase backdrop-blur-md">
+                                            Pendamping Sekolah
+                                        </div>
+                                        <h3 className="text-xl font-black leading-tight">
+                                            {selectedMember.name}
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div className="flex-1 p-8 md:p-12 md:w-2/4 relative overflow-y-auto max-h-[80vh]">
+                                    <Quote className="absolute top-8 right-8 size-12 text-blue-50 opacity-10 dark:text-blue-900" />
+                                    <DialogHeader className="mb-8 text-left">
+                                        <DialogTitle className="text-2xl font-black text-blue-600">Profil Pendidik</DialogTitle>
+                                        <DialogDescription className="text-xs font-bold uppercase tracking-widest opacity-60">
+                                            Membangun Generasi Kreatif & Kompeten
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    
+                                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                                        {selectedMember.description.split('\n').map((paragraph, idx) => (
+                                            paragraph.trim() && (
+                                                <p key={idx} className="mb-4 text-muted-foreground leading-relaxed text-sm">
+                                                    {paragraph.trim()}
+                                                </p>
+                                            )
+                                        ))}
+                                    </div>
+
+                                    <div className="mt-10 pt-8 border-t border-gray-50 dark:border-white/5 flex items-center justify-between">
+                                        <div className="flex items-center gap-3 text-blue-600">
+                                            <Sparkles className="size-5" />
+                                            <span className="text-xs font-bold uppercase tracking-widest">Inspirasi Pagi</span>
+                                        </div>
+                                        <Button 
+                                            onClick={() => setSelectedMember(null)}
+                                            className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 font-bold uppercase tracking-widest text-[10px]"
+                                        >
+                                            Tutup Profil
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </DialogContent>
+                </Dialog>
             </div>
         </StudentLayout>
     );

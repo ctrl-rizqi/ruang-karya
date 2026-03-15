@@ -5,6 +5,7 @@ use App\Http\Controllers\Dashboard\KaryaController as DashboardKaryaController;
 use App\Http\Controllers\Dashboard\MajorController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\WebSettingController;
+use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\PublicPageController;
 use App\Http\Controllers\Student\HomeController;
 use App\Http\Controllers\Student\KaryaController;
@@ -19,6 +20,7 @@ Route::inertia('/', 'welcome', [
 
 Route::get('tentang', [PublicPageController::class, 'about'])->name('about');
 Route::get('daftar-siswa', [PublicPageController::class, 'studentDirectory'])->name('student-directory');
+Route::get('p/{user:nisn}', [PortfolioController::class, 'show'])->name('portfolio.show');
 
 Route::middleware(['auth', 'verified', 'role:GURU'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');

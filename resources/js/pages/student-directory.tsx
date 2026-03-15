@@ -213,8 +213,8 @@ export default function StudentDirectory({
                                         </div>
 
                                         <Button asChild variant="outline" className="w-full rounded-2xl h-12 border-gray-100 dark:border-white/5 hover:bg-blue-600 hover:border-blue-600 hover:text-white group/btn transition-all">
-                                            <Link href={`/siswa/profiles/${student.id}`} prefetch>
-                                                Lihat Profil <ChevronRight className="ml-2 size-4 transition-transform group-hover/btn:translate-x-1" />
+                                            <Link href={`/p/${student.nisn}`} prefetch>
+                                                Lihat Portofolio <ChevronRight className="ml-2 size-4 transition-transform group-hover/btn:translate-x-1" />
                                             </Link>
                                         </Button>
                                     </div>

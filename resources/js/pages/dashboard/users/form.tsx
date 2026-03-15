@@ -319,7 +319,7 @@ export default function UserForm({ mode, user, roleOptions, classrooms, majors }
                                                         disabled={(date) =>
                                                             date > new Date() || date < new Date("1900-01-01")
                                                         }
-                                                        initialFocus
+                                                        autoFocus
                                                     />
                                                 </PopoverContent>
                                             </Popover>
@@ -386,9 +386,8 @@ export default function UserForm({ mode, user, roleOptions, classrooms, majors }
                                 <Sparkles className="size-4 text-blue-200" /> Tips Pendaftaran
                             </h3>
                             <div className="space-y-4 text-sm text-blue-100 leading-relaxed">
-                                <p>1. <strong>Email Otomatis</strong>: Sistem akan menggenerate email unik berdasarkan NISN untuk login siswa.</p>
-                                <p>2. <strong>Role Guru</strong>: Role ini memberikan akses penuh ke dashboard admin dan manajemen master data.</p>
-                                <p>3. <strong>Data Opsional</strong>: Siswa dapat melengkapi bio dan media sosial mereka sendiri setelah akun berhasil dibuat.</p>
+                                <p>1. <strong>Role Guru</strong>: Role ini memberikan akses penuh ke dashboard admin dan manajemen master data.</p>
+                                <p>2. <strong>Data Opsional</strong>: Siswa dapat melengkapi bio dan media sosial mereka sendiri setelah akun berhasil dibuat.</p>
                             </div>
                             <div className="mt-8 h-1 w-12 bg-white/30 rounded-full" />
                         </div>

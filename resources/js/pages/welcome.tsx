@@ -22,6 +22,39 @@ import { Card, CardContent } from '@/components/ui/card';
 import { dashboard, login, register } from '@/routes';
 import student from '@/routes/student';
 
+const ItemJurusan = [
+    {
+        id: 1,
+        name: 'Broadcast',
+        img: '/assets/BROADCAST.png',
+    },
+    {
+        id: 2,
+        name: 'DKV',
+        img: '/assets/DKV.png',
+    },
+    {
+        id: 3,
+        name: 'Perkantoran',
+        img: '/assets/MP.png',
+    },
+    {
+        id: 4,
+        name: 'Bisnis Digital',
+        img: '/assets/BD.png',
+    },
+    {
+        id: 5,
+        name: 'Akuntansi',
+        img: '/assets/AK.png',
+    },
+    {
+        id: 6,
+        name: 'Kuliner',
+        img: '/assets/KLR.png',
+    }
+]
+
 interface WelcomeProps {
     webSetting: {
         site_title: string;
@@ -33,6 +66,14 @@ interface WelcomeProps {
 
 export default function Welcome({ webSetting }: WelcomeProps) {
     const { auth } = usePage().props;
+
+    const sponsors = [
+        { id: 1, name: 'Sponsor 1', logo: '/assets/sponsor-placeholder.png' },
+        { id: 2, name: 'Sponsor 2', logo: '/assets/sponsor-placeholder.png' },
+        { id: 3, name: 'Sponsor 3', logo: '/assets/sponsor-placeholder.png' },
+        { id: 4, name: 'Sponsor 4', logo: '/assets/sponsor-placeholder.png' },
+        { id: 5, name: 'Sponsor 5', logo: '/assets/sponsor-placeholder.png' },
+    ];
 
     return (
         <div className="min-h-screen bg-[#FDFDFC] font-sans text-[#1b1b18] selection:bg-blue-100 selection:text-blue-900">
@@ -47,54 +88,42 @@ export default function Welcome({ webSetting }: WelcomeProps) {
             {/* Navigation */}
             <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/80 backdrop-blur-md">
                 <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
-                    <div className="flex items-center gap-2">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg overflow-hidden">
+                    <div className="flex items-center gap-6">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg overflow-hidden border border-gray-100">
                             {webSetting.site_logo_url ? (
-                                <img src={"/storage/"+ webSetting.site_logo_url} alt={webSetting.site_title} className="size-full object-cover" />
+                                <img src={"/storage/" + webSetting.site_logo_url} alt={webSetting.site_title} className="size-full object-cover" />
                             ) : (
-                                <School className="size-6" />
+                                <School className="size-6 text-blue-600" />
                             )}
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-lg leading-none font-bold tracking-tight text-[#003366] uppercase">
+                            <span className="text-lg leading-none font-black tracking-tight text-[#003366] uppercase">
                                 {webSetting.site_title}
                             </span>
-                            <span className="text-[10px] font-medium tracking-[0.2em] text-gray-400 uppercase">
+                            <span className="text-[9px] font-bold tracking-[0.2em] text-blue-600/60 uppercase mt-1">
                                 {webSetting.site_tagline}
                             </span>
                         </div>
+                        <nav className="hidden items-center gap-8 text-xs font-bold uppercase tracking-widest text-gray-400 md:flex ml-4">
+                            <Link
+                                href="/tentang"
+                                className="transition-colors hover:text-[#003366]"
+                            >
+                                Tentang
+                            </Link>
+                            <Link
+                                href="/daftar-siswa"
+                                className="transition-colors hover:text-[#003366]"
+                            >
+                                Direktori Siswa
+                            </Link>
+                        </nav>
                     </div>
 
-                    <nav className="hidden items-center gap-8 text-sm font-medium text-gray-500 md:flex">
-                        <Link
-                            href="/tentang"
-                            className="transition-colors hover:text-[#003366]"
-                        >
-                            Tentang
-                        </Link>
-                        <Link
-                            href="/daftar-siswa"
-                            className="transition-colors hover:text-[#003366]"
-                        >
-                            Daftar Siswa
-                        </Link>
-                        <Link
-                            href="#"
-                            className="transition-colors hover:text-[#003366]"
-                        >
-                            Alumni
-                        </Link>
-                        <Link
-                            href="#"
-                            className="transition-colors hover:text-[#003366]"
-                        >
-                            Exhibitions
-                        </Link>
-                    </nav>
 
                     <div className="flex items-center gap-4">
                         {auth.user ? (
-                            <Button asChild variant="ghost" size="sm">
+                            <Button asChild variant="ghost" size="sm" className="font-bold uppercase tracking-widest text-[10px]">
                                 <Link
                                     href={
                                         auth.user.role === 'SISWA'
@@ -104,20 +133,20 @@ export default function Welcome({ webSetting }: WelcomeProps) {
                                 >
                                     {auth.user.role === 'SISWA'
                                         ? 'Beranda Siswa'
-                                        : 'Dashboard'}
+                                        : 'Dashboard Guru'}
                                 </Link>
                             </Button>
                         ) : (
                             <Link
                                 href={login()}
-                                className="text-sm font-medium text-gray-500 hover:text-[#003366]"
+                                className="text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-[#003366]"
                             >
-                                School ID Login
+                                Masuk Portal
                             </Link>
                         )}
                         <Button
                             asChild
-                            className="rounded-lg bg-[#1b1b18] px-6 text-white hover:bg-black"
+                            className="rounded-xl bg-[#003366] px-6 text-white hover:bg-[#002244] shadow-lg shadow-blue-900/20 font-bold uppercase tracking-widest text-[10px] h-11"
                         >
                             <Link
                                 href={
@@ -129,8 +158,8 @@ export default function Welcome({ webSetting }: WelcomeProps) {
                                 }
                             >
                                 {auth.user
-                                    ? 'Submit Portfolio'
-                                    : 'Join Academy'}{' '}
+                                    ? 'Kirim Karya'
+                                    : 'Daftar Sekarang'}{' '}
                                 <ArrowUpRight className="ml-2 size-4" />
                             </Link>
                         </Button>
@@ -141,27 +170,27 @@ export default function Welcome({ webSetting }: WelcomeProps) {
             <main>
                 {/* Hero Section */}
                 <section className="mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-24">
-                    <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12">
-                        <div className="lg:col-span-8">
-                            <div className="mb-6 flex items-center gap-2 text-sm font-medium text-blue-600">
-                                <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
-                                Official Student Gallery • {webSetting.site_title}
+                    <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
+                        <div className="lg:col-span-7">
+                            <div className="mb-6 flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] text-blue-600 uppercase">
+                                <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse" />
+                                Galeri Resmi Karya Siswa • {webSetting.site_title}
                             </div>
-                            <h1 className="mb-8 font-serif text-6xl leading-[1.1] text-[#1b1b18] lg:text-7xl">
-                                The Future of <br />
+                            <h1 className="mb-8 font-serif text-6xl leading-[1.1] text-[#1b1b18] lg:text-8xl">
+                                Merayakan <br />
                                 <span className="font-normal text-[#003366] italic">
-                                    {webSetting.site_title}
+                                    Kreativitas
                                 </span>{' '}
-                                Excellence
+                                Tanpa Batas
                             </h1>
-                            <p className="mb-10 max-w-xl text-lg leading-relaxed text-gray-500">
-                                {webSetting.site_description}
+                            <p className="mb-10 max-w-xl text-lg leading-relaxed text-gray-500 font-medium">
+                                {webSetting.site_description || "Wadah digital untuk mendokumentasikan, memamerkan, dan merayakan setiap pencapaian kreatif siswa-siswi terbaik kami."}
                             </p>
                             <div className="flex flex-wrap items-center gap-4">
                                 <Button
                                     asChild
                                     size="lg"
-                                    className="h-14 rounded-xl bg-[#003366] px-8 text-white hover:bg-[#002244]"
+                                    className="h-14 rounded-2xl bg-[#003366] px-8 text-white hover:bg-[#002244] shadow-xl shadow-blue-900/20 font-bold uppercase tracking-widest text-xs"
                                 >
                                     <Link
                                         href={
@@ -172,190 +201,149 @@ export default function Welcome({ webSetting }: WelcomeProps) {
                                                 : login()
                                         }
                                     >
-                                        Upload via Student Portal{' '}
+                                        Mulai Posting Karya{' '}
                                         <Plus className="ml-2 size-5" />
                                     </Link>
                                 </Button>
                                 <Button
                                     variant="outline"
                                     size="lg"
-                                    className="h-14 rounded-xl border-gray-200 px-8"
+                                    className="h-14 rounded-2xl border-gray-200 px-8 font-bold uppercase tracking-widest text-xs"
                                 >
-                                    View All Departments
+                                    Jelajahi Jurusan
                                 </Button>
                             </div>
 
-                            {/* Verification Badge */}
                             <div className="mt-16 flex items-center gap-4">
                                 <div className="flex -space-x-3">
-                                    {[1, 2, 3].map((i) => (
+                                    {[1, 2, 3, 4].map((i) => (
                                         <Avatar
                                             key={i}
-                                            className="size-10 border-2 border-white"
+                                            className="size-10 border-4 border-white shadow-sm"
                                         >
                                             <AvatarImage
-                                                src={`https://i.pravatar.cc/150?u=${i}`}
+                                                src={`https://i.pravatar.cc/150?u=school${i}`}
                                             />
-                                            <AvatarFallback>U</AvatarFallback>
+                                            <AvatarFallback>S</AvatarFallback>
                                         </Avatar>
                                     ))}
-                                    <div className="flex size-10 items-center justify-center rounded-full border-2 border-white bg-gray-100 text-[10px] font-bold text-gray-400">
-                                        +850
+                                    <div className="flex size-10 items-center justify-center rounded-full border-4 border-white bg-blue-50 text-[10px] font-black text-blue-600 shadow-sm">
+                                        +500
                                     </div>
                                 </div>
-                                <p className="text-xs font-medium text-gray-400">
-                                    Verified access for {webSetting.site_title} students and faculty only
+                                <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+                                    Siswa Terverifikasi Telah Bergabung
                                 </p>
                             </div>
                         </div>
 
-                        {/* Academy Profile Card */}
-                        <div className="lg:col-span-4">
-                            <Card className="overflow-hidden rounded-2xl border-none bg-white shadow-[0_20px_50px_rgba(0,0,0,0.04)]">
-                                <CardContent className="p-8">
-                                    <div className="flex flex-col gap-6">
-                                        <div>
-                                            <h3 className="mb-4 text-[10px] font-bold tracking-[0.2em] text-blue-600 uppercase">
-                                                Academy Profile
-                                            </h3>
-                                            <div className="flex items-start gap-3 text-gray-500">
-                                                <MapPin className="size-5 shrink-0 text-gray-300" />
-                                                <span className="text-sm">
-                                                    Official Online Showcase
-                                                </span>
-                                            </div>
+                        <div className="lg:col-span-5 relative">
+                            <div className="absolute -inset-4 bg-blue-600/5 rounded-[3rem] -z-10 blur-2xl" />
+                            <Card className="overflow-hidden rounded-[2.5rem] border-none bg-white shadow-[0_30px_100px_rgba(0,51,102,0.08)] relative">
+                                <div className="aspect-square relative">
+                                    <img 
+                                        src="https://images.unsplash.com/photo-1523050335392-93851179ae22?q=80&w=1000&auto=format&fit=crop" 
+                                        className="size-full object-cover" 
+                                        alt="School Atmosphere" 
+                                    />
+                                    <div className="absolute inset-0 bg-linear-to-t from-[#003366]/80 via-transparent to-transparent" />
+                                    <div className="absolute bottom-8 left-8 right-8 text-white">
+                                        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-[8px] font-bold tracking-widest uppercase backdrop-blur-md">
+                                            Visi Sekolah
                                         </div>
-
-                                        <div className="relative border-t border-gray-100 pt-6">
-                                            <Quote className="absolute -top-3 left-0 size-6 bg-white text-blue-50" />
-                                            <p className="text-sm leading-relaxed text-gray-500 italic">
-                                                "To inspire excellence,
-                                                cultivate curiosity, and empower
-                                                students to lead with integrity
-                                                in a global community."
-                                            </p>
-                                        </div>
-
-                                        <div className="grid grid-cols-2 gap-y-6 border-t border-gray-100 pt-6">
-                                            <div>
-                                                <p className="mb-1 text-[10px] tracking-wider text-gray-400 uppercase">
-                                                    Founded
-                                                </p>
-                                                <p className="font-bold text-[#1b1b18]">
-                                                    1842
-                                                </p>
-                                            </div>
-                                            <div className="text-right">
-                                                <p className="mb-1 text-[10px] tracking-wider text-gray-400 uppercase">
-                                                    Enrollment
-                                                </p>
-                                                <p className="font-bold text-[#1b1b18]">
-                                                    1,200 Students
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <p className="mb-1 text-[10px] tracking-wider text-gray-400 uppercase">
-                                                    Exhibition Cycle
-                                                </p>
-                                                <p className="font-bold text-[#1b1b18]">
-                                                    Termly Showcase
-                                                </p>
-                                            </div>
-                                        </div>
+                                        <p className="text-lg font-medium leading-relaxed italic">
+                                            "Mencetak generasi yang kompeten, kreatif, dan berakhlak mulia di era digital."
+                                        </p>
                                     </div>
-                                </CardContent>
+                                </div>
                             </Card>
                         </div>
                     </div>
                 </section>
 
-                {/* Category Grid */}
-                <section className="mx-auto max-w-7xl px-6 pb-24 lg:px-8">
-                    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-                        <CategoryCard
-                            icon={Palette}
-                            label="Visual Arts"
-                            color="bg-blue-50 text-blue-600"
-                        />
-                        <CategoryCard
-                            icon={Microscope}
-                            label="STEM Projects"
-                            color="bg-orange-50 text-orange-600"
-                        />
-                        <CategoryCard
-                            icon={Scale}
-                            label="Humanities"
-                            color="bg-emerald-50 text-emerald-600"
-                        />
-                        <CategoryCard
-                            icon={Music}
-                            label="Performance"
-                            color="bg-rose-50 text-rose-600"
-                        />
-                        <CategoryCard
-                            icon={Dumbbell}
-                            label="Athletics"
-                            color="bg-sky-50 text-sky-600"
-                        />
+                {/* Jurusan Section */}
+                <section className="mx-auto max-w-7xl px-6 py-24 lg:px-8 border-t border-gray-100">
+                    <div className="mb-16 flex flex-col items-center text-center">
+                        <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] text-blue-600 uppercase">
+                            Explore Departments
+                        </div>
+                        <h2 className="text-4xl font-black tracking-tight text-[#1b1b18]">
+                            Pilih Berdasarkan Jurusan
+                        </h2>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-6">
+                        {ItemJurusan.map((jurusan) => (
+                            <div key={jurusan.id} className="group cursor-pointer flex flex-col items-center">
+                                <div className="mb-4 size-24 rounded-3xl bg-white shadow-sm border border-gray-100 p-4 transition-all duration-500 group-hover:shadow-xl group-hover:-translate-y-2 group-hover:border-blue-100 flex items-center justify-center overflow-hidden">
+                                    <img src={jurusan.img} alt={jurusan.name} className="size-full object-contain transition-transform duration-500 group-hover:scale-110" />
+                                </div>
+                                <span className="text-[10px] font-black tracking-widest text-[#1b1b18] uppercase text-center group-hover:text-blue-600 transition-colors">
+                                    {jurusan.name}
+                                </span>
+                            </div>
+                        ))}
                     </div>
                 </section>
 
                 {/* Featured Projects */}
-                <section className="bg-gray-50/50 py-24">
+                <section className="bg-[#003366]/[0.02] py-24">
                     <div className="mx-auto max-w-7xl px-6 lg:px-8">
-                        <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+                        <div className="mb-16 flex flex-col justify-between gap-6 md:flex-row md:items-end">
                             <div>
-                                <h2 className="mb-4 font-serif text-4xl text-[#1b1b18]">
-                                    Featured Grade 12 Projects
+                                <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-blue-100/50 px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] text-blue-700 uppercase">
+                                    Featured Works
+                                </div>
+                                <h2 className="mb-4 font-serif text-5xl text-[#1b1b18]">
+                                    Karya Unggulan Siswa
                                 </h2>
-                                <p className="text-gray-500">
-                                    Senior capstone projects representing the
-                                    pinnacle of our academic year.
+                                <p className="text-gray-500 font-medium">
+                                    Inspirasi terbaik yang telah melalui proses kurasi guru pembimbing.
                                 </p>
                             </div>
-                            <div className="flex gap-2 rounded-lg border border-gray-100 bg-white p-1">
+                            <div className="flex gap-2 rounded-2xl border border-gray-200 bg-white p-1.5 shadow-sm">
                                 <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="h-8 rounded-md text-xs font-medium"
+                                    className="h-9 rounded-xl text-[10px] font-black uppercase tracking-widest"
                                 >
-                                    All Grades
+                                    Semua Kelas
                                 </Button>
                                 <Button
                                     size="sm"
-                                    className="h-8 rounded-md bg-[#003366] text-xs font-medium text-white hover:bg-[#002244]"
+                                    className="h-9 rounded-xl bg-[#003366] text-[10px] font-black uppercase tracking-widest text-white hover:bg-[#002244]"
                                 >
-                                    Seniors
+                                    Kelas XII
                                 </Button>
                                 <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="h-8 rounded-md text-xs font-medium text-gray-400"
+                                    className="h-9 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400"
                                 >
-                                    Award Winners
+                                    Pemenang Lomba
                                 </Button>
                             </div>
                         </div>
 
-                        <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                        <div className="mb-16 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
                             <ProjectCard
-                                title="EcoFlow: Product Identity"
-                                category="Design Technology"
-                                grade="Grade 12"
+                                title="EcoFlow: Identitas Produk"
+                                category="Desain Komunikasi Visual"
+                                grade="Kelas XII"
                                 image="https://images.unsplash.com/photo-1586717791821-3f44a563de4c?q=80&w=800&auto=format&fit=crop"
-                                likes="Top Merit"
+                                likes="Prestasi Utama"
                             />
                             <ProjectCard
-                                title="Synthetics of Nature"
-                                category="Fine Arts Honors"
-                                grade="Grade 11"
+                                title="Sintesis Alam dalam Lensa"
+                                category="Fotografi Broadcast"
+                                grade="Kelas XI"
                                 image="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop"
                                 likes="840"
                             />
                             <ProjectCard
-                                title="Nebula: Open-Source Engine"
-                                category="Computer Science AP"
-                                grade="Grade 12"
+                                title="Nebula: Sistem Kasir Digital"
+                                category="Pengembangan Perangkat Lunak"
+                                grade="Kelas XII"
                                 image="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop"
                                 likes="3.4k"
                             />
@@ -364,73 +352,100 @@ export default function Welcome({ webSetting }: WelcomeProps) {
                         <div className="flex justify-center">
                             <Button
                                 variant="outline"
-                                className="h-12 rounded-xl border-gray-200 px-8 text-sm font-medium"
+                                className="h-14 rounded-2xl border-gray-200 px-10 text-xs font-bold uppercase tracking-widest hover:bg-white hover:shadow-xl transition-all"
                             >
-                                Load More Student Work
+                                Lihat Semua Karya Siswa
                             </Button>
                         </div>
                     </div>
                 </section>
 
+                {/* Sponsor Section */}
+                <section className="mx-auto max-w-7xl px-6 py-24 lg:px-8 border-t border-gray-100">
+                    <div className="flex flex-col items-center">
+                        <p className="mb-10 text-[10px] font-bold tracking-[0.3em] text-gray-400 uppercase">
+                            Bekerjasama Dengan Industri
+                        </p>
+                        <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-40 grayscale transition-all hover:grayscale-0">
+                            {sponsors.map((sponsor) => (
+                                <div key={sponsor.id} className="h-12 flex items-center justify-center transition-transform hover:scale-110">
+                                    {/* Replace src with your actual sponsor logo paths */}
+                                    <img 
+                                        src={sponsor.logo} 
+                                        alt={sponsor.name} 
+                                        className="h-full object-contain"
+                                        onError={(e) => {
+                                            (e.target as HTMLImageElement).src = `https://placehold.co/200x80/f3f4f6/9ca3af?text=${sponsor.name}`;
+                                        }}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
                 {/* Empowering Section */}
-                <section className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
+                <section className="mx-auto max-w-7xl px-6 py-24 lg:px-8 bg-white">
                     <div className="grid grid-cols-1 items-center gap-20 lg:grid-cols-2">
                         <div>
-                            <h2 className="mb-12 font-serif text-5xl leading-tight text-[#1b1b18]">
-                                Empowering <br />
+                            <h2 className="mb-12 font-serif text-6xl leading-tight text-[#1b1b18]">
+                                Membangun <br />
                                 <span className="font-normal text-[#003366] italic">
-                                    {webSetting.site_title} Scholars
+                                    Portofolio Masa Depan
                                 </span>
                             </h2>
                             <div className="space-y-10">
                                 <StepItem
                                     number="1"
-                                    title="School ID Authentication"
-                                    description="Use your official academy credentials to log in. Our ecosystem is restricted to verified students, staff, and alumni."
+                                    title="Autentikasi Akun Sekolah"
+                                    description="Masuk menggunakan NISN dan password yang telah didaftarkan pihak sekolah. Sistem ini eksklusif untuk komunitas internal."
                                 />
                                 <StepItem
                                     number="2"
-                                    title="Tag Your Department"
-                                    description="Categorize your work by Grade level and Department (Arts, STEM, Humanities) to ensure it reaches the right faculty evaluators."
+                                    title="Pilih Kategori Karya"
+                                    description="Tentukan jenis media (Video, Gambar, Dokumen) dan hubungkan dengan jurusanmu agar dapat dikurasi oleh guru pembimbing."
                                 />
                                 <StepItem
                                     number="3"
-                                    title="Build Your Academic Legacy"
-                                    description="Your showcase profile serves as a digital transcript of your creative growth, ready for university applications."
+                                    title="Bangun Jejak Akademik"
+                                    description="Profil galerimu berfungsi sebagai transkrip digital perjalanan kreatif yang siap digunakan untuk melamar pekerjaan atau kuliah."
                                 />
                             </div>
                         </div>
                         <div className="relative">
-                            <div className="absolute -inset-4 -z-10 rounded-3xl bg-blue-50/50" />
-                            <Card className="overflow-hidden rounded-2xl border-none bg-white shadow-[0_40px_100px_rgba(0,0,0,0.08)]">
+                            <div className="absolute -inset-10 bg-indigo-50/50 rounded-[4rem] -z-10 blur-3xl" />
+                            <Card className="overflow-hidden rounded-[2.5rem] border-none bg-white shadow-[0_40px_100px_rgba(0,51,102,0.1)]">
                                 <CardContent className="p-10">
                                     <div className="flex flex-col gap-8">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-3">
-                                                <div className="flex size-10 items-center justify-center rounded-full bg-gray-100">
-                                                    <User className="size-5 text-gray-400" />
+                                                <div className="flex size-12 items-center justify-center rounded-2xl bg-blue-50">
+                                                    <User className="size-6 text-blue-600" />
                                                 </div>
                                                 <div className="flex flex-col">
-                                                    <div className="mb-2 h-2 w-24 rounded-full bg-gray-100" />
-                                                    <div className="h-2 w-16 rounded-full bg-gray-50" />
+                                                    <div className="mb-2 h-2.5 w-32 rounded-full bg-gray-100" />
+                                                    <div className="h-2 w-20 rounded-full bg-gray-50" />
                                                 </div>
                                             </div>
                                             <Badge
                                                 variant="secondary"
-                                                className="border-none bg-blue-50 text-[10px] tracking-wider text-blue-600 uppercase"
+                                                className="border-none bg-emerald-50 text-[9px] font-black tracking-widest text-emerald-600 uppercase px-3 py-1"
                                             >
-                                                Verified Student
+                                                Siswa Aktif
                                             </Badge>
                                         </div>
-                                        <div className="flex aspect-video items-center justify-center rounded-xl border-2 border-dashed border-gray-100 bg-gray-50">
-                                            <Plus className="size-8 text-gray-300" />
+                                        <div className="flex aspect-video items-center justify-center rounded-3xl border-2 border-dashed border-blue-100 bg-blue-50/30 transition-colors hover:bg-blue-50/50 cursor-pointer">
+                                            <div className="flex flex-col items-center gap-2">
+                                                <Plus className="size-10 text-blue-400" />
+                                                <span className="text-[10px] font-bold uppercase tracking-widest text-blue-400">Upload Karya Baru</span>
+                                            </div>
                                         </div>
                                         <div className="space-y-4">
                                             <div className="h-3 w-full rounded-full bg-gray-100" />
                                             <div className="h-3 w-3/4 rounded-full bg-gray-50" />
                                         </div>
-                                        <Button className="h-12 w-full rounded-lg bg-[#003366] hover:bg-[#002244]">
-                                            Submit for Review
+                                        <Button className="h-14 w-full rounded-2xl bg-[#003366] hover:bg-[#002244] shadow-lg shadow-blue-900/20 font-bold uppercase tracking-widest text-xs">
+                                            Ajukan Untuk Tinjauan
                                         </Button>
                                     </div>
                                 </CardContent>
@@ -440,47 +455,47 @@ export default function Welcome({ webSetting }: WelcomeProps) {
                 </section>
 
                 {/* Top Students */}
-                <section className="relative overflow-hidden bg-[#050505] py-24 text-white">
-                    <div className="absolute top-0 right-0 h-full w-1/3 bg-linear-to-l from-blue-900/10 to-transparent" />
+                <section className="relative overflow-hidden bg-[#050505] py-32 text-white">
+                    <div className="absolute top-0 right-0 h-full w-1/2 bg-linear-to-l from-[#003366]/20 to-transparent" />
                     <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-                        <div className="mb-16 flex items-end justify-between">
+                        <div className="mb-20 flex flex-col md:flex-row md:items-end justify-between gap-8">
                             <div>
-                                <h3 className="mb-4 text-[10px] font-bold tracking-[0.2em] text-blue-400 uppercase">
-                                    Scholarship
+                                <h3 className="mb-4 text-[10px] font-black tracking-[0.3em] text-blue-400 uppercase">
+                                    Prestasi Siswa
                                 </h3>
-                                <h2 className="mb-4 font-serif text-4xl">
-                                    Top Students of the Month
+                                <h2 className="font-serif text-5xl lg:text-6xl">
+                                    Siswa Berprestasi <br /> Bulan Ini
                                 </h2>
                             </div>
                             <Button
                                 variant="link"
-                                className="group text-gray-400 hover:text-white"
+                                className="group text-gray-400 hover:text-white p-0 h-auto font-bold uppercase tracking-widest text-[10px]"
                             >
-                                View all merit recipients{' '}
+                                Lihat semua penerima prestasi{' '}
                                 <ChevronRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
                             </Button>
                         </div>
 
-                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
                             <StudentCard
-                                name="Alex Rivera"
-                                focus="Architectural Design"
-                                grade="Grade 12"
+                                name="Bhima Erlangga"
+                                focus="Manajemen Perkantoran"
+                                grade="Kelas XII"
                             />
                             <StudentCard
-                                name="Elena Chen"
-                                focus="UX Design"
-                                grade="Grade 11"
+                                name="Deri Candra"
+                                focus="Desain Komunikasi Visual"
+                                grade="Kelas XI"
                             />
                             <StudentCard
-                                name="Marcus Thorne"
-                                focus="Engineering"
-                                grade="Grade 12"
+                                name="Muhimatul Aliyah"
+                                focus="Kuliner"
+                                grade="Kelas XII"
                             />
                             <StudentCard
-                                name="Sarah Jenkins"
-                                focus="Creative Writing"
-                                grade="Grade 10"
+                                name="Qori’atul Khusna"
+                                focus="Bisnis Digital"
+                                grade="Kelas X"
                             />
                         </div>
                     </div>
@@ -488,7 +503,7 @@ export default function Welcome({ webSetting }: WelcomeProps) {
 
                 {/* Ready to join */}
                 <section className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
-                    <div className="relative overflow-hidden rounded-[2.5rem] bg-[#003366] px-8 py-24 text-center text-white lg:px-16">
+                    <div className="relative overflow-hidden rounded-[3rem] bg-[#003366] px-8 py-32 text-center text-white lg:px-16 shadow-2xl shadow-blue-900/40">
                         {/* Decorative background curves */}
                         <svg
                             className="absolute inset-0 size-full opacity-10"
@@ -512,33 +527,33 @@ export default function Welcome({ webSetting }: WelcomeProps) {
                         </svg>
 
                         <div className="relative z-10">
-                            <h2 className="mb-8 font-serif text-5xl lg:text-6xl">
-                                Ready to join the <br />
+                            <h2 className="mb-8 font-serif text-6xl lg:text-7xl">
+                                Siap memamerkan <br />
                                 <span className="italic">
-                                    academy archives?
+                                    karyamu sendiri?
                                 </span>
                             </h2>
                             <p className="mx-auto mb-12 max-w-2xl text-lg leading-relaxed font-medium text-blue-100 opacity-80">
-                                Exclusively for {webSetting.site_title} students.
-                                Log in with your <br /> school ID to begin
-                                documenting your journey.
+                                Khusus untuk siswa-siswi {webSetting.site_title}.
+                                Masuk dengan akun sekolahmu untuk mulai <br /> 
+                                menginspirasi dunia sekarang juga.
                             </p>
                             <div className="flex flex-wrap justify-center gap-4">
                                 <Button
                                     asChild
                                     size="lg"
-                                    className="h-14 rounded-xl bg-white px-10 font-bold text-[#003366] hover:bg-blue-50"
+                                    className="h-16 rounded-2xl bg-white px-12 font-black uppercase tracking-widest text-xs text-[#003366] hover:bg-blue-50 shadow-xl"
                                 >
                                     <Link href={login()}>
-                                        Login with School ID
+                                        Masuk Sekarang
                                     </Link>
                                 </Button>
                                 <Button
                                     variant="outline"
                                     size="lg"
-                                    className="h-14 rounded-xl border-white/20 bg-white/10 px-10 font-bold text-white backdrop-blur-sm hover:bg-white/20"
+                                    className="h-16 rounded-2xl border-white/20 bg-white/10 px-12 font-black uppercase tracking-widest text-xs text-white backdrop-blur-sm hover:bg-white/20"
                                 >
-                                    Visitor Access
+                                    Akses Pengunjung
                                 </Button>
                             </div>
                         </div>
@@ -547,24 +562,24 @@ export default function Welcome({ webSetting }: WelcomeProps) {
             </main>
 
             {/* Footer */}
-            <footer className="border-t border-gray-100 pt-24 pb-12">
+            <footer className="border-t border-gray-100 pt-24 pb-12 bg-white">
                 <div className="mx-auto max-w-7xl px-6 lg:px-8">
                     <div className="mb-20 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
                         <div className="lg:col-span-4">
-                            <div className="mb-6 flex items-center gap-2">
-                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#003366] text-white overflow-hidden">
+                            <div className="mb-6 flex items-center gap-3">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003366] text-white overflow-hidden shadow-lg shadow-blue-900/20">
                                     {webSetting.site_logo_url ? (
-                                        <img src={webSetting.site_logo_url} alt={webSetting.site_title} className="size-full object-cover" />
+                                        <img src={"/storage/" + webSetting.site_logo_url} alt={webSetting.site_title} className="size-full object-cover" />
                                     ) : (
-                                        <School className="size-5" />
+                                        <School className="size-6" />
                                     )}
                                 </div>
-                                <span className="text-lg font-bold text-[#003366] uppercase">
+                                <span className="text-xl font-black text-[#003366] uppercase tracking-tight">
                                     {webSetting.site_title}
                                 </span>
                             </div>
-                            <p className="mb-8 max-w-sm text-sm leading-relaxed text-gray-400">
-                                {webSetting.site_description}
+                            <p className="mb-8 max-w-sm text-sm font-medium leading-relaxed text-gray-400">
+                                {webSetting.site_description || "Platform galeri karya siswa yang berfokus pada pengembangan bakat dan kreativitas dalam ekosistem pendidikan modern."}
                             </p>
                             <div className="flex gap-4">
                                 <SocialIcon icon={Eye} />
@@ -574,135 +589,87 @@ export default function Welcome({ webSetting }: WelcomeProps) {
                         </div>
 
                         <div className="lg:col-span-2">
-                            <h4 className="mb-6 text-sm font-bold">
-                                Departments
+                            <h4 className="mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-[#1b1b18]">
+                                Daftar Jurusan
                             </h4>
-                            <ul className="space-y-4 text-sm text-gray-400">
-                                <li>
-                                    <Link
-                                        href="#"
-                                        className="transition-colors hover:text-blue-600"
-                                    >
-                                        Visual Arts
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        href="#"
-                                        className="transition-colors hover:text-blue-600"
-                                    >
-                                        Science & Tech
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        href="#"
-                                        className="transition-colors hover:text-blue-600"
-                                    >
-                                        Classical Studies
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        href="#"
-                                        className="transition-colors hover:text-blue-600"
-                                    >
-                                        Music Conservatory
-                                    </Link>
-                                </li>
+                            <ul className="space-y-4 text-xs font-bold text-gray-400">
+                                {ItemJurusan.slice(0, 4).map(j => (
+                                    <li key={j.id}>
+                                        <Link href="#" className="transition-colors hover:text-blue-600">
+                                            {j.name}
+                                        </Link>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
 
                         <div className="lg:col-span-2">
-                            <h4 className="mb-6 text-sm font-bold">Academy</h4>
-                            <ul className="space-y-4 text-sm text-gray-400">
+                            <h4 className="mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-[#1b1b18]">
+                                Lembaga
+                            </h4>
+                            <ul className="space-y-4 text-xs font-bold text-gray-400">
                                 <li>
-                                    <Link
-                                        href="#"
-                                        className="transition-colors hover:text-blue-600"
-                                    >
-                                        Our History
+                                    <Link href="/tentang" className="transition-colors hover:text-blue-600">
+                                        Profil Sekolah
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link
-                                        href="#"
-                                        className="transition-colors hover:text-blue-600"
-                                    >
-                                        Campus Life
+                                    <Link href="#" className="transition-colors hover:text-blue-600">
+                                        Visi & Misi
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link
-                                        href="#"
-                                        className="transition-colors hover:text-blue-600"
-                                    >
-                                        Student Council
+                                    <Link href="/daftar-siswa" className="transition-colors hover:text-blue-600">
+                                        Data Siswa
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link
-                                        href="#"
-                                        className="transition-colors hover:text-blue-600"
-                                    >
-                                        Events Calendar
+                                    <Link href="#" className="transition-colors hover:text-blue-600">
+                                        Kontak Kami
                                     </Link>
                                 </li>
                             </ul>
                         </div>
 
                         <div className="lg:col-span-4">
-                            <h4 className="mb-6 text-sm font-bold">
-                                Resources
+                            <h4 className="mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-[#1b1b18]">
+                                Bantuan
                             </h4>
-                            <ul className="space-y-4 text-sm text-gray-400">
+                            <ul className="space-y-4 text-xs font-bold text-gray-400">
                                 <li>
-                                    <Link
-                                        href="#"
-                                        className="transition-colors hover:text-blue-600"
-                                    >
-                                        Submission Guide
+                                    <Link href="#" className="transition-colors hover:text-blue-600">
+                                        Panduan Kirim Karya
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link
-                                        href="#"
-                                        className="transition-colors hover:text-blue-600"
-                                    >
-                                        Teacher Portal
+                                    <Link href="#" className="transition-colors hover:text-blue-600">
+                                        Portal Pengajar
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link
-                                        href="#"
-                                        className="transition-colors hover:text-blue-600"
-                                    >
-                                        Parent Portal
+                                    <Link href="#" className="transition-colors hover:text-blue-600">
+                                        Kebijakan Privasi
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link
-                                        href="#"
-                                        className="transition-colors hover:text-blue-600"
-                                    >
-                                        IT Help Desk
+                                    <Link href="#" className="transition-colors hover:text-blue-600">
+                                        Syarat & Ketentuan
                                     </Link>
                                 </li>
                             </ul>
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-center justify-between gap-6 border-t border-gray-100 pt-12 text-[10px] font-medium tracking-wider text-gray-400 uppercase md:flex-row">
+                    <div className="flex flex-col items-center justify-between gap-6 border-t border-gray-100 pt-12 text-[9px] font-bold tracking-[0.2em] text-gray-400 uppercase md:flex-row">
                         <p>
-                            © 2024 {webSetting.site_title}. For internal educational
-                            use only.
+                            © 2026 {webSetting.site_title}. Dikembangkan untuk ekosistem pendidikan Indonesia.
                         </p>
                         <div className="flex gap-8">
                             <Link href="#" className="hover:text-blue-600">
-                                Academy Ethics
+                                Etika Akademik
                             </Link>
                             <Link href="#" className="hover:text-blue-600">
-                                Privacy Policy
+                                Help Desk
                             </Link>
                         </div>
                     </div>
