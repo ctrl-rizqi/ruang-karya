@@ -16,6 +16,11 @@ class Karya extends Model
         'title',
         'description',
         'content',
+        'media_type',
+        'media_url',
+        'media_path',
+        'media_size',
+        'status',
     ];
 
     public function user(): BelongsTo

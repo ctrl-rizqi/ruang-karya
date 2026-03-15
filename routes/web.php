@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Dashboard\ClassroomController;
+use App\Http\Controllers\Dashboard\KaryaController as DashboardKaryaController;
 use App\Http\Controllers\Dashboard\MajorController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\WebSettingController;
@@ -45,6 +46,10 @@ Route::middleware(['auth', 'verified', 'role:GURU'])->group(function () {
         'update' => 'dashboard.majors.update',
         'destroy' => 'dashboard.majors.destroy',
     ])->only(['index', 'store', 'update', 'destroy']);
+
+    Route::get('dashboard/karyas', [DashboardKaryaController::class, 'index'])->name('dashboard.karyas.index');
+    Route::get('dashboard/karyas/{karya}', [DashboardKaryaController::class, 'show'])->name('dashboard.karyas.show');
+    Route::patch('dashboard/karyas/{karya}/status', [DashboardKaryaController::class, 'updateStatus'])->name('dashboard.karyas.status');
 });
 
 Route::middleware(['auth', 'verified', 'role:SISWA'])->group(function () {

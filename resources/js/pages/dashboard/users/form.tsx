@@ -1,4 +1,5 @@
 import { Head, Link, useForm } from '@inertiajs/react';
+import { format } from 'date-fns';
 import {
     AtSign,
     ChevronLeft,
@@ -300,20 +301,25 @@ export default function UserForm({ mode, user, roleOptions, classrooms, majors }
                                                 <PopoverTrigger asChild>
                                                     <Input
                                                         id="birth_date"
-                                                        
-                                                        className="rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent"
+                                                        readOnly
+                                                        className="rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent cursor-pointer"
                                                         value={form.data.birth_date}
-                                                        onChange={(e) => form.setData('birth_date', e.target.value)}
                                                     />
                                                 </PopoverTrigger>
-                                                <PopoverContent>
-                                                    <Calendar mode='single' captionLayout='dropdown' 
-                                                    selected={form.data.birth_date ? new Date(form.data.birth_date) : undefined}
-                                                    onSelect={(date) => {
-                                                        if (date) {
-                                                            form.setData('birth_date', date.toISOString().split('T')[0]);
+                                                <PopoverContent className="w-auto p-0" align="start">
+                                                    <Calendar 
+                                                        mode='single' 
+                                                        captionLayout='dropdown' 
+                                                        selected={form.data.birth_date ? new Date(form.data.birth_date) : undefined}
+                                                        onSelect={(date) => {
+                                                            if (date) {
+                                                                form.setData('birth_date', format(date, 'yyyy-MM-dd'));
+                                                            }
+                                                        }}
+                                                        disabled={(date) =>
+                                                            date > new Date() || date < new Date("1900-01-01")
                                                         }
-                                                    }}
+                                                        initialFocus
                                                     />
                                                 </PopoverContent>
                                             </Popover>

@@ -14,7 +14,7 @@ import {
     X
 } from 'lucide-react';
 import { useState,  useRef } from 'react';
-import type {FormEvent} from 'react';
+import type {SubmitEvent} from 'react';
 import InputError from '@/components/input-error';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -72,7 +72,15 @@ export default function StudentProfile({ student }: StudentProfileProps) {
         if (fileInput.current) fileInput.current.value = '';
     };
 
-    const submit = (event: FormEvent<HTMLFormElement>) => {
+/**
+ * Submit the form with the updated profile data.
+ * The form data will be sent as multipart/form-data
+ * and the _method field will be spoofed to 'PATCH'
+ * to update the profile data.
+ * On success, the preview will be cleared and the file input will be reset.
+ */
+
+    const submit = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         // Use post with _method spoofing for multipart/form-data

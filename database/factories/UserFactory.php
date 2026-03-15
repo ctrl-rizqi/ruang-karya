@@ -70,7 +70,7 @@ class UserFactory extends Factory
     public function guru(): static
     {
         return $this->state(fn (array $attributes) => [
-            'nisn' => null,
+            'nisn' => fake()->unique()->numerify('##########'),
             'classroom_id' => null,
             'major_id' => null,
             'role' => UserRole::Guru,

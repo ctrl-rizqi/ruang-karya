@@ -37,6 +37,12 @@ export function AppSidebar() {
                   icon: LayoutGrid,
               },
               {
+                  title: 'Review Karya',
+                  href: '/dashboard/karyas',
+                  icon: FolderGit2,
+                  matchSubpaths: true,
+              },
+              {
                   title: 'Users',
                   href: '/dashboard/users',
                   icon: Users,

@@ -1,5 +1,5 @@
 import { Form, Head, Link } from '@inertiajs/react';
-import { Mail, Lock, LogIn, ArrowRight } from 'lucide-react';
+import { UserRound, Lock, LogIn, ArrowRight } from 'lucide-react';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
@@ -39,85 +39,99 @@ export default function Login({
                     <>
                         <div className="grid gap-5">
                             <div className="space-y-2">
-                                <Label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Email Address</Label>
+                                <Label
+                                    htmlFor="nisn"
+                                    className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase"
+                                >
+                                    Username / Nomor Identitas
+                                </Label>
                                 <div className="relative">
-                                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                                    <UserRound className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
                                     <Input
-                                        id="email"
-                                        type="email"
-                                        name="email"
+                                        id="nisn"
+                                        type="text"
+                                        name="nisn"
                                         required
                                         autoFocus
-                                        tabIndex={1}
-                                        autoComplete="email"
-                                        placeholder="nama@sekolah.sch.id"
-                                        className="pl-10 h-12 rounded-xl bg-white dark:bg-[#0a0a0a] border-gray-100 dark:border-white/5 focus:border-blue-600 transition-all"
-                                        
+                                        autoComplete="username"
+                                        placeholder="Contoh: 1234567890"
+                                        className="h-12 rounded-xl border-gray-100 bg-white pl-10 transition-all focus:border-blue-600 dark:border-white/5 dark:bg-[#0a0a0a]"
                                     />
                                 </div>
-                                <InputError message={errors.email} />
+                                <InputError message={errors.nisn} />
                             </div>
 
                             <div className="space-y-2">
-                                <div className="flex items-center justify-between ml-1">
-                                    <Label htmlFor="password" title="Password" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Password</Label>
+                                <div className="ml-1 flex items-center justify-between">
+                                    <Label
+                                        htmlFor="password"
+                                        title="Password"
+                                        className="text-xs font-bold tracking-widest text-muted-foreground uppercase"
+                                    >
+                                        Password
+                                    </Label>
                                     {canResetPassword && (
                                         <TextLink
                                             href={request()}
-                                            className="text-[10px] font-bold uppercase tracking-widest text-blue-600 hover:text-blue-700"
-                                            tabIndex={5}
+                                            className="text-[10px] font-bold tracking-widest text-blue-600 uppercase hover:text-blue-700"
                                         >
                                             Lupa Password?
                                         </TextLink>
                                     )}
                                 </div>
                                 <div className="relative">
-                                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                                    <Lock className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
                                     <Input
                                         id="password"
                                         type="password"
                                         name="password"
                                         required
-                                        tabIndex={2}
                                         autoComplete="current-password"
                                         placeholder="••••••••"
-                                        className="pl-10 h-12 rounded-xl bg-white dark:bg-[#0a0a0a] border-gray-100 dark:border-white/5 focus:border-blue-600 transition-all"
-                                        
+                                        className="h-12 rounded-xl border-gray-100 bg-white pl-10 transition-all focus:border-blue-600 dark:border-white/5 dark:bg-[#0a0a0a]"
                                     />
                                 </div>
                                 <InputError message={errors.password} />
                             </div>
 
-                            <div className="flex items-center space-x-3 ml-1">
+                            <div className="ml-1 flex items-center space-x-3">
                                 <Checkbox
                                     id="remember"
                                     name="remember"
-                                    tabIndex={3}
                                     className="rounded-md border-gray-200 text-blue-600 focus:ring-blue-500/20"
                                 />
-                                <Label htmlFor="remember" className="text-sm font-medium text-muted-foreground cursor-pointer">Ingat saya di perangkat ini</Label>
+                                <Label
+                                    htmlFor="remember"
+                                    className="cursor-pointer text-sm font-medium text-muted-foreground"
+                                >
+                                    Ingat saya di perangkat ini
+                                </Label>
                             </div>
 
                             <Button
                                 type="submit"
-                                className="mt-2 w-full h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold uppercase tracking-widest text-xs shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
-                                tabIndex={4}
+                                className="mt-2 h-12 w-full rounded-xl bg-blue-600 text-xs font-bold tracking-widest text-white uppercase shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02] hover:bg-blue-700 active:scale-[0.98]"
                                 disabled={processing}
                                 data-test="login-button"
                             >
-                                {processing ? <Spinner className="mr-2" /> : <LogIn className="mr-2 size-4" />}
+                                {processing ? (
+                                    <Spinner className="mr-2" />
+                                ) : (
+                                    <LogIn className="mr-2 size-4" />
+                                )}
                                 Masuk Sekarang
                             </Button>
                         </div>
 
                         {canRegister && (
-                            <div className="text-center text-sm font-medium text-muted-foreground pt-2">
+                            <div className="pt-2 text-center text-sm font-medium text-muted-foreground">
                                 Belum punya akun?{' '}
-                                <Link 
-                                    href={register()} 
-                                    className="text-blue-600 hover:text-blue-700 font-bold flex items-center justify-center gap-1 mt-2 group"
+                                <Link
+                                    href={register()}
+                                    className="group mt-2 flex items-center justify-center gap-1 font-bold text-blue-600 hover:text-blue-700"
                                 >
-                                    Daftar Siswa Baru <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                                    Daftar Siswa Baru{' '}
+                                    <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
                                 </Link>
                             </div>
                         )}
@@ -126,7 +140,7 @@ export default function Login({
             </Form>
 
             {status && (
-                <div className="mt-6 p-4 rounded-xl bg-green-50 dark:bg-green-900/20 text-center text-sm font-bold text-green-600 border border-green-100 dark:border-green-900/30">
+                <div className="mt-6 rounded-xl border border-green-100 bg-green-50 p-4 text-center text-sm font-bold text-green-600 dark:border-green-900/30 dark:bg-green-900/20">
                     {status}
                 </div>
             )}

@@ -8,7 +8,13 @@ import {
     Search, 
     Share2, 
     Sparkles, 
-    Trash2 
+    Trash2,
+    Image as ImageIcon,
+    Video,
+    FileText,
+    Link as LinkIcon,
+    CheckCircle2,
+    Clock
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -27,6 +33,10 @@ type KaryaItem = {
     title: string;
     description: string | null;
     content: string;
+    media_type: string;
+    media_url: string | null;
+    media_path: string | null;
+    status: string;
     created_at: string | null;
 };
 
@@ -55,6 +65,18 @@ export default function StudentKaryaIndex({ karyas }: StudentKaryaIndexProps) {
             .replace(/<[^>]*>/g, '')
             .replaceAll('&laquo;', '')
             .replaceAll('&raquo;', '');
+    };
+
+    const mediaIcons = {
+        image: <ImageIcon className="size-8 opacity-20" />,
+        video: <Video className="size-8 opacity-20" />,
+        document: <FileText className="size-8 opacity-20" />,
+        link: <LinkIcon className="size-8 opacity-20" />,
+    };
+
+    const statusBadges = {
+        pending: <Badge variant="secondary" className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-none text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 flex items-center gap-1"><Clock className="size-3" /> Pending</Badge>,
+        reviewed: <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-none text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 flex items-center gap-1"><CheckCircle2 className="size-3" /> Reviewed</Badge>,
     };
 
     return (
@@ -108,9 +130,14 @@ export default function StudentKaryaIndex({ karyas }: StudentKaryaIndexProps) {
                         {karyas.data.map((karya) => (
                             <Card key={karya.id} className="group overflow-hidden border-none shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500 bg-white dark:bg-[#161615] rounded-4xl">
                                 <div className="aspect-16/10 bg-linear-to-br from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 relative overflow-hidden">
-                                    <div className="size-full flex items-center justify-center text-blue-200 dark:text-blue-900 font-black text-7xl group-hover:scale-110 transition-transform duration-700 select-none">
-                                        {karya.title[0]}
-                                    </div>
+                                    {karya.media_type === 'image' && karya.media_path ? (
+                                        <img src={karya.media_path} className="size-full object-cover group-hover:scale-110 transition-transform duration-700" alt={karya.title} />
+                                    ) : (
+                                        <div className="size-full flex flex-col items-center justify-center group-hover:scale-110 transition-transform duration-700 select-none">
+                                            {mediaIcons[karya.media_type as keyof typeof mediaIcons] || mediaIcons.link}
+                                            <span className="text-blue-200 dark:text-blue-900 font-black text-6xl mt-2">{karya.title[0]}</span>
+                                        </div>
+                                    )}
                                     <div className="absolute top-4 right-4">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
@@ -136,9 +163,13 @@ export default function StudentKaryaIndex({ karyas }: StudentKaryaIndexProps) {
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </div>
+                                    <div className="absolute top-4 left-4">
+                                        {statusBadges[karya.status as keyof typeof statusBadges] || statusBadges.pending}
+                                    </div>
                                     <div className="absolute bottom-4 left-4">
-                                        <Badge className="bg-blue-600/90 hover:bg-blue-600 text-white border-none text-[10px] font-bold uppercase tracking-widest px-3 py-1 backdrop-blur-sm">
-                                            Creative Work
+                                        <Badge className="bg-blue-600/90 hover:bg-blue-600 text-white border-none text-[10px] font-bold uppercase tracking-widest px-3 py-1 backdrop-blur-sm flex items-center gap-1.5">
+                                            {karya.media_type === 'link' ? <LinkIcon className="size-3" /> : (karya.media_type === 'video' ? <Video className="size-3" /> : (karya.media_type === 'document' ? <FileText className="size-3" /> : <ImageIcon className="size-3" />))}
+                                            {karya.media_type}
                                         </Badge>
                                     </div>
                                 </div>

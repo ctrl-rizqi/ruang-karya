@@ -7,6 +7,7 @@ use App\Http\Requests\Student\StoreKaryaRequest;
 use App\Http\Requests\Student\UpdateKaryaRequest;
 use App\Models\Karya;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -36,9 +37,18 @@ class KaryaController extends Controller
 
     public function store(StoreKaryaRequest $request): RedirectResponse
     {
+        $data = $request->validated();
+
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store('karyas', 'public');
+            $data['media_path'] = $path;
+            $data['media_size'] = $request->file('file')->getSize();
+        }
+
         Karya::create([
-            ...$request->validated(),
+            ...$data,
             'user_id' => $request->user()->id,
+            'status' => 'pending',
         ]);
 
         return to_route('student.karya.index')->with('status', 'karya-created');
@@ -58,7 +68,19 @@ class KaryaController extends Controller
     {
         $this->ensureOwnedKarya($karya);
 
-        $karya->fill($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('file')) {
+            if ($karya->media_path) {
+                Storage::disk('public')->delete($karya->media_path);
+            }
+
+            $path = $request->file('file')->store('karyas', 'public');
+            $data['media_path'] = $path;
+            $data['media_size'] = $request->file('file')->getSize();
+        }
+
+        $karya->fill($data);
         $karya->save();
 
         return to_route('student.karya.index')->with('status', 'karya-updated');
@@ -67,6 +89,10 @@ class KaryaController extends Controller
     public function destroy(Karya $karya): RedirectResponse
     {
         $this->ensureOwnedKarya($karya);
+
+        if ($karya->media_path) {
+            Storage::disk('public')->delete($karya->media_path);
+        }
 
         $karya->delete();
 
@@ -85,6 +111,11 @@ class KaryaController extends Controller
             'title' => $karya->title,
             'description' => $karya->description,
             'content' => $karya->content,
+            'media_type' => $karya->media_type,
+            'media_url' => $karya->media_url,
+            'media_path' => $karya->media_path ? Storage::disk('public')->url($karya->media_path) : null,
+            'media_size' => $karya->media_size,
+            'status' => $karya->status,
             'created_at' => $karya->created_at?->toDateTimeString(),
         ];
     }

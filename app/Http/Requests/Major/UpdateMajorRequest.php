@@ -11,15 +11,15 @@ class UpdateMajorRequest extends FormRequest
     {
         return [
             'name' => [
-                'required', 
-                'string', 
-                'max:255', 
+                'required',
+                'string',
+                'max:255',
                 Rule::unique('majors', 'name')->ignore($this->route('major')),
             ],
             'code' => [
-                'required', 
-                'string', 
-                'max:20', 
+                'required',
+                'string',
+                'max:20',
                 Rule::unique('majors', 'code')->ignore($this->route('major')),
             ],
         ];

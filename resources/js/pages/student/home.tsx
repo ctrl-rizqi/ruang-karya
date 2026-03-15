@@ -11,20 +11,30 @@ import {
     Plus, 
     Share2, 
     Sparkles, 
-    Trophy 
+    Trophy,
+    Image as ImageIcon,
+    Video,
+    FileText,
+    Link as LinkIcon,
+    Clock,
+    CheckCircle2
 } from 'lucide-react';
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import StudentLayout from '@/layouts/student-layout';
 import { cn } from '@/lib/utils';
 
 type Karya = {
     id: number;
     title: string;
-    description: string;
-    content: string;
+    description: string | null;
+    media_type: string;
+    media_url: string | null;
+    media_path: string | null;
+    status: string;
     created_at: string;
 };
 
@@ -50,6 +60,18 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
         .map((n) => n[0])
         .join('')
         .toUpperCase();
+
+    const mediaIcons = {
+        image: <ImageIcon className="size-8 opacity-20" />,
+        video: <Video className="size-8 opacity-20" />,
+        document: <FileText className="size-8 opacity-20" />,
+        link: <LinkIcon className="size-8 opacity-20" />,
+    };
+
+    const statusBadges = {
+        pending: <Badge variant="secondary" className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-none text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 flex items-center gap-1"><Clock className="size-3" /> Pending</Badge>,
+        reviewed: <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-none text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 flex items-center gap-1"><CheckCircle2 className="size-3" /> Reviewed</Badge>,
+    };
 
     return (
         <StudentLayout>
@@ -130,12 +152,12 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
                                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Karya</span>
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-xl font-bold">1.2k</span>
-                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Views</span>
+                                <span className="text-xl font-bold">{recentKarya.filter(k => k.status === 'reviewed').length}</span>
+                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Reviewed</span>
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-xl font-bold">428</span>
-                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Appreciation</span>
+                                <span className="text-xl font-bold">{recentKarya.filter(k => k.media_type === 'link').length}</span>
+                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Links</span>
                             </div>
                         </div>
                     </div>
@@ -176,19 +198,30 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
                                     {recentKarya.map((karya) => (
                                         <Card key={karya.id} className="group overflow-hidden border-none shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-500 bg-white dark:bg-[#161615] rounded-3xl">
                                             <div className="aspect-4/3 bg-gray-50 dark:bg-[#222] relative overflow-hidden">
+                                                {karya.media_type === 'image' && karya.media_path ? (
+                                                    <img src={karya.media_path} className="size-full object-cover group-hover:scale-110 transition-transform duration-700" alt={karya.title} />
+                                                ) : (
+                                                    <div className="size-full flex flex-col items-center justify-center group-hover:scale-110 transition-transform duration-700 select-none">
+                                                        {mediaIcons[karya.media_type as keyof typeof mediaIcons] || mediaIcons.link}
+                                                        <span className="text-blue-200 dark:text-blue-900 font-black text-5xl mt-2">{karya.title[0]}</span>
+                                                    </div>
+                                                )}
+                                                
                                                 <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
                                                     <div className="flex items-center gap-4 text-white text-xs font-bold uppercase tracking-wider">
                                                         <span className="flex items-center gap-1.5"><MessageSquare className="size-4" /> 12</span>
                                                         <span className="flex items-center gap-1.5"><Share2 className="size-4" /> 5</span>
                                                     </div>
                                                 </div>
-                                                <div className="size-full flex items-center justify-center text-blue-100 font-bold text-5xl group-hover:scale-110 transition-transform duration-700">
-                                                    {karya.title[0]}
-                                                </div>
+                                                
                                                 <div className="absolute top-4 left-4">
-                                                    <div className="px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold uppercase tracking-widest text-blue-600 shadow-sm">
-                                                        Art & Design
+                                                    <div className="px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold uppercase tracking-widest text-blue-600 shadow-sm flex items-center gap-1.5">
+                                                        {karya.media_type === 'link' ? <LinkIcon className="size-3" /> : (karya.media_type === 'video' ? <Video className="size-3" /> : (karya.media_type === 'document' ? <FileText className="size-3" /> : <ImageIcon className="size-3" />))}
+                                                        {karya.media_type}
                                                     </div>
+                                                </div>
+                                                <div className="absolute top-4 right-4">
+                                                    {statusBadges[karya.status as keyof typeof statusBadges]}
                                                 </div>
                                             </div>
                                             <CardContent className="p-6">

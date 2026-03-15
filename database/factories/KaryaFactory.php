@@ -22,6 +22,11 @@ class KaryaFactory extends Factory
             'title' => fake()->sentence(5),
             'description' => fake()->optional()->paragraph(),
             'content' => fake()->paragraphs(3, true),
+            'media_type' => fake()->randomElement(['image', 'video', 'document', 'link']),
+            'media_url' => fake()->url(),
+            'media_path' => null,
+            'media_size' => null,
+            'status' => fake()->randomElement(['pending', 'reviewed']),
         ];
     }
 }

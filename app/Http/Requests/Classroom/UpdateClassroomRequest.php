@@ -11,9 +11,9 @@ class UpdateClassroomRequest extends FormRequest
     {
         return [
             'name' => [
-                'required', 
-                'string', 
-                'max:255', 
+                'required',
+                'string',
+                'max:255',
                 Rule::unique('classrooms', 'name')->ignore($this->route('classroom')),
             ],
         ];

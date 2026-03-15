@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Karya;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -21,7 +22,17 @@ class HomeController extends Controller
             ->where('user_id', $student->id)
             ->latest()
             ->limit(6)
-            ->get();
+            ->get()
+            ->map(fn (Karya $karya) => [
+                'id' => $karya->id,
+                'title' => $karya->title,
+                'description' => $karya->description,
+                'media_type' => $karya->media_type,
+                'media_url' => $karya->media_url,
+                'media_path' => $karya->media_path ? Storage::disk('public')->url($karya->media_path) : null,
+                'status' => $karya->status,
+                'created_at' => $karya->created_at?->toDateTimeString(),
+            ]);
 
         return Inertia::render('student/home', [
             'karyaCount' => $karyaCount,
