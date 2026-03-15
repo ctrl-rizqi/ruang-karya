@@ -21,16 +21,16 @@ type TeamMember = {
 };
 
 type AboutProps = {
-    webSetting: {
-        site_title: string;
-        site_logo_url: string | null;
-        site_tagline: string | null;
-        site_description: string | null;
-    };
-    team: TeamMember[];
-    purpose: string;
-    vision: string;
-    missions: string[];
+    webSetting?: {
+        site_title?: string | null;
+        site_logo_url?: string | null;
+        site_tagline?: string | null;
+        site_description?: string | null;
+    } | null;
+    team?: TeamMember[] | null;
+    purpose?: string | null;
+    vision?: string | null;
+    missions?: string[] | null;
 };
 
 export default function About({
@@ -40,9 +40,16 @@ export default function About({
     vision,
     missions,
 }: AboutProps) {
+    const siteTitle = webSetting?.site_title?.trim() || 'Ruang Karya';
+    const siteTagline = webSetting?.site_tagline?.trim() || 'Platform inspiratif untuk mewadahi kreativitas tanpa batas bagi setiap siswa.';
+    const purposeText = purpose?.trim() || 'Ruang Karya dibuat untuk membantu siswa menampilkan karya terbaiknya dalam satu platform portfolio sekolah.';
+    const visionText = vision?.trim() || 'Menjadi ruang digital sekolah yang mendorong kreativitas, kolaborasi, dan apresiasi karya siswa.';
+    const missionsList = Array.isArray(missions) ? missions.filter((mission) => mission && mission.trim().length > 0) : [];
+    const teamMembers = Array.isArray(team) ? team : [];
+
     return (
         <StudentLayout>
-            <Head title={`Tentang ${webSetting.site_title}`} />
+            <Head title={`Tentang ${siteTitle}`} />
 
             <div className="mx-auto max-w-6xl px-6 py-12 lg:py-20">
                 {/* Header Section */}
@@ -51,10 +58,10 @@ export default function About({
                         <Info className="size-3" /> Get to know us
                     </div>
                     <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-6">
-                        Tentang <span className="text-blue-600">{webSetting.site_title}</span>
+                        Tentang <span className="text-blue-600">{siteTitle}</span>
                     </h1>
                     <p className="text-muted-foreground max-w-2xl mx-auto text-lg md:text-xl font-medium leading-relaxed">
-                        {webSetting.site_tagline || 'Platform inspiratif untuk mewadahi kreativitas tanpa batas bagi setiap siswa.'}
+                        {siteTagline}
                     </p>
                 </div>
 
@@ -70,7 +77,7 @@ export default function About({
                                 <h2 className="text-2xl font-bold tracking-tight">Tujuan Kami</h2>
                             </div>
                             <p className="text-muted-foreground text-lg leading-relaxed bg-white dark:bg-[#161615] p-8 rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-sm">
-                                {purpose}
+                                {purposeText}
                             </p>
                         </section>
 
@@ -83,7 +90,7 @@ export default function About({
                                     </div>
                                     <h3 className="text-xl font-bold mb-4">Visi</h3>
                                     <p className="text-blue-50 leading-relaxed font-medium italic">
-                                        &ldquo;{vision}&rdquo;
+                                        &ldquo;{visionText}&rdquo;
                                     </p>
                                 </CardContent>
                             </Card>
@@ -95,12 +102,17 @@ export default function About({
                                     </div>
                                     <h3 className="text-xl font-bold mb-4">Misi Kami</h3>
                                     <ul className="space-y-4">
-                                        {missions.map((mission, index) => (
+                                        {missionsList.map((mission, index) => (
                                             <li key={index} className="flex gap-3 text-sm text-muted-foreground leading-relaxed">
                                                 <div className="size-1.5 rounded-full bg-blue-600 mt-2 shrink-0" />
                                                 <span>{mission}</span>
                                             </li>
                                         ))}
+                                        {missionsList.length === 0 && (
+                                            <li className="text-sm text-muted-foreground leading-relaxed">
+                                                Misi akan segera ditambahkan.
+                                            </li>
+                                        )}
                                     </ul>
                                 </CardContent>
                             </Card>
@@ -140,14 +152,14 @@ export default function About({
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-                        {team.map((member, index) => (
+                        {teamMembers.map((member, index) => (
                             <Card key={index} className="group border-none shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 bg-white dark:bg-[#161615] rounded-4xl overflow-hidden">
                                 <CardContent className="p-6 text-center">
                                     <div className="relative mb-6 mx-auto w-fit">
                                         <Avatar className="size-20 rounded-2xl border-4 border-blue-50 dark:border-blue-900/20 group-hover:scale-110 transition-transform duration-500">
-                                            <AvatarImage src={member.avatar} />
+                                            <AvatarImage src={member.avatar || undefined} />
                                             <AvatarFallback className="bg-blue-50 text-blue-600 font-bold uppercase">
-                                                {member.name.charAt(0)}
+                                                {(member.name || '?').charAt(0)}
                                             </AvatarFallback>
                                         </Avatar>
                                     </div>
@@ -166,6 +178,13 @@ export default function About({
                                 </CardContent>
                             </Card>
                         ))}
+                        {teamMembers.length === 0 && (
+                            <Card className="sm:col-span-2 lg:col-span-5 border-none shadow-sm bg-white dark:bg-[#161615] rounded-4xl overflow-hidden">
+                                <CardContent className="p-8 text-center text-sm text-muted-foreground">
+                                    Data tim belum tersedia.
+                                </CardContent>
+                            </Card>
+                        )}
                     </div>
                 </section>
             </div>
