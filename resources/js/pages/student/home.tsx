@@ -1,16 +1,16 @@
 import { Head, Link } from '@inertiajs/react';
-import { 
-    Calendar, 
-    Edit, 
-    ExternalLink, 
-    Grid, 
-    Info, 
-    MapPin, 
-    MessageSquare, 
-    MoreHorizontal, 
-    Plus, 
-    Share2, 
-    Sparkles, 
+import {
+    Calendar,
+    User,
+    Edit,
+    ExternalLink,
+    Grid,
+    Info,
+    MapPin,
+    MoreHorizontal,
+    Plus,
+    Share2,
+    Sparkles,
     Trophy,
     Copy,
     Check,
@@ -19,13 +19,14 @@ import {
     FileText,
     Link as LinkIcon,
     Clock,
-    CheckCircle2
+    CheckCircle2,
 } from 'lucide-react';
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { LikeButton } from '@/components/like-button';
 import StudentLayout from '@/layouts/student-layout';
 import { cn } from '@/lib/utils';
 
@@ -37,6 +38,8 @@ type Karya = {
     media_url: string | null;
     media_path: string | null;
     status: string;
+    likes_count: number;
+    is_liked: boolean;
     created_at: string;
 };
 
@@ -51,10 +54,15 @@ type StudentHomeProps = {
         address: string | null;
         social_link: string | null;
         avatar: string;
+        bio: string | null;
     };
 };
 
-export default function StudentHome({ karyaCount, recentKarya, student }: StudentHomeProps) {
+export default function StudentHome({
+    karyaCount,
+    recentKarya,
+    student,
+}: StudentHomeProps) {
     const [activeTab, setActiveTab] = useState<'karya' | 'about'>('karya');
     const [copied, setCopied] = useState(false);
 
@@ -68,11 +76,13 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
 
     const handleShare = () => {
         if (navigator.share) {
-            navigator.share({
-                title: `Portofolio ${student.name} - Ruang Karya`,
-                text: `Lihat portofolio karya kreatif saya di Ruang Karya!`,
-                url: publicUrl,
-            }).catch(() => {});
+            navigator
+                .share({
+                    title: `Portofolio ${student.name} - Ruang Karya`,
+                    text: `Lihat portofolio karya kreatif saya di Ruang Karya!`,
+                    url: publicUrl,
+                })
+                .catch(() => {});
         } else {
             copyToClipboard();
         }
@@ -92,8 +102,22 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
     };
 
     const statusBadges = {
-        pending: <Badge variant="secondary" className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-none text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 flex items-center gap-1"><Clock className="size-3" /> Pending</Badge>,
-        reviewed: <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-none text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 flex items-center gap-1"><CheckCircle2 className="size-3" /> Reviewed</Badge>,
+        pending: (
+            <Badge
+                variant="secondary"
+                className="flex items-center gap-1 border-none bg-amber-100 px-2 py-0.5 text-[9px] font-bold tracking-widest text-amber-700 uppercase hover:bg-amber-100"
+            >
+                <Clock className="size-3" /> Pending
+            </Badge>
+        ),
+        reviewed: (
+            <Badge
+                variant="secondary"
+                className="flex items-center gap-1 border-none bg-emerald-100 px-2 py-0.5 text-[9px] font-bold tracking-widest text-emerald-700 uppercase hover:bg-emerald-100"
+            >
+                <CheckCircle2 className="size-3" /> Reviewed
+            </Badge>
+        ),
     };
 
     return (
@@ -102,103 +126,138 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
 
             <div className="mx-auto max-w-5xl">
                 {/* Profile Header */}
-                <div className="relative overflow-hidden bg-white dark:bg-[#0a0a0a] rounded-b-3xl shadow-sm border-x border-b border-gray-100 dark:border-white/5">
+                <div className="relative overflow-hidden rounded-b-3xl border-x border-b border-gray-100 bg-white shadow-sm dark:border-white/5 dark:bg-[#0a0a0a]">
                     {/* Cover Photo */}
-                    <div className="h-2 w-full bg-linear-to-r from-blue-600 via-indigo-500 to-purple-600 relative">
+                    <div className="relative h-2 w-full bg-linear-to-r from-blue-600 via-indigo-500 to-purple-600">
                         <div className="absolute inset-0 bg-black/10" />
                     </div>
 
                     {/* Profile Info Section */}
                     <div className="px-6 pb-6">
-                        <div className="relative flex flex-col md:flex-row md:items-end justify-between mt-3 gap-6">
-                            <div className="flex flex-col md:flex-row items-start md:items-end gap-4">
-                                <div className="relative group">
-                                    <Avatar className="size-24 md:size-32 border-4 border-white dark:border-[#0a0a0a] shadow-xl rounded-2xl transition-transform group-hover:scale-105 duration-300">
-                                        <AvatarImage src={student.avatar} className="bg-cover" />
-                                        <AvatarFallback className="text-2xl font-bold bg-blue-50 text-blue-600">{initials}</AvatarFallback>
+                        <div className="relative mt-3 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+                            <div className="flex flex-col items-start gap-4 md:flex-row md:items-end">
+                                <div className="group relative">
+                                    <Avatar className="size-24 rounded-2xl border-4 border-white shadow-xl transition-transform duration-300 group-hover:scale-105 md:size-32 dark:border-[#0a0a0a]">
+                                        <AvatarImage
+                                            src={student.avatar}
+                                            className="bg-cover"
+                                        />
+                                        <AvatarFallback className="bg-blue-50 text-2xl font-bold text-blue-600">
+                                            {initials}
+                                        </AvatarFallback>
                                     </Avatar>
-                                    <div className="absolute bottom-2 right-2 size-6 rounded-full bg-green-500 border-2 border-white dark:border-[#0a0a0a] ring-4 ring-green-500/20 animate-pulse" title="Online" />
+                                    <div
+                                        className="absolute right-2 bottom-2 size-6 animate-pulse rounded-full border-2 border-white bg-green-500 ring-4 ring-green-500/20 dark:border-[#0a0a0a]"
+                                        title="Online"
+                                    />
                                 </div>
                                 <div className="mb-2">
                                     <div className="flex items-center gap-2">
-                                        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">{student.name}</h1>
-                                        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-100 text-blue-600 shadow-sm" title="Verified Scholar">
+                                        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+                                            {student.name}
+                                        </h1>
+                                        <div
+                                            className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-100 text-blue-600 shadow-sm"
+                                            title="Verified Scholar"
+                                        >
                                             <Sparkles className="size-3 fill-current" />
                                         </div>
                                     </div>
-                                    <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-sm text-muted-foreground font-medium">
+                                    <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm font-medium text-muted-foreground">
                                         {student.nisn && (
                                             <span className="flex items-center gap-1.5">
-                                                <Trophy className="size-3.5 text-orange-400" /> NISN: {student.nisn}
+                                                <Trophy className="size-3.5 text-orange-400" />{' '}
+                                                NISN: {student.nisn}
                                             </span>
                                         )}
                                         {student.address && (
                                             <span className="flex items-center gap-1.5 text-blue-600">
-                                                <MapPin className="size-3.5" /> {student.address}
+                                                <MapPin className="size-3.5" />{' '}
+                                                {student.address}
                                             </span>
                                         )}
                                         {student.birth_date && (
                                             <span className="flex items-center gap-1.5">
-                                                <Calendar className="size-3.5" /> Lahir: {new Date(student.birth_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                                <Calendar className="size-3.5" />{' '}
+                                                Lahir:{' '}
+                                                {new Date(
+                                                    student.birth_date,
+                                                ).toLocaleDateString('id-ID', {
+                                                    day: 'numeric',
+                                                    month: 'long',
+                                                    year: 'numeric',
+                                                })}
                                             </span>
                                         )}
                                     </div>
+
                                     
-                                    {/* Public Portfolio Section - The requested Share area */}
-                                    <div className="mt-4 flex flex-wrap items-center gap-2">
-                                        <div className="px-3 py-1.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 flex items-center gap-2 max-w-xs md:max-w-md">
-                                            <span className="text-[10px] font-bold text-muted-foreground truncate uppercase tracking-widest shrink-0">Portofolio Publik:</span>
-                                            <span className="text-[10px] font-mono text-blue-600 truncate">{publicUrl}</span>
-                                            <button 
-                                                onClick={copyToClipboard}
-                                                className="ml-auto p-1 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-md transition-colors text-blue-600"
-                                                title="Salin URL Portofolio"
-                                            >
-                                                {copied ? <Check className="size-3" /> : <Copy className="size-3" />}
-                                            </button>
-                                        </div>
-                                        <Button 
-                                            size="sm" 
-                                            variant="secondary" 
-                                            className="h-8 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/30 border-none font-bold uppercase tracking-widest text-[9px] px-4"
-                                            onClick={handleShare}
-                                        >
-                                            <Share2 className="mr-2 size-3" /> Bagikan Profil
-                                        </Button>
-                                    </div>
                                 </div>
                             </div>
 
-                            <div className="flex gap-2 mb-2">
-                                <Button asChild variant="outline" className="rounded-xl border-gray-200 h-11 px-5">
+                            <div className="mb-2 flex gap-2">
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    className="h-11 rounded-xl border-gray-200 px-5"
+                                >
                                     <Link href="/siswa/profile">
-                                        <Edit className="mr-2 size-4" /> Edit Profil
+                                        <Edit className="mr-2 size-4" /> Edit
+                                        Profil
                                     </Link>
                                 </Button>
-                                <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-11 px-5 shadow-lg shadow-blue-500/20">
+                                <Button
+                                    asChild
+                                    className="h-11 rounded-xl bg-blue-600 px-5 text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700"
+                                >
                                     <Link href="/siswa/karya/create">
-                                        <Plus className="mr-2 size-4" /> Posting Karya
+                                        <Plus className="mr-2 size-4" /> Posting
+                                        Karya
                                     </Link>
                                 </Button>
-                                <Button variant="ghost" size="icon" className="rounded-xl border border-gray-100 size-11">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="size-11 rounded-xl border border-gray-100"
+                                >
                                     <MoreHorizontal className="size-5 text-gray-400" />
                                 </Button>
                             </div>
                         </div>
 
                         {/* Stats Bar */}
-                        <div className="mt-8 flex gap-8 border-t border-gray-100 dark:border-white/5 pt-6 px-2">
+                        <div className="mt-8 flex gap-8 border-t border-gray-100 px-2 pt-6 dark:border-white/5">
                             <div className="flex flex-col">
-                                <span className="text-xl font-bold">{karyaCount}</span>
-                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Karya</span>
+                                <span className="text-xl font-bold">
+                                    {karyaCount}
+                                </span>
+                                <span className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
+                                    Karya
+                                </span>
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-xl font-bold">{recentKarya.filter(k => k.status === 'reviewed').length}</span>
-                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Reviewed</span>
+                                <span className="text-xl font-bold">
+                                    {
+                                        recentKarya.filter(
+                                            (k) => k.status === 'reviewed',
+                                        ).length
+                                    }
+                                </span>
+                                <span className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
+                                    Reviewed
+                                </span>
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-xl font-bold">{recentKarya.filter(k => k.media_type === 'link').length}</span>
-                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Links</span>
+                                <span className="text-xl font-bold">
+                                    {
+                                        recentKarya.filter(
+                                            (k) => k.media_type === 'link',
+                                        ).length
+                                    }
+                                </span>
+                                <span className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
+                                    Links
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -206,76 +265,137 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
 
                 {/* Navigation Tabs */}
                 <div className="px-6 py-8">
-                    <div className="flex items-center justify-between mb-8 border-b border-gray-100 dark:border-white/5">
+                    <div className="mb-8 flex items-center justify-between border-b border-gray-100 dark:border-white/5">
                         <div className="flex gap-8">
-                            <button 
+                            <button
+                                type="button"
                                 onClick={() => setActiveTab('karya')}
                                 className={cn(
-                                    "pb-4 flex items-center gap-2 font-bold text-xs uppercase tracking-[0.2em] transition-all relative",
-                                    activeTab === 'karya' ? "text-blue-600" : "text-muted-foreground hover:text-foreground"
+                                    'relative flex items-center gap-2 pb-4 text-xs font-bold tracking-[0.2em] uppercase transition-all',
+                                    activeTab === 'karya'
+                                        ? 'text-blue-600'
+                                        : 'text-muted-foreground hover:text-foreground',
                                 )}
                             >
                                 <Grid className="size-4" /> Feed Karya
-                                {activeTab === 'karya' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />}
+                                {activeTab === 'karya' && (
+                                    <div className="absolute right-0 bottom-0 left-0 h-0.5 rounded-full bg-blue-600" />
+                                )}
                             </button>
-                            <button 
+                            <button
+                                type="button"
                                 onClick={() => setActiveTab('about')}
                                 className={cn(
-                                    "pb-4 flex items-center gap-2 font-bold text-xs uppercase tracking-[0.2em] transition-all relative",
-                                    activeTab === 'about' ? "text-blue-600" : "text-muted-foreground hover:text-foreground"
+                                    'relative flex items-center gap-2 pb-4 text-xs font-bold tracking-[0.2em] uppercase transition-all',
+                                    activeTab === 'about'
+                                        ? 'text-blue-600'
+                                        : 'text-muted-foreground hover:text-foreground',
                                 )}
                             >
                                 <Info className="size-4" /> Tentang Saya
-                                {activeTab === 'about' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />}
+                                {activeTab === 'about' && (
+                                    <div className="absolute right-0 bottom-0 left-0 h-0.5 rounded-full bg-blue-600" />
+                                )}
                             </button>
                         </div>
                     </div>
 
                     {/* Tab Content */}
-                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="animate-in duration-500 fade-in slide-in-from-bottom-4">
                         {activeTab === 'karya' ? (
                             recentKarya.length > 0 ? (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                                     {recentKarya.map((karya) => (
-                                        <Card key={karya.id} className="group overflow-hidden border-none shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-500 bg-white dark:bg-[#161615] rounded-3xl">
-                                            <div className="aspect-4/3 bg-gray-50 dark:bg-[#222] relative overflow-hidden">
-                                                {karya.media_type === 'image' && karya.media_path ? (
-                                                    <img src={karya.media_path} className="size-full object-cover group-hover:scale-110 transition-transform duration-700" alt={karya.title} />
+                                        <Card
+                                            key={karya.id}
+                                            className="group overflow-hidden rounded-3xl border-none bg-white shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] dark:bg-[#161615]"
+                                        >
+                                            <div className="relative aspect-4/3 overflow-hidden bg-gray-50 dark:bg-[#222]">
+                                                {karya.media_type === 'image' &&
+                                                karya.media_path ? (
+                                                    <img
+                                                        src={karya.media_path}
+                                                        className="size-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                                        alt={karya.title}
+                                                    />
                                                 ) : (
-                                                    <div className="size-full flex flex-col items-center justify-center group-hover:scale-110 transition-transform duration-700 select-none">
-                                                        {mediaIcons[karya.media_type as keyof typeof mediaIcons] || mediaIcons.link}
-                                                        <span className="text-blue-200 dark:text-blue-900 font-black text-5xl mt-2">{karya.title[0]}</span>
+                                                    <div className="flex size-full flex-col items-center justify-center transition-transform duration-700 select-none group-hover:scale-110">
+                                                        {mediaIcons[
+                                                            karya.media_type as keyof typeof mediaIcons
+                                                        ] || mediaIcons.link}
+                                                        <span className="mt-2 text-5xl font-black text-blue-200 dark:text-blue-900">
+                                                            {karya.title[0]}
+                                                        </span>
                                                     </div>
                                                 )}
-                                                
-                                                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
-                                                    <div className="flex items-center gap-4 text-white text-xs font-bold uppercase tracking-wider">
-                                                        <span className="flex items-center gap-1.5"><MessageSquare className="size-4" /> 12</span>
-                                                        <span className="flex items-center gap-1.5"><Share2 className="size-4" /> 5</span>
-                                                    </div>
-                                                </div>
-                                                
+
                                                 <div className="absolute top-4 left-4">
-                                                    <div className="px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold uppercase tracking-widest text-blue-600 shadow-sm flex items-center gap-1.5">
-                                                        {karya.media_type === 'link' ? <LinkIcon className="size-3" /> : (karya.media_type === 'video' ? <Video className="size-3" /> : (karya.media_type === 'document' ? <FileText className="size-3" /> : <ImageIcon className="size-3" />))}
+                                                    <div className="flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold tracking-widest text-blue-600 uppercase shadow-sm backdrop-blur-md">
+                                                        {karya.media_type ===
+                                                        'link' ? (
+                                                            <LinkIcon className="size-3" />
+                                                        ) : karya.media_type ===
+                                                          'video' ? (
+                                                            <Video className="size-3" />
+                                                        ) : karya.media_type ===
+                                                          'document' ? (
+                                                            <FileText className="size-3" />
+                                                        ) : (
+                                                            <ImageIcon className="size-3" />
+                                                        )}
                                                         {karya.media_type}
                                                     </div>
                                                 </div>
                                                 <div className="absolute top-4 right-4">
-                                                    {statusBadges[karya.status as keyof typeof statusBadges]}
+                                                    {
+                                                        statusBadges[
+                                                            karya.status as keyof typeof statusBadges
+                                                        ]
+                                                    }
                                                 </div>
                                             </div>
                                             <CardContent className="p-6">
-                                                <h3 className="font-bold text-lg leading-tight mb-2 group-hover:text-blue-600 transition-colors line-clamp-1">{karya.title}</h3>
-                                                <p className="text-sm text-muted-foreground line-clamp-2 mb-6 leading-relaxed">
-                                                    {karya.description || "Inspirasi baru yang dituangkan dalam sebuah karya kreatif yang bermakna."}
+                                                <h3 className="mb-2 line-clamp-1 text-lg leading-tight font-bold transition-colors group-hover:text-blue-600">
+                                                    {karya.title}
+                                                </h3>
+                                                <p className="mb-6 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+                                                    {karya.description ||
+                                                        'Inspirasi baru yang dituangkan dalam sebuah karya kreatif yang bermakna.'}
                                                 </p>
-                                                <div className="flex items-center justify-between pt-5 border-t border-gray-50 dark:border-white/5">
-                                                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                                                        {new Date(karya.created_at).toLocaleDateString('id-ID', { month: 'short', day: 'numeric', year: 'numeric' })}
-                                                    </span>
-                                                    <Link href={`/siswa/karya/${karya.id}/edit`} className="text-xs font-bold text-blue-600 hover:text-blue-700 uppercase tracking-widest flex items-center gap-1 group/link">
-                                                        Manage <Edit className="size-3 transition-transform group-hover/link:scale-110" />
+                                                <div className="flex items-center justify-between border-t border-gray-50 pt-5 dark:border-white/5">
+                                                    <div className="flex items-center gap-3">
+                                                        <span className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
+                                                            {new Date(
+                                                                karya.created_at,
+                                                            ).toLocaleDateString(
+                                                                'id-ID',
+                                                                {
+                                                                    month: 'short',
+                                                                    day: 'numeric',
+                                                                    year: 'numeric',
+                                                                },
+                                                            )}
+                                                        </span>
+                                                        <LikeButton
+                                                            karyaId={karya.id}
+                                                            likesCount={
+                                                                karya.likes_count
+                                                            }
+                                                            isLiked={
+                                                                karya.is_liked
+                                                            }
+                                                            only={[
+                                                                'recentKarya',
+                                                            ]}
+                                                            className="h-8 px-3 text-[10px] font-bold"
+                                                        />
+                                                    </div>
+                                                    <Link
+                                                        href={`/siswa/karya/${karya.id}/edit`}
+                                                        className="group/link flex items-center gap-1 text-xs font-bold tracking-widest text-blue-600 uppercase hover:text-blue-700"
+                                                    >
+                                                        Manage{' '}
+                                                        <Edit className="size-3 transition-transform group-hover/link:scale-110" />
                                                     </Link>
                                                 </div>
                                             </CardContent>
@@ -283,94 +403,136 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
                                     ))}
                                 </div>
                             ) : (
-                                <div className="flex flex-col items-center justify-center py-24 text-center bg-gray-50/50 dark:bg-white/5 rounded-[3rem] border-2 border-dashed border-gray-100 dark:border-white/10">
-                                    <div className="size-24 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center mb-8 relative">
+                                <div className="flex flex-col items-center justify-center rounded-[3rem] border-2 border-dashed border-gray-100 bg-gray-50/50 py-24 text-center dark:border-white/10 dark:bg-white/5">
+                                    <div className="relative mb-8 flex size-24 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/20">
                                         <Sparkles className="size-12 text-blue-600" />
-                                        <div className="absolute -top-2 -right-2 size-8 rounded-full bg-purple-100 flex items-center justify-center animate-bounce">
+                                        <div className="absolute -top-2 -right-2 flex size-8 animate-bounce items-center justify-center rounded-full bg-purple-100">
                                             <Plus className="size-4 text-purple-600" />
                                         </div>
                                     </div>
-                                    <h3 className="text-2xl font-bold mb-3">Mulai petualanganmu!</h3>
-                                    <p className="text-muted-foreground max-w-sm mb-10 leading-relaxed font-medium">
-                                        Ruang ini masih kosong. Ayo buat karya pertamamu dan tunjukkan kepada dunia bakat luar biasanmu!
+                                    <h3 className="mb-3 text-2xl font-bold">
+                                        Mulai petualanganmu!
+                                    </h3>
+                                    <p className="mb-10 max-w-sm leading-relaxed font-medium text-muted-foreground">
+                                        Ruang ini masih kosong. Ayo buat karya
+                                        pertamamu dan tunjukkan kepada dunia
+                                        bakat luar biasanmu!
                                     </p>
-                                    <Button asChild className="bg-[#1b1b18] hover:bg-black text-white rounded-2xl h-14 px-10 shadow-xl shadow-black/10 transition-all hover:scale-105 active:scale-95">
+                                    <Button
+                                        asChild
+                                        className="h-14 rounded-2xl bg-[#1b1b18] px-10 text-white shadow-xl shadow-black/10 transition-all hover:scale-105 hover:bg-black active:scale-95"
+                                    >
                                         <Link href="/siswa/karya/create">
-                                            <Plus className="mr-2 size-5" /> Buat Karya Pertama
+                                            <Plus className="mr-2 size-5" />{' '}
+                                            Buat Karya Pertama
                                         </Link>
                                     </Button>
                                 </div>
                             )
                         ) : (
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                                <div className="lg:col-span-2 space-y-8">
-                                    <section className="p-8 bg-white dark:bg-[#161615] rounded-4xl shadow-sm border border-gray-100 dark:border-white/5">
-                                        <div className="flex items-center gap-3 mb-6">
-                                            <div className="size-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                            <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+                                <div className="space-y-8 lg:col-span-2">
+                                    <section className="rounded-4xl border border-gray-100 bg-white p-8 shadow-sm dark:border-white/5 dark:bg-[#161615]">
+                                        <div className="mb-6 flex items-center gap-3">
+                                            <div className="flex size-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
                                                 <User className="size-5" />
                                             </div>
-                                            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-blue-600">Biodata Diri</h3>
+                                            <h3 className="text-sm font-bold tracking-[0.2em] text-blue-600 uppercase">
+                                                Biodata Diri
+                                            </h3>
                                         </div>
-                                        <p className="text-muted-foreground leading-relaxed text-lg italic">
-                                            "{student.address || "Halo! Saya adalah siswa yang antusias dalam belajar hal-hal baru dan ingin berbagi inspirasi melalui karya-karya saya di platform Ruang Karya."}"
+                                        <p className="text-lg leading-relaxed text-muted-foreground italic">
+                                            "
+                                            {student.bio ||
+                                                'Halo! Saya adalah siswa yang antusias dalam belajar hal-hal baru dan ingin berbagi inspirasi melalui karya-karya saya di platform Ruang Karya.'}
+                                            "
                                         </p>
                                     </section>
 
-                                    <section className="p-8 bg-linear-to-br from-blue-600 to-indigo-700 rounded-4xl shadow-xl text-white">
-                                        <div className="flex items-center gap-3 mb-6">
-                                            <div className="size-10 rounded-2xl bg-white/20 text-white flex items-center justify-center backdrop-blur-md">
+                                    <section className="rounded-4xl bg-linear-to-br from-blue-600 to-indigo-700 p-8 text-white shadow-xl">
+                                        <div className="mb-6 flex items-center gap-3">
+                                            <div className="flex size-10 items-center justify-center rounded-2xl bg-white/20 text-white backdrop-blur-md">
                                                 <Trophy className="size-5" />
                                             </div>
-                                            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-blue-100">Visi & Semangat</h3>
+                                            <h3 className="text-sm font-bold tracking-[0.2em] text-blue-100 uppercase">
+                                                Visi & Semangat
+                                            </h3>
                                         </div>
-                                        <p className="text-xl font-bold leading-relaxed mb-4">
-                                            "Terus bereksperimen, belajar dari kegagalan, dan pantang menyerah sebelum menjadi versi terbaik diri sendiri."
+                                        <p className="mb-4 text-xl leading-relaxed font-bold">
+                                            "Terus bereksperimen, belajar dari
+                                            kegagalan, dan pantang menyerah
+                                            sebelum menjadi versi terbaik diri
+                                            sendiri."
                                         </p>
-                                        <div className="h-1 w-20 bg-white/30 rounded-full" />
+                                        <div className="h-1 w-20 rounded-full bg-white/30" />
                                     </section>
                                 </div>
 
                                 <div className="space-y-8">
-                                    <section className="p-8 bg-white dark:bg-[#161615] rounded-4xl shadow-sm border border-gray-100 dark:border-white/5">
-                                        <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground mb-6">Connect With Me</h3>
+                                    <section className="rounded-4xl border border-gray-100 bg-white p-8 shadow-sm dark:border-white/5 dark:bg-[#161615]">
+                                        <h3 className="mb-6 text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">
+                                            Connect With Me
+                                        </h3>
                                         <div className="space-y-4">
                                             {student.social_link ? (
-                                                <a 
-                                                    href={student.social_link} 
-                                                    target="_blank" 
-                                                    className="flex items-center justify-between p-4 rounded-2xl bg-gray-50 dark:bg-white/5 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group"
+                                                <a
+                                                    href={student.social_link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="group flex items-center justify-between rounded-2xl bg-gray-50 p-4 transition-all hover:bg-blue-50 dark:bg-white/5 dark:hover:bg-blue-900/20"
                                                 >
                                                     <div className="flex items-center gap-3">
-                                                        <div className="size-8 rounded-full bg-white dark:bg-black flex items-center justify-center shadow-sm">
+                                                        <div className="flex size-8 items-center justify-center rounded-full bg-white shadow-sm dark:bg-black">
                                                             <ExternalLink className="size-4 text-blue-600" />
                                                         </div>
-                                                        <span className="text-sm font-bold">Website / Social</span>
+                                                        <span className="text-sm font-bold">
+                                                            Website / Social
+                                                        </span>
                                                     </div>
                                                     <Share2 className="size-4 text-gray-300 group-hover:text-blue-600" />
                                                 </a>
                                             ) : (
-                                                <div className="text-center py-4">
-                                                    <p className="text-sm text-muted-foreground italic mb-4">Belum ada tautan sosial.</p>
-                                                    <Button asChild variant="link" size="sm" className="text-blue-600">
-                                                        <Link href="/siswa/profile">Tambah Sekarang</Link>
+                                                <div className="py-4 text-center">
+                                                    <p className="mb-4 text-sm text-muted-foreground italic">
+                                                        Belum ada tautan sosial.
+                                                    </p>
+                                                    <Button
+                                                        asChild
+                                                        variant="link"
+                                                        size="sm"
+                                                        className="text-blue-600"
+                                                    >
+                                                        <Link href="/siswa/profile">
+                                                            Tambah Sekarang
+                                                        </Link>
                                                     </Button>
                                                 </div>
                                             )}
                                         </div>
                                     </section>
 
-                                    <section className="p-8 bg-white dark:bg-[#161615] rounded-4xl shadow-sm border border-gray-100 dark:border-white/5">
-                                        <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground mb-6">Informasi Akun</h3>
+                                    <section className="rounded-4xl border border-gray-100 bg-white p-8 shadow-sm dark:border-white/5 dark:bg-[#161615]">
+                                        <h3 className="mb-6 text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">
+                                            Informasi Akun
+                                        </h3>
                                         <div className="space-y-6">
                                             <div className="flex flex-col gap-1">
-                                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Email Terverifikasi</span>
-                                                <span className="text-sm font-bold truncate">{student.email}</span>
+                                                <span className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
+                                                    Email Terverifikasi
+                                                </span>
+                                                <span className="truncate text-sm font-bold">
+                                                    {student.email}
+                                                </span>
                                             </div>
                                             <div className="flex flex-col gap-1">
-                                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Status Keanggotaan</span>
+                                                <span className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
+                                                    Status Keanggotaan
+                                                </span>
                                                 <div className="flex items-center gap-2">
                                                     <div className="size-2 rounded-full bg-green-500 ring-4 ring-green-500/20" />
-                                                    <span className="text-sm font-bold">Siswa Aktif</span>
+                                                    <span className="text-sm font-bold">
+                                                        Siswa Aktif
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -382,25 +544,5 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
                 </div>
             </div>
         </StudentLayout>
-    );
-}
-
-function User(props: any) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-        </svg>
     );
 }

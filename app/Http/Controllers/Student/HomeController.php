@@ -20,6 +20,10 @@ class HomeController extends Controller
 
         $recentKarya = Karya::query()
             ->where('user_id', $student->id)
+            ->withCount('likes')
+            ->withExists([
+                'likes as is_liked' => fn ($query) => $query->where('users.id', $student->id),
+            ])
             ->latest()
             ->limit(6)
             ->get()
@@ -31,6 +35,8 @@ class HomeController extends Controller
                 'media_url' => $karya->media_url,
                 'media_path' => $karya->media_path ? Storage::disk('public')->url($karya->media_path) : null,
                 'status' => $karya->status,
+                'likes_count' => $karya->likes_count,
+                'is_liked' => (bool) $karya->is_liked,
                 'created_at' => $karya->created_at?->toDateTimeString(),
             ]);
 

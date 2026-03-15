@@ -17,6 +17,10 @@ class KaryaController extends Controller
     {
         $karyas = Karya::query()
             ->where('user_id', auth()->id())
+            ->withCount('likes')
+            ->withExists([
+                'likes as is_liked' => fn ($query) => $query->where('users.id', auth()->id()),
+            ])
             ->latest()
             ->paginate(10)
             ->withQueryString()
@@ -116,6 +120,8 @@ class KaryaController extends Controller
             'media_path' => $karya->media_path ? Storage::disk('public')->url($karya->media_path) : null,
             'media_size' => $karya->media_size,
             'status' => $karya->status,
+            'likes_count' => $karya->likes_count ?? 0,
+            'is_liked' => (bool) $karya->is_liked,
             'created_at' => $karya->created_at?->toDateTimeString(),
         ];
     }

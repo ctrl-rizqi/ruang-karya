@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Karya;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -66,4 +67,12 @@ test('student directory does not include guru', function () {
         ->component('student-directory')
         ->where('students.data', fn ($students): bool => collect($students)->pluck('name')->contains('Siswa Tampil')
             && ! collect($students)->pluck('name')->contains('Guru Tampil')));
+});
+
+test('guest cannot toggle like on karya', function () {
+    $karya = Karya::factory()->create();
+
+    $response = $this->post(route('karya.like.toggle', $karya));
+
+    $response->assertRedirect(route('login'));
 });

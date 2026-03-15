@@ -1,18 +1,14 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import { 
-    Search, 
-    Users, 
-    X, 
-    ChevronRight, 
-    GraduationCap, 
-    BookOpen,
-    MapPin,
+import {
+    Users,
+    X,
+    ChevronRight,
     Sparkles,
     Instagram,
     Linkedin,
     MessageCircle
 } from 'lucide-react';
-import type { FormEvent } from 'react';
+import type { SubmitEvent } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,6 +17,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import StudentLayout from '@/layouts/student-layout';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 type StudentItem = {
     id: number;
@@ -72,7 +69,7 @@ export default function StudentDirectory({
         major_id: filters.major_id ?? '',
     });
 
-    const submit = (event: FormEvent<HTMLFormElement>) => {
+    const submit = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault();
         filterForm.get('/daftar-siswa', {
             preserveState: true,
@@ -122,39 +119,60 @@ export default function StudentDirectory({
                     <form onSubmit={submit} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                             <div className="md:col-span-5 relative">
-                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+
                                 <Input
                                     placeholder="Cari nama siswa..."
-                                    className="h-14 pl-12 rounded-2xl bg-gray-50/50 border-transparent focus:bg-white transition-all text-base dark:bg-accent/50 dark:focus:bg-accent"
+                                    className="rounded-2xl bg-gray-50/50 border-transparent focus:bg-white transition-all text-base dark:bg-accent/50 dark:focus:bg-accent"
                                     value={filterForm.data.name}
                                     onChange={(e) => filterForm.setData('name', e.target.value)}
                                 />
                             </div>
                             <div className="md:col-span-3 relative">
-                                <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
                                 <Input
                                     placeholder="NISN"
-                                    className="h-14 pl-12 rounded-2xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent"
+                                    className="rounded-2xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent"
                                     value={filterForm.data.nisn}
                                     onChange={(e) => filterForm.setData('nisn', e.target.value)}
                                 />
                             </div>
                             <div className="md:col-span-2 relative">
-                                <BookOpen className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground z-10" />
-                                <select
-                                    className="w-full h-14 pl-12 rounded-2xl bg-gray-50/50 border-transparent focus:bg-white transition-all text-sm outline-none appearance-none"
-                                    value={filterForm.data.classroom_id}
-                                    onChange={(e) => filterForm.setData('classroom_id', e.target.value)}
+                                <Select
+                                    value={
+                                        filterForm.data.classroom_id || 'none'
+                                    }
+                                    onValueChange={(value) =>
+                                        filterForm.setData('classroom_id', value === 'none' ? '' : value)
+                                    }
                                 >
-                                    <option value="">Semua Kelas</option>
-                                    {classrooms.map((c) => (
-                                        <option key={c.id} value={c.id}>{c.name}</option>
-                                    ))}
-                                </select>
+                                    <SelectTrigger
+                                        id="classroom_id"
+                                        className="h-12 w-full rounded-xl border-none bg-gray-50/50 px-4 text-sm shadow-none transition-all outline-none focus:bg-white"
+                                    >
+                                        <SelectValue placeholder="Pilih Kelas" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="none">
+                                            Pilih Kelas
+                                        </SelectItem>
+                                        {classrooms.map(
+                                            (classroom) => (
+                                                <SelectItem
+                                                    key={
+                                                        classroom.id
+                                                    }
+                                                    value={classroom.id.toString()}
+                                                >
+                                                    {classroom.name}
+                                                </SelectItem>
+                                            ),
+                                        )}
+                                    </SelectContent>
+                                </Select>
+
                             </div>
                             <div className="md:col-span-2">
-                                <Button 
-                                    type="submit" 
+                                <Button
+                                    type="submit"
                                     className="w-full h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02]"
                                 >
                                     Filter
@@ -165,19 +183,42 @@ export default function StudentDirectory({
                         <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-gray-50 dark:border-white/5">
                             <div className="flex items-center gap-2">
                                 <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground mr-2">Jurusan:</Label>
-                                <select
-                                    className="h-10 px-4 rounded-xl bg-gray-50/50 border-transparent focus:bg-white text-xs outline-none"
-                                    value={filterForm.data.major_id}
-                                    onChange={(e) => filterForm.setData('major_id', e.target.value)}
+                                <Select
+                                    value={
+                                        filterForm.data.major_id || 'none'
+                                    }
+                                    onValueChange={(value) =>
+                                        filterForm.setData('major_id', value === 'none' ? '' : value)
+                                    }
                                 >
-                                    <option value="">Semua Jurusan</option>
-                                    {majors.map((m) => (
-                                        <option key={m.id} value={m.id}>{m.name}</option>
-                                    ))}
-                                </select>
+                                    <SelectTrigger
+                                        id="major_id"
+                                        className="h-12 w-full rounded-xl border-none bg-gray-50/50 px-4 text-sm shadow-none transition-all outline-none focus:bg-white"
+                                    >
+                                        <SelectValue placeholder="Pilih Jurusan" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="none">
+                                            Pilih Jurusan
+                                        </SelectItem>
+                                        {majors.map(
+                                            (major) => (
+                                                <SelectItem
+                                                    key={
+                                                        major.id
+                                                    }
+                                                    value={major.id.toString()}
+                                                >
+                                                    {major.name}
+                                                </SelectItem>
+                                            ),
+                                        )}
+                                    </SelectContent>
+                                </Select>
+
                             </div>
-                            <button 
-                                type="button" 
+                            <button
+                                type="button"
                                 onClick={reset}
                                 className="text-xs font-bold uppercase tracking-widest text-rose-500 hover:text-rose-600 transition-colors flex items-center gap-2"
                             >
@@ -221,7 +262,7 @@ export default function StudentDirectory({
                                                 {student.major || '-'}
                                             </Badge>
                                         </div>
-                                        
+
                                         <p className="text-xs text-muted-foreground line-clamp-2 mb-6 min-h-10 font-medium leading-relaxed italic">
                                             {student.bio || `Halo! Saya siswa ${student.major || ''} yang berfokus pada pengembangan diri dan karya kreatif.`}
                                         </p>

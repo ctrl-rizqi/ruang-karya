@@ -301,28 +301,7 @@ export default function Welcome({ webSetting }: WelcomeProps) {
                                     Inspirasi terbaik yang telah melalui proses kurasi guru pembimbing.
                                 </p>
                             </div>
-                            <div className="flex gap-2 rounded-2xl border border-gray-200 bg-white p-1.5 shadow-sm">
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-9 rounded-xl text-[10px] font-black uppercase tracking-widest"
-                                >
-                                    Semua Kelas
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    className="h-9 rounded-xl bg-[#003366] text-[10px] font-black uppercase tracking-widest text-white hover:bg-[#002244]"
-                                >
-                                    Kelas XII
-                                </Button>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-9 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400"
-                                >
-                                    Pemenang Lomba
-                                </Button>
-                            </div>
+                            
                         </div>
 
                         <div className="mb-16 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
@@ -455,7 +434,7 @@ export default function Welcome({ webSetting }: WelcomeProps) {
                 </section>
 
                 {/* Top Students */}
-                <section className="relative overflow-hidden bg-[#050505] py-32 text-white">
+                {/* <section className="relative overflow-hidden bg-[#050505] py-32 text-white">
                     <div className="absolute top-0 right-0 h-full w-1/2 bg-linear-to-l from-[#003366]/20 to-transparent" />
                     <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
                         <div className="mb-20 flex flex-col md:flex-row md:items-end justify-between gap-8">
@@ -499,7 +478,7 @@ export default function Welcome({ webSetting }: WelcomeProps) {
                             />
                         </div>
                     </div>
-                </section>
+                </section> */}
 
                 {/* Ready to join */}
                 <section className="mx-auto max-w-7xl px-6 py-24 lg:px-8">

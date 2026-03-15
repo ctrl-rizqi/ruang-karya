@@ -116,6 +116,30 @@ test('siswa cannot edit karya from another siswa', function () {
     $response->assertNotFound();
 });
 
+test('siswa can toggle like on karya', function () {
+    $author = User::factory()->siswa()->create();
+    $siswa = User::factory()->siswa()->create();
+    $karya = Karya::factory()->create([
+        'user_id' => $author->id,
+    ]);
+
+    $likeResponse = $this->actingAs($siswa)->post(route('karya.like.toggle', $karya));
+
+    $likeResponse->assertRedirect();
+    $this->assertDatabaseHas('karya_likes', [
+        'user_id' => $siswa->id,
+        'karya_id' => $karya->id,
+    ]);
+
+    $unlikeResponse = $this->actingAs($siswa)->post(route('karya.like.toggle', $karya));
+
+    $unlikeResponse->assertRedirect();
+    $this->assertDatabaseMissing('karya_likes', [
+        'user_id' => $siswa->id,
+        'karya_id' => $karya->id,
+    ]);
+});
+
 test('siswa can see student profile list and detail', function () {
     $siswa = User::factory()->siswa()->create();
     $otherSiswa = User::factory()->siswa()->create([

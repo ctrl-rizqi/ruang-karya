@@ -15,6 +15,10 @@ class PortfolioController extends Controller
         abort_unless($user->role === UserRole::Siswa, 404);
 
         $karyas = $user->karyas()
+            ->withCount('likes')
+            ->withExists([
+                'likes as is_liked' => fn ($query) => $query->where('users.id', auth()->id()),
+            ])
             ->latest()
             ->get()
             ->map(fn ($karya) => [
@@ -26,6 +30,8 @@ class PortfolioController extends Controller
                 'media_url' => $karya->media_url,
                 'media_path' => $karya->media_path ? Storage::disk('public')->url($karya->media_path) : null,
                 'status' => $karya->status,
+                'likes_count' => $karya->likes_count,
+                'is_liked' => (bool) $karya->is_liked,
                 'created_at' => $karya->created_at?->toDateTimeString(),
             ]);
 
