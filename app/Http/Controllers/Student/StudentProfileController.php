@@ -24,6 +24,10 @@ class StudentProfileController extends Controller
                 'birth_date' => $student->birth_date?->toDateString(),
                 'address' => $student->address,
                 'social_link' => $student->social_link,
+                'instagram' => $student->instagram,
+                'facebook' => $student->facebook,
+                'tiktok' => $student->tiktok,
+                'linkedin' => $student->linkedin,
             ]);
 
         return Inertia::render('student/profiles/index', [
@@ -56,6 +60,10 @@ class StudentProfileController extends Controller
                 'birth_date' => $student->birth_date?->toDateString(),
                 'address' => $student->address,
                 'social_link' => $student->social_link,
+                'instagram' => $student->instagram,
+                'facebook' => $student->facebook,
+                'tiktok' => $student->tiktok,
+                'linkedin' => $student->linkedin,
             ],
             'karyas' => $karyas,
         ]);

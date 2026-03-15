@@ -287,7 +287,7 @@ export default function Welcome({ webSetting }: WelcomeProps) {
                 </section>
 
                 {/* Featured Projects */}
-                <section className="bg-[#003366]/[0.02] py-24">
+                <section className="bg-[#003366]/2 py-24">
                     <div className="mx-auto max-w-7xl px-6 lg:px-8">
                         <div className="mb-16 flex flex-col justify-between gap-6 md:flex-row md:items-end">
                             <div>

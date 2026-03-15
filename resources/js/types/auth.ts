@@ -7,6 +7,10 @@ export type User = {
     birth_date?: string | null;
     address?: string | null;
     social_link?: string | null;
+    instagram?: string | null;
+    facebook?: string | null;
+    tiktok?: string | null;
+    linkedin?: string | null;
     avatar?: string;
     email_verified_at: string | null;
     two_factor_enabled?: boolean;

@@ -7,7 +7,10 @@ import {
     GraduationCap, 
     BookOpen,
     MapPin,
-    Sparkles
+    Sparkles,
+    Instagram,
+    Linkedin,
+    MessageCircle
 } from 'lucide-react';
 import type { FormEvent } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -15,19 +18,31 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import StudentLayout from '@/layouts/student-layout';
 import { cn } from '@/lib/utils';
 
+type StudentItem = {
+    id: number;
+    nisn: string | null;
+    name: string;
+    avatar: string;
+    student_class: string | null;
+    major: string | null;
+    address: string | null;
+    bio: string | null;
+    skills: string[];
+    socials: {
+        instagram: string | null;
+        facebook: string | null;
+        tiktok: string | null;
+        linkedin: string | null;
+    };
+};
+
 type StudentDirectoryProps = {
     students: {
-        data: {
-            id: number;
-            nisn: string | null;
-            name: string;
-            student_class: string | null;
-            major: string | null;
-            address: string | null;
-        }[];
+        data: StudentItem[];
         links: {
             url: string | null;
             label: string;
@@ -90,7 +105,7 @@ export default function StudentDirectory({
 
     return (
         <StudentLayout>
-            <Head title="Daftar Siswa - Ruang Karya" />
+            <Head title="Direktori Siswa - Ruang Karya" />
 
             <div className="mx-auto max-w-6xl px-6 py-12">
                 {/* Header */}
@@ -98,7 +113,7 @@ export default function StudentDirectory({
                     <div className="flex items-center gap-2 text-blue-600 font-bold text-xs uppercase tracking-[0.2em] mb-4">
                         <Users className="size-4" /> Student Community
                     </div>
-                    <h1 className="text-4xl font-black tracking-tight mb-2">Daftar Siswa</h1>
+                    <h1 className="text-4xl font-black tracking-tight mb-2">Direktori Siswa</h1>
                     <p className="text-muted-foreground text-lg font-medium">Jelajahi profil dan temukan inspirasi dari teman-temanmu.</p>
                 </div>
 
@@ -110,7 +125,7 @@ export default function StudentDirectory({
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
                                 <Input
                                     placeholder="Cari nama siswa..."
-                                    className="h-14 pl-12 rounded-2xl bg-gray-50/50 border-transparent focus:bg-white transition-all text-base"
+                                    className="h-14 pl-12 rounded-2xl bg-gray-50/50 border-transparent focus:bg-white transition-all text-base dark:bg-accent/50 dark:focus:bg-accent"
                                     value={filterForm.data.name}
                                     onChange={(e) => filterForm.setData('name', e.target.value)}
                                 />
@@ -119,7 +134,7 @@ export default function StudentDirectory({
                                 <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
                                 <Input
                                     placeholder="NISN"
-                                    className="h-14 pl-12 rounded-2xl bg-gray-50/50 border-transparent focus:bg-white transition-all"
+                                    className="h-14 pl-12 rounded-2xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent"
                                     value={filterForm.data.nisn}
                                     onChange={(e) => filterForm.setData('nisn', e.target.value)}
                                 />
@@ -182,12 +197,12 @@ export default function StudentDirectory({
                         </div>
                     ) : (
                         students.data.map((student) => (
-                            <Card key={student.id} className="group border-none shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 bg-white dark:bg-[#161615] rounded-[2.5rem] overflow-hidden">
-                                <CardContent className="p-8">
+                            <Card key={student.id} className="group border-none shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 bg-white dark:bg-[#161615] rounded-[2.5rem] overflow-hidden flex flex-col">
+                                <CardContent className="p-8 flex-1 flex flex-col">
                                     <div className="flex flex-col items-center text-center">
                                         <div className="relative mb-6">
                                             <Avatar className="size-24 rounded-3xl border-4 border-blue-50 dark:border-blue-900/20 group-hover:scale-110 transition-transform duration-500">
-                                                <AvatarImage src={`https://i.pravatar.cc/150?u=${student.name}`} />
+                                                <AvatarImage src={student.avatar} className="object-cover" />
                                                 <AvatarFallback className="bg-blue-50 text-blue-600 font-bold text-xl uppercase">
                                                     {student.name.charAt(0)}
                                                 </AvatarFallback>
@@ -197,22 +212,54 @@ export default function StudentDirectory({
                                             </div>
                                         </div>
 
-                                        <h3 className="text-xl font-bold mb-1 group-hover:text-blue-600 transition-colors">{student.name}</h3>
+                                        <h3 className="text-xl font-black mb-1 group-hover:text-blue-600 transition-colors line-clamp-1">{student.name}</h3>
                                         <div className="flex items-center gap-2 mb-4">
-                                            <span className="px-2 py-0.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 text-[10px] font-bold uppercase tracking-widest">
+                                            <Badge variant="secondary" className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 text-[9px] font-black uppercase tracking-widest border-none">
                                                 {student.student_class || '-'}
-                                            </span>
-                                            <span className="px-2 py-0.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 text-[10px] font-bold uppercase tracking-widest">
+                                            </Badge>
+                                            <Badge variant="secondary" className="bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 text-[9px] font-black uppercase tracking-widest border-none">
                                                 {student.major || '-'}
-                                            </span>
+                                            </Badge>
                                         </div>
                                         
-                                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-8">
-                                            <MapPin className="size-3.5 text-blue-600" />
-                                            <span className="truncate max-w-45">{student.address || '-'}</span>
-                                        </div>
+                                        <p className="text-xs text-muted-foreground line-clamp-2 mb-6 min-h-10 font-medium leading-relaxed italic">
+                                            {student.bio || `Halo! Saya siswa ${student.major || ''} yang berfokus pada pengembangan diri dan karya kreatif.`}
+                                        </p>
 
-                                        <Button asChild variant="outline" className="w-full rounded-2xl h-12 border-gray-100 dark:border-white/5 hover:bg-blue-600 hover:border-blue-600 hover:text-white group/btn transition-all">
+                                        {student.skills.length > 0 && (
+                                            <div className="flex flex-wrap justify-center gap-1.5 mb-6">
+                                                {student.skills.slice(0, 3).map((skill, idx) => (
+                                                    <Badge key={idx} variant="outline" className="text-[8px] font-bold uppercase tracking-wider py-0 px-2 text-muted-foreground border-gray-100">
+                                                        {skill}
+                                                    </Badge>
+                                                ))}
+                                                {student.skills.length > 3 && (
+                                                    <span className="text-[8px] font-bold text-muted-foreground">+{student.skills.length - 3}</span>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        <div className="flex items-center justify-center gap-3 mb-8">
+                                            {student.socials.instagram && (
+                                                <a href={student.socials.instagram} target="_blank" className="size-8 rounded-xl bg-gray-50 dark:bg-white/5 flex items-center justify-center text-muted-foreground hover:text-pink-600 hover:bg-pink-50 transition-all">
+                                                    <Instagram className="size-4" />
+                                                </a>
+                                            )}
+                                            {student.socials.linkedin && (
+                                                <a href={student.socials.linkedin} target="_blank" className="size-8 rounded-xl bg-gray-50 dark:bg-white/5 flex items-center justify-center text-muted-foreground hover:text-blue-700 hover:bg-blue-50 transition-all">
+                                                    <Linkedin className="size-4" />
+                                                </a>
+                                            )}
+                                            {student.socials.tiktok && (
+                                                <a href={student.socials.tiktok} target="_blank" className="size-8 rounded-xl bg-gray-50 dark:bg-white/5 flex items-center justify-center text-muted-foreground hover:text-black hover:bg-gray-100 transition-all">
+                                                    <MessageCircle className="size-4" />
+                                                </a>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-auto">
+                                        <Button asChild className="w-full rounded-2xl h-12 bg-gray-50 dark:bg-white/5 text-[#1b1b18] dark:text-white hover:bg-[#003366] hover:text-white group/btn transition-all shadow-none border-none font-bold uppercase tracking-widest text-[10px]">
                                             <Link href={`/p/${student.nisn}`} prefetch>
                                                 Lihat Portofolio <ChevronRight className="ml-2 size-4 transition-transform group-hover/btn:translate-x-1" />
                                             </Link>

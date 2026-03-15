@@ -31,9 +31,20 @@ test('guru can create guru user from dashboard', function () {
         'name' => 'Guru Baru',
         'password' => 'Password123!',
         'password_confirmation' => 'Password123!',
+        'gender' => 'P',
+        'phone' => '081298765432',
+        'birth_place' => 'Bandung',
         'birth_date' => '1990-02-01',
         'address' => 'Bandung',
+        'bio' => 'Guru pembimbing pengembangan software sekolah.',
+        'skills' => ['Mentoring', 'Laravel'],
+        'achievements' => ['Pembina Juara LKS'],
+        'interests' => ['Edutech'],
         'social_link' => 'https://instagram.com/guru.baru',
+        'instagram' => 'https://instagram.com/guru.baru',
+        'facebook' => 'https://facebook.com/guru.baru',
+        'tiktok' => 'https://tiktok.com/@guru.baru',
+        'linkedin' => 'https://linkedin.com/in/guru-baru',
     ]);
 
     $response->assertRedirect(route('dashboard.users.index'));
@@ -43,13 +54,24 @@ test('guru can create guru user from dashboard', function () {
     expect($createdUser)->not->toBeNull();
     expect($createdUser?->role)->toBe(UserRole::Guru);
     expect(Hash::check('Password123!', (string) $createdUser?->password))->toBeTrue();
+    expect($createdUser?->skills)->toBe(['Mentoring', 'Laravel']);
+    expect($createdUser?->achievements)->toBe(['Pembina Juara LKS']);
+    expect($createdUser?->interests)->toBe(['Edutech']);
 
     $this->assertDatabaseHas('users', [
         'nisn' => '2234567890',
         'name' => 'Guru Baru',
+        'gender' => 'P',
+        'phone' => '081298765432',
+        'birth_place' => 'Bandung',
         'birth_date' => '1990-02-01 00:00:00',
         'address' => 'Bandung',
+        'bio' => 'Guru pembimbing pengembangan software sekolah.',
         'social_link' => 'https://instagram.com/guru.baru',
+        'instagram' => 'https://instagram.com/guru.baru',
+        'facebook' => 'https://facebook.com/guru.baru',
+        'tiktok' => 'https://tiktok.com/@guru.baru',
+        'linkedin' => 'https://linkedin.com/in/guru-baru',
         'role' => UserRole::Guru->value,
     ]);
 });
@@ -67,9 +89,20 @@ test('guru can update user data from dashboard', function () {
         'name' => 'User Diperbarui',
         'password' => '',
         'password_confirmation' => '',
+        'gender' => 'L',
+        'phone' => '081200000000',
+        'birth_place' => 'Yogyakarta',
         'birth_date' => '2009-04-10',
         'address' => 'Jakarta',
+        'bio' => 'Suka membangun aplikasi web dan mobile.',
+        'skills' => ['React', 'Laravel'],
+        'achievements' => ['Top 3 Hackathon Sekolah'],
+        'interests' => ['Software Engineering'],
         'social_link' => 'https://example.com/user',
+        'instagram' => 'https://instagram.com/user.updated',
+        'facebook' => 'https://facebook.com/user.updated',
+        'tiktok' => 'https://tiktok.com/@user.updated',
+        'linkedin' => 'https://linkedin.com/in/user-updated',
     ]);
 
     $response->assertRedirect(route('dashboard.users.index'));
@@ -79,10 +112,23 @@ test('guru can update user data from dashboard', function () {
         'role' => UserRole::Guru->value,
         'nisn' => '1234567892',
         'name' => 'User Diperbarui',
+        'gender' => 'L',
+        'phone' => '081200000000',
+        'birth_place' => 'Yogyakarta',
         'birth_date' => '2009-04-10 00:00:00',
         'address' => 'Jakarta',
+        'bio' => 'Suka membangun aplikasi web dan mobile.',
         'social_link' => 'https://example.com/user',
+        'instagram' => 'https://instagram.com/user.updated',
+        'facebook' => 'https://facebook.com/user.updated',
+        'tiktok' => 'https://tiktok.com/@user.updated',
+        'linkedin' => 'https://linkedin.com/in/user-updated',
     ]);
+
+    $updatedUser = $managedUser->fresh();
+    expect($updatedUser?->skills)->toBe(['React', 'Laravel']);
+    expect($updatedUser?->achievements)->toBe(['Top 3 Hackathon Sekolah']);
+    expect($updatedUser?->interests)->toBe(['Software Engineering']);
 
     expect(Hash::check('password', (string) $managedUser->fresh()?->password))->toBeTrue();
 });

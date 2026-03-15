@@ -4,15 +4,24 @@ import {
     ExternalLink, 
     Grid, 
     MapPin, 
+    Share2, 
     Sparkles, 
     Trophy,
     Image as ImageIcon,
     Video,
     FileText,
     Link as LinkIcon,
+    ChevronLeft,
     School,
     BookOpen,
     Quote,
+    Instagram,
+    Facebook,
+    Linkedin,
+    MessageCircle,
+    Phone,
+    Heart,
+    Star,
     ChevronRight
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -39,9 +48,20 @@ type PortfolioShowProps = {
         nisn: string;
         name: string;
         avatar: string;
+        gender: string | null;
+        phone: string | null;
+        birth_place: string | null;
         birth_date: string | null;
         address: string | null;
+        bio: string | null;
+        skills: string[];
+        achievements: string[];
+        interests: string[];
         social_link: string | null;
+        instagram: string | null;
+        facebook: string | null;
+        tiktok: string | null;
+        linkedin: string | null;
         classroom: string | null;
         major: string | null;
     };
@@ -91,15 +111,18 @@ export default function PortfolioShow({ student, karyas }: PortfolioShowProps) {
                     
                     {/* Left Sidebar: Student Info */}
                     <div className="lg:col-span-4 space-y-8">
-                        <Card className="border-none shadow-[0_20px_50px_rgba(0,51,102,0.04)] bg-white rounded-xl overflow-hidden">
+                        <Card className="border-none shadow-[0_20px_50px_rgba(0,51,102,0.04)] bg-white rounded-[2.5rem] overflow-hidden">
                             <div className="h-24 bg-linear-to-br from-blue-600 to-indigo-700" />
                             <CardContent className="px-8 pb-10 -mt-12 text-center">
                                 <Avatar className="size-32 border-4 border-white shadow-xl rounded-2xl mx-auto mb-6">
                                     <AvatarImage src={student.avatar} className="bg-cover" />
                                     <AvatarFallback className="text-3xl font-bold bg-blue-50 text-blue-600">{initials}</AvatarFallback>
                                 </Avatar>
-                                <h1 className="text-2xl font-black tracking-tight mb-2 text-zinc-800">{student.name}</h1>
+                                <h1 className="text-2xl font-black tracking-tight mb-2">{student.name}</h1>
                                 <div className="flex flex-col gap-2 mb-8">
+                                    <Badge variant="secondary" className="w-fit mx-auto bg-blue-50 text-blue-600 border-none text-[10px] font-black uppercase tracking-widest px-3 py-1">
+                                        Verified Student
+                                    </Badge>
                                     <div className="flex items-center justify-center gap-2 text-muted-foreground text-xs font-bold uppercase tracking-widest">
                                         <BookOpen className="size-3.5" /> {student.major || 'Umum'}
                                     </div>
@@ -111,6 +134,14 @@ export default function PortfolioShow({ student, karyas }: PortfolioShowProps) {
                                     <div className="flex flex-col gap-1">
                                         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Identitas</span>
                                         <span className="text-sm font-bold flex items-center gap-2"><Trophy className="size-4 text-orange-400" /> NISN: {student.nisn}</span>
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Kelahiran</span>
+                                        <span className="text-sm font-bold flex items-center gap-2">
+                                            <Calendar className="size-4 text-emerald-500" /> 
+                                            {student.birth_place ? `${student.birth_place}, ` : ''} 
+                                            {student.birth_date ? new Date(student.birth_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-'}
+                                        </span>
                                     </div>
                                     {student.classroom && (
                                         <div className="flex flex-col gap-1">
@@ -124,32 +155,106 @@ export default function PortfolioShow({ student, karyas }: PortfolioShowProps) {
                                             <span className="text-sm font-bold flex items-center gap-2"><MapPin className="size-4 text-rose-500" /> {student.address}</span>
                                         </div>
                                     )}
+                                    {student.phone && (
+                                        <div className="flex flex-col gap-1">
+                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Kontak</span>
+                                            <span className="text-sm font-bold flex items-center gap-2"><Phone className="size-4 text-indigo-500" /> {student.phone}</span>
+                                        </div>
+                                    )}
                                 </div>
 
-                                {student.social_link && (
-                                    <Button asChild className="w-full mt-10 rounded-2xl bg-[#1b1b18] hover:bg-black h-12 shadow-lg shadow-black/10">
-                                        <a href={student.social_link} target="_blank" rel="noopener noreferrer">
-                                            Hubungi via Sosial Media <ExternalLink className="ml-2 size-4" />
+                                <div className="flex items-center justify-center gap-3 mt-10">
+                                    {student.instagram && (
+                                        <a href={student.instagram} target="_blank" className="size-10 rounded-2xl bg-gray-50 flex items-center justify-center text-muted-foreground hover:text-pink-600 hover:bg-pink-50 transition-all">
+                                            <Instagram className="size-5" />
                                         </a>
-                                    </Button>
-                                )}
+                                    )}
+                                    {student.facebook && (
+                                        <a href={student.facebook} target="_blank" className="size-10 rounded-2xl bg-gray-50 flex items-center justify-center text-muted-foreground hover:text-blue-600 hover:bg-blue-50 transition-all">
+                                            <Facebook className="size-5" />
+                                        </a>
+                                    )}
+                                    {student.linkedin && (
+                                        <a href={student.linkedin} target="_blank" className="size-10 rounded-2xl bg-gray-50 flex items-center justify-center text-muted-foreground hover:text-blue-700 hover:bg-blue-50 transition-all">
+                                            <Linkedin className="size-5" />
+                                        </a>
+                                    )}
+                                    {student.tiktok && (
+                                        <a href={student.tiktok} target="_blank" className="size-10 rounded-2xl bg-gray-50 flex items-center justify-center text-muted-foreground hover:text-black hover:bg-gray-100 transition-all">
+                                            <MessageCircle className="size-5" />
+                                        </a>
+                                    )}
+                                </div>
                             </CardContent>
                         </Card>
 
-                        <div className="p-8 bg-blue-600 rounded-[2.5rem] text-white shadow-xl shadow-blue-900/20 relative overflow-hidden">
-                            <Quote className="absolute -top-4 -right-4 size-24 text-white/10 rotate-12" />
-                            <h3 className="text-sm font-black uppercase tracking-widest mb-4 flex items-center gap-2">
-                                <Sparkles className="size-4 text-blue-200" /> Personal Motto
-                            </h3>
-                            <p className="text-lg font-medium leading-relaxed italic relative z-10">
-                                "Terus berkarya dan menginspirasi melalui setiap detail pekerjaan yang saya lakukan."
-                            </p>
-                        </div>
+                        {/* Skills Card */}
+                        {student.skills.length > 0 && (
+                            <Card className="border-none shadow-[0_20px_50px_rgba(0,51,102,0.04)] bg-white rounded-[2.5rem] p-8">
+                                <h3 className="text-sm font-black uppercase tracking-widest mb-6 flex items-center gap-2">
+                                    <Star className="size-4 text-yellow-500" /> Technical Skills
+                                </h3>
+                                <div className="flex flex-wrap gap-2">
+                                    {student.skills.map((skill, i) => (
+                                        <Badge key={i} variant="outline" className="bg-gray-50/50 border-gray-100 text-xs py-1 px-3 rounded-xl font-bold text-muted-foreground uppercase tracking-wider">
+                                            {skill}
+                                        </Badge>
+                                    ))}
+                                </div>
+                            </Card>
+                        )}
+
+                        {/* Achievements Card */}
+                        {student.achievements.length > 0 && (
+                            <Card className="border-none shadow-[0_20px_50px_rgba(0,51,102,0.04)] bg-white rounded-[2.5rem] p-8">
+                                <h3 className="text-sm font-black uppercase tracking-widest mb-6 flex items-center gap-2">
+                                    <Trophy className="size-4 text-orange-400" /> Achievements
+                                </h3>
+                                <div className="space-y-4">
+                                    {student.achievements.map((achievement, i) => (
+                                        <div key={i} className="flex gap-3">
+                                            <div className="size-2 rounded-full bg-orange-400 mt-1.5 shrink-0" />
+                                            <p className="text-sm font-bold text-muted-foreground leading-relaxed">{achievement}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </Card>
+                        )}
                     </div>
 
-                    {/* Right Side: Karya Feed */}
-                    <div className="lg:col-span-8 space-y-10">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-gray-100 pb-8">
+                    {/* Right Side: Bio & Karya Feed */}
+                    <div className="lg:col-span-8 space-y-12">
+                        {/* Bio Section */}
+                        <section>
+                            <div className="mb-6 inline-flex items-center gap-2 text-[10px] font-black tracking-[0.2em] text-blue-600 uppercase">
+                                <Quote className="size-3" /> Professional Bio
+                            </div>
+                            <div className="p-10 bg-white shadow-[0_20px_50px_rgba(0,51,102,0.04)] rounded-[3rem] border border-gray-50">
+                                <p className="text-xl font-medium leading-relaxed italic text-muted-foreground">
+                                    {student.bio || `Halo! Saya adalah siswa yang antusias dalam belajar hal-hal baru dan ingin berbagi inspirasi melalui karya-karya saya di platform Ruang Karya. Berfokus pada kompetensi ${student.major || ''} untuk membangun masa depan yang lebih baik.`}
+                                </p>
+                            </div>
+                        </section>
+
+                        {/* Interests Section */}
+                        {student.interests.length > 0 && (
+                            <section>
+                                <div className="mb-6 inline-flex items-center gap-2 text-[10px] font-black tracking-[0.2em] text-blue-600 uppercase">
+                                    <Heart className="size-3" /> Area of Interest
+                                </div>
+                                <div className="flex flex-wrap gap-3">
+                                    {student.interests.map((interest, i) => (
+                                        <div key={i} className="px-6 py-3 bg-blue-50 text-blue-600 rounded-full text-sm font-black uppercase tracking-widest">
+                                            {interest}
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+
+                        <Separator className="opacity-50" />
+
+                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                             <div>
                                 <div className="mb-2 inline-flex items-center gap-2 text-[10px] font-black tracking-[0.2em] text-blue-600 uppercase">
                                     <Grid className="size-3" /> Creative Portfolio

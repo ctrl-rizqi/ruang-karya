@@ -1,16 +1,16 @@
 import { Head, Link } from '@inertiajs/react';
-import {
-    Calendar,
-    Edit,
-    ExternalLink,
-    Grid,
-    Info,
-    MapPin,
-    MessageSquare,
-    MoreHorizontal,
-    Plus,
-    Share2,
-    Sparkles,
+import { 
+    Calendar, 
+    Edit, 
+    ExternalLink, 
+    Grid, 
+    Info, 
+    MapPin, 
+    MessageSquare, 
+    MoreHorizontal, 
+    Plus, 
+    Share2, 
+    Sparkles, 
     Trophy,
     Copy,
     Check,
@@ -66,6 +66,18 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
         setTimeout(() => setCopied(false), 2000);
     };
 
+    const handleShare = () => {
+        if (navigator.share) {
+            navigator.share({
+                title: `Portofolio ${student.name} - Ruang Karya`,
+                text: `Lihat portofolio karya kreatif saya di Ruang Karya!`,
+                url: publicUrl,
+            }).catch(() => {});
+        } else {
+            copyToClipboard();
+        }
+    };
+
     const initials = student.name
         .split(' ')
         .map((n) => n[0])
@@ -94,12 +106,6 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
                     {/* Cover Photo */}
                     <div className="h-2 w-full bg-linear-to-r from-blue-600 via-indigo-500 to-purple-600 relative">
                         <div className="absolute inset-0 bg-black/10" />
-                        {/* Share Button */}
-                        <div className="absolute top-4 right-4 flex gap-2 z-20">
-                            <a href={publicUrl} target="_blank" rel="noopener noreferrer" className='px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20 transition-all flex items-center gap-1'>
-                                <Share2 className="mr-2 size-4" /> Share
-                            </a>
-                        </div>
                     </div>
 
                     {/* Profile Info Section */}
@@ -138,6 +144,28 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
                                         )}
                                     </div>
                                     
+                                    {/* Public Portfolio Section - The requested Share area */}
+                                    <div className="mt-4 flex flex-wrap items-center gap-2">
+                                        <div className="px-3 py-1.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 flex items-center gap-2 max-w-xs md:max-w-md">
+                                            <span className="text-[10px] font-bold text-muted-foreground truncate uppercase tracking-widest shrink-0">Portofolio Publik:</span>
+                                            <span className="text-[10px] font-mono text-blue-600 truncate">{publicUrl}</span>
+                                            <button 
+                                                onClick={copyToClipboard}
+                                                className="ml-auto p-1 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-md transition-colors text-blue-600"
+                                                title="Salin URL Portofolio"
+                                            >
+                                                {copied ? <Check className="size-3" /> : <Copy className="size-3" />}
+                                            </button>
+                                        </div>
+                                        <Button 
+                                            size="sm" 
+                                            variant="secondary" 
+                                            className="h-8 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/30 border-none font-bold uppercase tracking-widest text-[9px] px-4"
+                                            onClick={handleShare}
+                                        >
+                                            <Share2 className="mr-2 size-3" /> Bagikan Profil
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -180,7 +208,7 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
                 <div className="px-6 py-8">
                     <div className="flex items-center justify-between mb-8 border-b border-gray-100 dark:border-white/5">
                         <div className="flex gap-8">
-                            <button
+                            <button 
                                 onClick={() => setActiveTab('karya')}
                                 className={cn(
                                     "pb-4 flex items-center gap-2 font-bold text-xs uppercase tracking-[0.2em] transition-all relative",
@@ -190,7 +218,7 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
                                 <Grid className="size-4" /> Feed Karya
                                 {activeTab === 'karya' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />}
                             </button>
-                            <button
+                            <button 
                                 onClick={() => setActiveTab('about')}
                                 className={cn(
                                     "pb-4 flex items-center gap-2 font-bold text-xs uppercase tracking-[0.2em] transition-all relative",
@@ -219,14 +247,14 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
                                                         <span className="text-blue-200 dark:text-blue-900 font-black text-5xl mt-2">{karya.title[0]}</span>
                                                     </div>
                                                 )}
-
+                                                
                                                 <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
                                                     <div className="flex items-center gap-4 text-white text-xs font-bold uppercase tracking-wider">
                                                         <span className="flex items-center gap-1.5"><MessageSquare className="size-4" /> 12</span>
                                                         <span className="flex items-center gap-1.5"><Share2 className="size-4" /> 5</span>
                                                     </div>
                                                 </div>
-
+                                                
                                                 <div className="absolute top-4 left-4">
                                                     <div className="px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold uppercase tracking-widest text-blue-600 shadow-sm flex items-center gap-1.5">
                                                         {karya.media_type === 'link' ? <LinkIcon className="size-3" /> : (karya.media_type === 'video' ? <Video className="size-3" /> : (karya.media_type === 'document' ? <FileText className="size-3" /> : <ImageIcon className="size-3" />))}
@@ -307,9 +335,9 @@ export default function StudentHome({ karyaCount, recentKarya, student }: Studen
                                         <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground mb-6">Connect With Me</h3>
                                         <div className="space-y-4">
                                             {student.social_link ? (
-                                                <a
-                                                    href={student.social_link}
-                                                    target="_blank"
+                                                <a 
+                                                    href={student.social_link} 
+                                                    target="_blank" 
                                                     className="flex items-center justify-between p-4 rounded-2xl bg-gray-50 dark:bg-white/5 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group"
                                                 >
                                                     <div className="flex items-center gap-3">

@@ -24,23 +24,52 @@ test('siswa can update own profile data', function () {
     $siswa = User::factory()->siswa()->create([
         'name' => 'Nama Lama',
         'address' => null,
+        'skills' => [],
+        'achievements' => [],
+        'interests' => [],
     ]);
 
     $response = $this->actingAs($siswa)->patch(route('student.profile.update'), [
         'name' => 'Nama Baru',
+        'gender' => 'L',
+        'phone' => '081234567890',
+        'birth_place' => 'Surabaya',
         'birth_date' => '2008-03-01',
-        'address' => 'Surabaya',
+        'address' => 'Surabaya, Jawa Timur',
+        'bio' => 'Siswa aktif yang suka teknologi dan desain produk.',
+        'skills' => ['Laravel', 'UI/UX'],
+        'achievements' => ['Juara 1 LKS Kota'],
+        'interests' => ['Web Development', 'Product Design'],
         'social_link' => 'https://instagram.com/nama.baru',
+        'instagram' => 'https://instagram.com/nama.baru',
+        'facebook' => 'https://facebook.com/nama.baru',
+        'tiktok' => 'https://tiktok.com/@nama.baru',
+        'linkedin' => 'https://linkedin.com/in/nama-baru',
     ]);
 
     $response->assertRedirect(route('student.profile.edit'));
+
+    $updatedStudent = $siswa->fresh();
+
     $this->assertDatabaseHas('users', [
         'id' => $siswa->id,
         'name' => 'Nama Baru',
+        'gender' => 'L',
+        'phone' => '081234567890',
+        'birth_place' => 'Surabaya',
         'birth_date' => '2008-03-01 00:00:00',
-        'address' => 'Surabaya',
+        'address' => 'Surabaya, Jawa Timur',
+        'bio' => 'Siswa aktif yang suka teknologi dan desain produk.',
         'social_link' => 'https://instagram.com/nama.baru',
+        'instagram' => 'https://instagram.com/nama.baru',
+        'facebook' => 'https://facebook.com/nama.baru',
+        'tiktok' => 'https://tiktok.com/@nama.baru',
+        'linkedin' => 'https://linkedin.com/in/nama-baru',
     ]);
+
+    expect($updatedStudent?->skills)->toBe(['Laravel', 'UI/UX']);
+    expect($updatedStudent?->achievements)->toBe(['Juara 1 LKS Kota']);
+    expect($updatedStudent?->interests)->toBe(['Web Development', 'Product Design']);
 });
 
 test('siswa can create edit and delete own karya', function () {

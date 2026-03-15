@@ -87,9 +87,18 @@ class PublicPageController extends Controller
                 'id' => $student->id,
                 'nisn' => $student->nisn,
                 'name' => $student->name,
+                'avatar' => $student->avatar,
                 'student_class' => $student->classroom?->name,
                 'major' => $student->major?->name,
                 'address' => $student->address,
+                'bio' => $student->bio,
+                'skills' => $student->skills ?? [],
+                'socials' => [
+                    'instagram' => $student->instagram,
+                    'facebook' => $student->facebook,
+                    'tiktok' => $student->tiktok,
+                    'linkedin' => $student->linkedin,
+                ],
             ]);
 
         return Inertia::render('student-directory', [

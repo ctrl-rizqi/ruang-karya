@@ -1,97 +1,186 @@
-import { Head, useForm, usePage, Link } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import {
     AtSign,
+    Camera,
+    ExternalLink,
     Globe,
     Lock,
     MapPin,
     Save,
+    Sparkles,
+    Trophy,
     User,
     UserCircle,
-    Trophy,
-    ExternalLink,
-    Camera,
-    X
+    X,
 } from 'lucide-react';
-import { useState,  useRef } from 'react';
-import type {SubmitEvent} from 'react';
+import { format } from 'date-fns';
+import { useRef, useState } from 'react';
+import type { ChangeEvent, SubmitEvent } from 'react';
 import InputError from '@/components/input-error';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Calendar } from '@/components/ui/calendar';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import StudentLayout from '@/layouts/student-layout';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { format } from 'date-fns';
-
 
 type StudentProfileProps = {
     student: {
         nisn: string | null;
         name: string;
+        gender: 'L' | 'P' | null;
+        phone: string | null;
+        birth_place: string | null;
         birth_date: string | null;
         address: string | null;
+        bio: string | null;
+        skills: string[];
+        achievements: string[];
+        interests: string[];
         social_link: string | null;
+        instagram: string | null;
+        facebook: string | null;
+        tiktok: string | null;
+        linkedin: string | null;
         avatar: string;
     };
 };
 
+type ListField = 'skills' | 'achievements' | 'interests';
+
 export default function StudentProfile({ student }: StudentProfileProps) {
-    const { auth } = usePage().props;
+    const { auth } = usePage().props as {
+        auth?: {
+            user?: {
+                email?: string;
+            } | null;
+        };
+    };
+
     const fileInput = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<string | null>(null);
+    const [drafts, setDrafts] = useState<Record<ListField, string>>({
+        skills: '',
+        achievements: '',
+        interests: '',
+    });
 
     const form = useForm({
         name: student.name,
+        gender: student.gender ?? '',
+        phone: student.phone ?? '',
+        birth_place: student.birth_place ?? '',
         birth_date: student.birth_date ?? '',
         address: student.address ?? '',
+        bio: student.bio ?? '',
+        skills: student.skills ?? [],
+        achievements: student.achievements ?? [],
+        interests: student.interests ?? [],
         social_link: student.social_link ?? '',
+        instagram: student.instagram ?? '',
+        facebook: student.facebook ?? '',
+        tiktok: student.tiktok ?? '',
+        linkedin: student.linkedin ?? '',
         avatar: null as File | null,
         _method: 'PATCH',
     });
 
     const initials = student.name
         .split(' ')
-        .map((n) => n[0])
+        .map((namePart) => namePart[0])
         .join('')
         .toUpperCase();
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            form.setData('avatar', file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreview(reader.result as string);
-            };
-            reader.readAsDataURL(file);
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+
+        if (!file) {
+            return;
         }
+
+        form.setData('avatar', file);
+
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+            if (typeof reader.result === 'string') {
+                setPreview(reader.result);
+            }
+        };
+
+        reader.readAsDataURL(file);
     };
 
     const clearPreview = () => {
         setPreview(null);
         form.setData('avatar', null);
-        if (fileInput.current) fileInput.current.value = '';
+
+        if (fileInput.current) {
+            fileInput.current.value = '';
+        }
     };
 
-/**
- * Submit the form with the updated profile data.
- * The form data will be sent as multipart/form-data
- * and the _method field will be spoofed to 'PATCH'
- * to update the profile data.
- * On success, the preview will be cleared and the file input will be reset.
- */
+    const addListItem = (field: ListField) => {
+        const value = drafts[field].trim();
+
+        if (!value) {
+            return;
+        }
+
+        if (form.data[field].includes(value)) {
+            setDrafts((currentDrafts) => ({
+                ...currentDrafts,
+                [field]: '',
+            }));
+
+            return;
+        }
+
+        form.setData(field, [...form.data[field], value]);
+        setDrafts((currentDrafts) => ({
+            ...currentDrafts,
+            [field]: '',
+        }));
+    };
+
+    const removeListItem = (field: ListField, index: number) => {
+        form.setData(
+            field,
+            form.data[field].filter((_, listIndex) => listIndex !== index),
+        );
+    };
 
     const submit = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        // Use post with _method spoofing for multipart/form-data
         form.post('/siswa/profile', {
             forceFormData: true,
             onSuccess: () => {
                 setPreview(null);
-                if (fileInput.current) fileInput.current.value = '';
+
+                if (fileInput.current) {
+                    fileInput.current.value = '';
+                }
             },
         });
     };
@@ -100,37 +189,44 @@ export default function StudentProfile({ student }: StudentProfileProps) {
         <StudentLayout>
             <Head title="Pengaturan Profil" />
 
-            <div className="mx-auto max-w-4xl px-4 py-8">
-                <div className="flex flex-col md:flex-row gap-8">
-                    {/* Left Sidebar - Profile Summary */}
-                    <div className="md:w-1/3 space-y-6">
-                        <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-4xl overflow-hidden">
+            <div className="mx-auto max-w-5xl px-4 py-8">
+                <div className="flex flex-col gap-8 md:flex-row">
+                    <div className="space-y-6 md:w-1/3">
+                        <Card className="overflow-hidden rounded-4xl border-none bg-white shadow-sm dark:bg-[#161615]">
                             <CardContent className="p-8 text-center">
-                                <div className="relative inline-block mb-6 group">
-                                    <Avatar className="size-32 border-4 border-blue-50 dark:border-blue-900/20 overflow-hidden">
-                                        <AvatarImage src={preview || student.avatar} />
-                                        <AvatarFallback className="text-3xl font-bold bg-blue-50 text-blue-600">{initials}</AvatarFallback>
+                                <div className="group relative mb-6 inline-block">
+                                    <Avatar className="size-32 overflow-hidden border-4 border-blue-50 dark:border-blue-900/20">
+                                        <AvatarImage
+                                            src={preview || student.avatar}
+                                        />
+                                        <AvatarFallback className="bg-blue-50 text-3xl font-bold text-blue-600">
+                                            {initials}
+                                        </AvatarFallback>
                                     </Avatar>
 
                                     <button
                                         type="button"
-                                        onClick={() => fileInput.current?.click()}
-                                        className="absolute inset-0 bg-black/40 text-white flex flex-col items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                                        onClick={() =>
+                                            fileInput.current?.click()
+                                        }
+                                        className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center rounded-full bg-black/40 text-white opacity-0 transition-opacity group-hover:opacity-100"
                                     >
-                                        <Camera className="size-6 mb-1" />
-                                        <span className="text-[10px] font-bold uppercase tracking-widest">Update Foto</span>
+                                        <Camera className="mb-1 size-6" />
+                                        <span className="text-[10px] font-bold tracking-widest uppercase">
+                                            Update Foto
+                                        </span>
                                     </button>
 
-                                    {preview && (
+                                    {preview ? (
                                         <Button
                                             size="icon"
                                             variant="destructive"
                                             onClick={clearPreview}
-                                            className="absolute -top-2 -right-2 rounded-full size-8 shadow-lg border-2 border-white dark:border-[#161615]"
+                                            className="absolute -top-2 -right-2 size-8 rounded-full border-2 border-white shadow-lg dark:border-[#161615]"
                                         >
                                             <X className="size-4" />
                                         </Button>
-                                    )}
+                                    ) : null}
 
                                     <input
                                         type="file"
@@ -140,150 +236,560 @@ export default function StudentProfile({ student }: StudentProfileProps) {
                                         onChange={handleFileChange}
                                     />
                                 </div>
-                                <h2 className="text-xl font-bold mb-1 line-clamp-1">{student.name}</h2>
-                                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-6">Student Account</p>
 
-                                <div className="space-y-3 pt-6 border-t border-gray-50 dark:border-white/5">
-                                    <div className="flex items-center gap-3 text-sm text-muted-foreground text-left">
-                                        <AtSign className="size-4 text-blue-600 shrink-0" />
-                                        <span className="truncate">{auth.user.email}</span>
+                                <h2 className="mb-1 line-clamp-1 text-xl font-bold">
+                                    {student.name}
+                                </h2>
+                                <p className="mb-6 text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                                    Student Account
+                                </p>
+
+                                <div className="space-y-3 border-t border-gray-50 pt-6 text-left dark:border-white/5">
+                                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                                        <AtSign className="size-4 shrink-0 text-blue-600" />
+                                        <span className="truncate">
+                                            {auth?.user?.email ?? '-'}
+                                        </span>
                                     </div>
-                                    <div className="flex items-center gap-3 text-sm text-muted-foreground text-left">
-                                        <Lock className="size-4 text-orange-400 shrink-0" />
-                                        <span>NISN: {student.nisn ?? 'Not set'}</span>
+                                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                                        <Lock className="size-4 shrink-0 text-orange-400" />
+                                        <span>
+                                            NISN: {student.nisn ?? 'Not set'}
+                                        </span>
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
 
-                        <div className="p-6 bg-blue-600 rounded-4xl text-white shadow-xl shadow-blue-500/20">
-                            <h3 className="font-bold mb-2 flex items-center gap-2 text-sm uppercase tracking-widest">
+                        <div className="rounded-4xl bg-blue-600 p-6 text-white shadow-xl shadow-blue-500/20">
+                            <h3 className="mb-2 flex items-center gap-2 text-sm font-bold tracking-widest uppercase">
                                 <Trophy className="size-4" /> Tips Profil
                             </h3>
-                            <p className="text-xs text-blue-100 leading-relaxed">
-                                Foto profil yang profesional membantu karyamu lebih dipercaya oleh kurator dan audiens!.
+                            <p className="text-xs leading-relaxed text-blue-100">
+                                Lengkapi bio, skill, dan prestasi agar
+                                portofolio kamu terlihat lebih profesional saat
+                                dilihat pembimbing atau industri.
                             </p>
-
-                            <p className="text-xs text-blue-100 leading-relaxed">Ukuran sempurna untuk foto profil adalah 1:1.</p>
                         </div>
                     </div>
 
-                    {/* Right Content - Form */}
                     <div className="flex-1 space-y-6">
                         <form onSubmit={submit} className="space-y-6">
-                            <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-4xl">
+                            <Card className="rounded-4xl border-none bg-white shadow-sm dark:bg-[#161615]">
                                 <CardHeader className="px-8 pt-8 pb-4">
-                                    <CardTitle className="text-xl font-bold flex items-center gap-3">
-                                        <UserCircle className="size-6 text-blue-600" /> Informasi Dasar
+                                    <CardTitle className="flex items-center gap-3 text-xl font-bold">
+                                        <UserCircle className="size-6 text-blue-600" />{' '}
+                                        Informasi Dasar
                                     </CardTitle>
-                                    <CardDescription>Detail utama identitas kamu di platform ini.</CardDescription>
+                                    <CardDescription>
+                                        Identitas dasar dan data biodata utama
+                                        profil siswa.
+                                    </CardDescription>
                                 </CardHeader>
-                                <CardContent className="p-8 pt-0 space-y-6">
+                                <CardContent className="space-y-6 p-8 pt-0">
                                     <div className="grid gap-6 md:grid-cols-2">
-                                        <div className="space-y-2 flex flex-col gap-1.2">
-                                            <Label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Nama Lengkap</Label>
+                                        <div className="space-y-2">
+                                            <Label
+                                                htmlFor="name"
+                                                className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase"
+                                            >
+                                                Nama Lengkap
+                                            </Label>
                                             <div className="relative">
-                                                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                                                <User className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
                                                 <Input
                                                     id="name"
-                                                    className="pl-10 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent/40"
-                                                    placeholder="Nama lengkap kamu"
+                                                    className="rounded-xl border-transparent bg-gray-50/50 pl-10 transition-all focus:bg-white dark:bg-accent/50 dark:focus:bg-accent/40"
                                                     value={form.data.name}
-                                                    onChange={(e) => form.setData('name', e.target.value)}
+                                                    onChange={(event) =>
+                                                        form.setData(
+                                                            'name',
+                                                            event.target.value,
+                                                        )
+                                                    }
                                                 />
                                             </div>
-                                            <InputError message={form.errors.name} />
+                                            <InputError
+                                                message={form.errors.name}
+                                            />
                                         </div>
 
-                                        <div className="space-y-2 flex flex-col gap-1.2">
-                                            <Label htmlFor="birth_date" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Tanggal Lahir</Label>
+                                        <div className="space-y-2">
+                                            <Label
+                                                htmlFor="gender"
+                                                className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase"
+                                            >
+                                                Jenis Kelamin
+                                            </Label>
+                                            <Select
+                                                value={form.data.gender}
+                                                onValueChange={(value) =>
+                                                    form.setData(
+                                                        'gender',
+                                                        value as 'L' | 'P' | '',
+                                                    )
+                                                }
+                                            >
+                                                <SelectTrigger
+                                                    id="gender"
+                                                    className="h-10 rounded-xl border-transparent bg-gray-50/50 transition-all focus:bg-white dark:bg-accent/50 dark:focus:bg-accent/40"
+                                                >
+                                                    <SelectValue placeholder="Pilih jenis kelamin" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="L">
+                                                        Laki-laki
+                                                    </SelectItem>
+                                                    <SelectItem value="P">
+                                                        Perempuan
+                                                    </SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <InputError
+                                                message={form.errors.gender}
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label
+                                                htmlFor="birth_place"
+                                                className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase"
+                                            >
+                                                Tempat Lahir
+                                            </Label>
+                                            <Input
+                                                id="birth_place"
+                                                className="rounded-xl border-transparent bg-gray-50/50 transition-all focus:bg-white dark:bg-accent/50 dark:focus:bg-accent/40"
+                                                value={form.data.birth_place}
+                                                onChange={(event) =>
+                                                    form.setData(
+                                                        'birth_place',
+                                                        event.target.value,
+                                                    )
+                                                }
+                                            />
+                                            <InputError
+                                                message={
+                                                    form.errors.birth_place
+                                                }
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label
+                                                htmlFor="phone"
+                                                className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase"
+                                            >
+                                                Nomor WhatsApp
+                                            </Label>
+                                            <Input
+                                                id="phone"
+                                                className="rounded-xl border-transparent bg-gray-50/50 transition-all focus:bg-white dark:bg-accent/50 dark:focus:bg-accent/40"
+                                                placeholder="08xxxxxxxxxx"
+                                                value={form.data.phone}
+                                                onChange={(event) =>
+                                                    form.setData(
+                                                        'phone',
+                                                        event.target.value,
+                                                    )
+                                                }
+                                            />
+                                            <InputError
+                                                message={form.errors.phone}
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2 md:col-span-2">
+                                            <Label
+                                                htmlFor="birth_date"
+                                                className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase"
+                                            >
+                                                Tanggal Lahir
+                                            </Label>
                                             <Popover>
                                                 <PopoverTrigger asChild>
                                                     <Input
                                                         id="birth_date"
                                                         readOnly
-                                                        className="rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent cursor-pointer"
-                                                        value={form.data.birth_date}
+                                                        className="cursor-pointer rounded-xl border-transparent bg-gray-50/50 transition-all focus:bg-white dark:bg-accent/50 dark:focus:bg-accent"
+                                                        value={
+                                                            form.data.birth_date
+                                                        }
                                                     />
                                                 </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" align="start">
-                                                    <Calendar 
-                                                        mode='single' 
-                                                        captionLayout='dropdown' 
-                                                        selected={form.data.birth_date ? new Date(form.data.birth_date) : undefined}
+                                                <PopoverContent
+                                                    className="w-auto p-0"
+                                                    align="start"
+                                                >
+                                                    <Calendar
+                                                        mode="single"
+                                                        captionLayout="dropdown"
+                                                        selected={
+                                                            form.data.birth_date
+                                                                ? new Date(
+                                                                      form.data
+                                                                          .birth_date,
+                                                                  )
+                                                                : undefined
+                                                        }
                                                         onSelect={(date) => {
                                                             if (date) {
-                                                                form.setData('birth_date', format(date, 'yyyy-MM-dd'));
+                                                                form.setData(
+                                                                    'birth_date',
+                                                                    format(
+                                                                        date,
+                                                                        'yyyy-MM-dd',
+                                                                    ),
+                                                                );
                                                             }
                                                         }}
                                                         disabled={(date) =>
-                                                            date > new Date() || date < new Date("1900-01-01")
+                                                            date > new Date() ||
+                                                            date <
+                                                                new Date(
+                                                                    '1900-01-01',
+                                                                )
                                                         }
                                                         autoFocus
                                                     />
                                                 </PopoverContent>
                                             </Popover>
-                                            
-                                            <InputError message={form.errors.birth_date} />
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="address" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Alamat / Bio Singkat</Label>
-                                        <div className="relative mt-2">
-                                            <MapPin className="absolute left-3.5 top-4 size-4 text-muted-foreground" />
-                                            <Input
-                                                id="address"
-                                                className="pl-10 h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent/40"
-                                                placeholder="Edinburgh, Scotland"
-                                                value={form.data.address}
-                                                onChange={(e) => form.setData('address', e.target.value)}
+                                            <InputError
+                                                message={form.errors.birth_date}
                                             />
                                         </div>
-                                        <InputError message={form.errors.address} />
+
+                                        <div className="space-y-2 md:col-span-2">
+                                            <Label
+                                                htmlFor="address"
+                                                className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase"
+                                            >
+                                                Alamat
+                                            </Label>
+                                            <div className="relative">
+                                                <MapPin className="absolute top-4 left-3.5 size-4 text-muted-foreground" />
+                                                <Input
+                                                    id="address"
+                                                    className="h-12 rounded-xl border-transparent bg-gray-50/50 pl-10 transition-all focus:bg-white dark:bg-accent/50 dark:focus:bg-accent/40"
+                                                    value={form.data.address}
+                                                    onChange={(event) =>
+                                                        form.setData(
+                                                            'address',
+                                                            event.target.value,
+                                                        )
+                                                    }
+                                                />
+                                            </div>
+                                            <InputError
+                                                message={form.errors.address}
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2 md:col-span-2">
+                                            <Label
+                                                htmlFor="bio"
+                                                className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase"
+                                            >
+                                                Bio Singkat
+                                            </Label>
+                                            <Textarea
+                                                id="bio"
+                                                className="min-h-28 rounded-xl border-transparent bg-gray-50/50 transition-all focus:bg-white dark:bg-accent/50 dark:focus:bg-accent/40"
+                                                placeholder="Ceritakan dirimu secara singkat, fokus pada ketertarikan dan tujuan belajarmu."
+                                                value={form.data.bio}
+                                                onChange={(event) =>
+                                                    form.setData(
+                                                        'bio',
+                                                        event.target.value,
+                                                    )
+                                                }
+                                            />
+                                            <InputError
+                                                message={form.errors.bio}
+                                            />
+                                        </div>
                                     </div>
 
                                     <InputError message={form.errors.avatar} />
                                 </CardContent>
                             </Card>
 
-                            <Card className="border-none shadow-sm bg-white dark:bg-[#161615] rounded-4xl">
+                            <Card className="rounded-4xl border-none bg-white shadow-sm dark:bg-[#161615]">
                                 <CardHeader className="px-8 pt-8 pb-4">
-                                    <CardTitle className="text-xl font-bold flex items-center gap-3">
-                                        <Globe className="size-6 text-indigo-600" /> Kehadiran Online
+                                    <CardTitle className="flex items-center gap-3 text-xl font-bold">
+                                        <Sparkles className="size-6 text-indigo-600" />{' '}
+                                        Profil Profesional
                                     </CardTitle>
-                                    <CardDescription>Tautkan akun media sosial atau portfolio kamu.</CardDescription>
+                                    <CardDescription>
+                                        Tambahkan keahlian, prestasi, dan minat
+                                        agar profil lebih kuat.
+                                    </CardDescription>
                                 </CardHeader>
-                                <CardContent className="p-8 pt-0 space-y-6">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="social_link" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Link Website / Social Media</Label>
-                                        <div className="relative mt-2">
-                                            <ExternalLink className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                                            <Input
-                                                id="social_link"
-                                                type="url"
-                                                className="pl-10 h-12 rounded-xl bg-gray-50/50 border-transparent focus:bg-white transition-all dark:bg-accent/50 dark:focus:bg-accent/40"
-                                                placeholder="https://instagram.com/username"
-                                                value={form.data.social_link}
-                                                onChange={(e) => form.setData('social_link', e.target.value)}
-                                            />
+                                <CardContent className="space-y-6 p-8 pt-0">
+                                    {(
+                                        [
+                                            {
+                                                field: 'skills',
+                                                label: 'Skills',
+                                                placeholder:
+                                                    'Contoh: UI Design, Public Speaking, Laravel',
+                                                error: form.errors.skills,
+                                            },
+                                            {
+                                                field: 'achievements',
+                                                label: 'Prestasi',
+                                                placeholder:
+                                                    'Contoh: Juara 1 LKS tingkat kota',
+                                                error: form.errors.achievements,
+                                            },
+                                            {
+                                                field: 'interests',
+                                                label: 'Bidang Minat',
+                                                placeholder:
+                                                    'Contoh: Data Science, Videografi, Animasi',
+                                                error: form.errors.interests,
+                                            },
+                                        ] as const
+                                    ).map(
+                                        ({
+                                            field,
+                                            label,
+                                            placeholder,
+                                            error,
+                                        }) => (
+                                            <div
+                                                key={field}
+                                                className="space-y-3"
+                                            >
+                                                <Label
+                                                    htmlFor={field}
+                                                    className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase"
+                                                >
+                                                    {label}
+                                                </Label>
+                                                <div className="flex flex-col gap-3 sm:flex-row">
+                                                    <Input
+                                                        id={field}
+                                                        className="rounded-xl border-transparent bg-gray-50/50 transition-all focus:bg-white dark:bg-accent/50 dark:focus:bg-accent/40"
+                                                        placeholder={
+                                                            placeholder
+                                                        }
+                                                        value={drafts[field]}
+                                                        onChange={(event) => {
+                                                            const value =
+                                                                event.target
+                                                                    .value;
+
+                                                            setDrafts(
+                                                                (
+                                                                    currentDrafts,
+                                                                ) => ({
+                                                                    ...currentDrafts,
+                                                                    [field]:
+                                                                        value,
+                                                                }),
+                                                            );
+                                                        }}
+                                                        onKeyDown={(event) => {
+                                                            if (
+                                                                event.key ===
+                                                                'Enter'
+                                                            ) {
+                                                                event.preventDefault();
+                                                                addListItem(
+                                                                    field,
+                                                                );
+                                                            }
+                                                        }}
+                                                    />
+                                                    <Button
+                                                        type="button"
+                                                        variant="secondary"
+                                                        className="rounded-xl"
+                                                        onClick={() =>
+                                                            addListItem(field)
+                                                        }
+                                                    >
+                                                        Tambah
+                                                    </Button>
+                                                </div>
+
+                                                {form.data[field].length > 0 ? (
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {form.data[field].map(
+                                                            (item, index) => (
+                                                                <span
+                                                                    key={`${field}-${item}`}
+                                                                    className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-100"
+                                                                >
+                                                                    {item}
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() =>
+                                                                            removeListItem(
+                                                                                field,
+                                                                                index,
+                                                                            )
+                                                                        }
+                                                                        className="text-blue-400 hover:text-blue-700 dark:text-blue-200"
+                                                                    >
+                                                                        <X className="size-3" />
+                                                                    </button>
+                                                                </span>
+                                                            ),
+                                                        )}
+                                                    </div>
+                                                ) : null}
+
+                                                <InputError message={error} />
+                                            </div>
+                                        ),
+                                    )}
+                                </CardContent>
+                            </Card>
+
+                            <Card className="rounded-4xl border-none bg-white shadow-sm dark:bg-[#161615]">
+                                <CardHeader className="px-8 pt-8 pb-4">
+                                    <CardTitle className="flex items-center gap-3 text-xl font-bold">
+                                        <Globe className="size-6 text-indigo-600" />{' '}
+                                        Kehadiran Online
+                                    </CardTitle>
+                                    <CardDescription>
+                                        Tautkan akun media sosial atau portfolio
+                                        kamu.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="p-8 pt-0">
+                                    <div className="grid gap-4 md:grid-cols-2">
+                                        {(
+                                            [
+                                                {
+                                                    field: 'instagram',
+                                                    label: 'Instagram',
+                                                    placeholder:
+                                                        'https://instagram.com/username',
+                                                    error: form.errors
+                                                        .instagram,
+                                                },
+                                                {
+                                                    field: 'facebook',
+                                                    label: 'Facebook',
+                                                    placeholder:
+                                                        'https://facebook.com/username',
+                                                    error: form.errors.facebook,
+                                                },
+                                                {
+                                                    field: 'tiktok',
+                                                    label: 'TikTok',
+                                                    placeholder:
+                                                        'https://tiktok.com/@username',
+                                                    error: form.errors.tiktok,
+                                                },
+                                                {
+                                                    field: 'linkedin',
+                                                    label: 'LinkedIn',
+                                                    placeholder:
+                                                        'https://linkedin.com/in/username',
+                                                    error: form.errors.linkedin,
+                                                },
+                                            ] as const
+                                        ).map(
+                                            ({
+                                                field,
+                                                label,
+                                                placeholder,
+                                                error,
+                                            }) => (
+                                                <div
+                                                    key={field}
+                                                    className="space-y-2"
+                                                >
+                                                    <Label
+                                                        htmlFor={field}
+                                                        className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase"
+                                                    >
+                                                        {label}
+                                                    </Label>
+                                                    <div className="relative mt-2">
+                                                        <ExternalLink className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+                                                        <Input
+                                                            id={field}
+                                                            type="url"
+                                                            className="h-12 rounded-xl border-transparent bg-gray-50/50 pl-10 transition-all focus:bg-white dark:bg-accent/50 dark:focus:bg-accent/40"
+                                                            placeholder={
+                                                                placeholder
+                                                            }
+                                                            value={
+                                                                form.data[field]
+                                                            }
+                                                            onChange={(event) =>
+                                                                form.setData(
+                                                                    field,
+                                                                    event.target
+                                                                        .value,
+                                                                )
+                                                            }
+                                                        />
+                                                    </div>
+                                                    <InputError
+                                                        message={error}
+                                                    />
+                                                </div>
+                                            ),
+                                        )}
+                                        <div className="space-y-2 md:col-span-2">
+                                            <Label
+                                                htmlFor="social_link"
+                                                className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase"
+                                            >
+                                                Link Website Personal (Opsional)
+                                            </Label>
+                                            <div className="relative mt-2">
+                                                <AtSign className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+                                                <Input
+                                                    id="social_link"
+                                                    type="url"
+                                                    className="h-12 rounded-xl border-transparent bg-gray-50/50 pl-10 transition-all focus:bg-white dark:bg-accent/50 dark:focus:bg-accent/40"
+                                                    placeholder="https://my-portfolio.dev"
+                                                    value={
+                                                        form.data.social_link
+                                                    }
+                                                    onChange={(event) =>
+                                                        form.setData(
+                                                            'social_link',
+                                                            event.target.value,
+                                                        )
+                                                    }
+                                                />
+                                            </div>
                                         </div>
-                                        <InputError message={form.errors.social_link} />
+                                        <InputError
+                                            message={form.errors.social_link}
+                                        />
                                     </div>
                                 </CardContent>
                             </Card>
 
                             <div className="flex items-center justify-end gap-4 pt-4">
-                                <Button asChild variant="ghost" className="rounded-xl h-12 px-6">
+                                <Button
+                                    asChild
+                                    variant="ghost"
+                                    className="h-12 rounded-xl px-6"
+                                >
                                     <Link href="/siswa">Batal</Link>
                                 </Button>
                                 <Button
                                     disabled={form.processing}
                                     type="submit"
-                                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-12 px-10 shadow-xl shadow-blue-500/20 transition-all hover:scale-105"
+                                    className="h-12 rounded-xl bg-blue-600 px-10 text-white shadow-xl shadow-blue-500/20 transition-all hover:scale-105 hover:bg-blue-700"
                                 >
-                                    {form.processing ? 'Menyimpan...' : (
-                                        <span className="flex items-center gap-2 uppercase tracking-widest text-xs font-bold"><Save className="size-4" /> Simpan Perubahan</span>
+                                    {form.processing ? (
+                                        'Menyimpan...'
+                                    ) : (
+                                        <span className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase">
+                                            <Save className="size-4" /> Simpan
+                                            Perubahan
+                                        </span>
                                     )}
                                 </Button>
                             </div>
