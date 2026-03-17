@@ -22,9 +22,12 @@ class KaryaController extends Controller
                 'id' => $karya->id,
                 'user' => [
                     'name' => $karya->user->name,
+                    'avatar' => $karya->user->avatar,
                 ],
                 'title' => $karya->title,
+                'description' => $karya->description,
                 'media_type' => $karya->media_type,
+                'media_path' => $karya->media_path ? Storage::disk('public')->url($karya->media_path) : null,
                 'status' => $karya->status,
                 'created_at' => $karya->created_at?->diffForHumans(),
             ]);

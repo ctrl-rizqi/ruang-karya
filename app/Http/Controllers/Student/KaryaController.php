@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Student\StoreKaryaRequest;
 use App\Http\Requests\Student\UpdateKaryaRequest;
 use App\Models\Karya;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -13,10 +14,14 @@ use Inertia\Response;
 
 class KaryaController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $karyas = Karya::query()
-            ->where('user_id', auth()->id())
+        $karyas = Karya::with('user')
+            ->when($request->search, function ($query, $search) {
+                $query->whereHas('user', function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%");
+                });
+            })
             ->withCount('likes')
             ->withExists([
                 'likes as is_liked' => fn ($query) => $query->where('users.id', auth()->id()),
@@ -24,13 +29,16 @@ class KaryaController extends Controller
             ->latest()
             ->paginate(10)
             ->withQueryString()
-            ->through(fn (Karya $karya): array => $this->karyaData($karya));
+            ->through(fn (Karya $karya): array => [
+                ...$this->karyaData($karya),
+                'is_owner' => $karya->user_id === auth()->id(),
+            ]);
 
         return Inertia::render('student/karya/index', [
             'karyas' => $karyas,
+            'filters' => $request->only(['search']),
         ]);
     }
-
     public function create(): Response
     {
         return Inertia::render('student/karya/form', [
@@ -61,6 +69,7 @@ class KaryaController extends Controller
     public function edit(Karya $karya): Response
     {
         $this->ensureOwnedKarya($karya);
+        $karya->load('user');
 
         return Inertia::render('student/karya/form', [
             'mode' => 'edit',
@@ -112,6 +121,11 @@ class KaryaController extends Controller
     {
         return [
             'id' => $karya->id,
+            'user' => [
+                'name' => $karya->user->name,
+                'avatar' => $karya->user->avatar,
+                'nisn' => $karya->user->nisn,
+            ],
             'title' => $karya->title,
             'description' => $karya->description,
             'content' => $karya->content,
