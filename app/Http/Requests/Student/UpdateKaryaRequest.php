@@ -25,6 +25,18 @@ class UpdateKaryaRequest extends FormRequest
                 'file',
                 function ($attribute, $value, $fail) {
                     $type = $this->input('media_type');
+
+                    // If type is link, the file MUST be an image (thumbnail) if provided
+                    if ($type === 'link') {
+                        if (! in_array($value->getMimeType(), ['image/jpeg', 'image/png', 'image/webp'])) {
+                            $fail('The thumbnail must be an image (jpeg, png, webp).');
+                        }
+                        if ($value->getSize() > 2 * 1024 * 1024) {
+                            $fail('The thumbnail image may not be greater than 2MB.');
+                        }
+                        return;
+                    }
+
                     if ($type === 'image' && ! in_array($value->getMimeType(), ['image/jpeg', 'image/png', 'image/webp'])) {
                         $fail('The file must be an image (jpeg, png, webp).');
                     }

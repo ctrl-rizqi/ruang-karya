@@ -4,15 +4,43 @@ namespace App\Http\Controllers;
 
 use App\Enums\UserRole;
 use App\Models\Classroom;
+use App\Models\Karya;
 use App\Models\Major;
 use App\Models\User;
 use App\Models\WebSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class PublicPageController extends Controller
 {
+    public function index(): Response
+    {
+        $featuredKaryas = Karya::with(['user.major'])
+            ->where('status', 'reviewed')
+            ->withCount('likes')
+            ->orderByDesc('likes_count')
+            ->limit(3)
+            ->get()
+            ->map(fn (Karya $karya) => [
+                'id' => $karya->id,
+                'title' => $karya->title,
+                'media_type' => $karya->media_type,
+                'media_path' => $karya->media_path ? Storage::disk('public')->url($karya->media_path) : null,
+                'likes_count' => $karya->likes_count,
+                'user' => [
+                    'name' => $karya->user->name,
+                    'major' => $karya->user->major?->name,
+                    'nisn' => $karya->user->nisn,
+                ],
+            ]);
+
+        return Inertia::render('welcome', [
+            'featuredKaryas' => $featuredKaryas,
+        ]);
+    }
+
     public function about(): Response
     {
         $webSetting = WebSetting::query()->first();

@@ -182,6 +182,22 @@ export default function StudentKaryaForm({
                                         )}
                                     </div>
 
+                                    {form.data.media_type === 'link' && (
+                                        <div className="space-y-2 flex flex-col gap-1.2">
+                                            <Label htmlFor="file" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Thumbnail Karya (Wajib Gambar)</Label>
+                                            <div className="relative">
+                                                <Input
+                                                    id="file"
+                                                    type="file"
+                                                    accept="image/*"
+                                                    className="rounded-xl border-transparent transition-all cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                                    onChange={(e) => form.setData('file', e.target.files?.[0] || null)}
+                                                />
+                                            </div>
+                                            <InputError message={form.errors.file} />
+                                        </div>
+                                    )}
+
                                     <div className="space-y-2 flex flex-col gap-1.2">
                                         <Label htmlFor="content" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Konten / Isi Karya</Label>
                                         <Textarea
@@ -224,7 +240,7 @@ export default function StudentKaryaForm({
                                     </div>
                                     <p className="text-xs text-blue-900/70 dark:text-blue-100/70 leading-relaxed">
                                         {form.data.media_type === 'link' 
-                                            ? 'Tautkan link dari YouTube atau Unsplash untuk tampilan yang lebih keren!' 
+                                            ? 'Tautkan link dan wajib unggah gambar thumbnail agar karyamu tampil menarik di galeri!' 
                                             : 'Pastikan file yang kamu upload berkualitas tinggi agar teman-temanmu terkesan.'}
                                     </p>
                                 </div>

@@ -14,6 +14,8 @@ import {
     User,
     Plus,
     School,
+    FileText,
+    Link as LinkIcon,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -21,6 +23,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { dashboard, login, register } from '@/routes';
 import student from '@/routes/student';
+import { cn } from '@/lib/utils';
 
 const ItemJurusan = [
     {
@@ -62,17 +65,31 @@ interface WelcomeProps {
         site_tagline: string | null;
         site_description: string | null;
     };
+    featuredKaryas: {
+        id: number;
+        title: string;
+        media_type: string;
+        media_path: string | null;
+        likes_count: number;
+        user: {
+            name: string;
+            major: string | null;
+            nisn: string;
+        };
+    }[];
 }
 
-export default function Welcome({ webSetting }: WelcomeProps) {
-    const { auth } = usePage().props;
+export default function Welcome({ webSetting = {} as any, featuredKaryas = [] }: WelcomeProps) {
+    const { auth } = usePage().props as any;
 
     const sponsors = [
-        { id: 1, name: 'Sponsor 1', logo: '/assets/sponsor-placeholder.png' },
-        { id: 2, name: 'Sponsor 2', logo: '/assets/sponsor-placeholder.png' },
-        { id: 3, name: 'Sponsor 3', logo: '/assets/sponsor-placeholder.png' },
-        { id: 4, name: 'Sponsor 4', logo: '/assets/sponsor-placeholder.png' },
-        { id: 5, name: 'Sponsor 5', logo: '/assets/sponsor-placeholder.png' },
+        { id: 1, name: 'Sponsor 1', logo: '/assets/HONDA.png' },
+        { id: 2, name: 'Sponsor 2', logo: '/assets/WKSTORE.png' },
+        { id: 3, name: 'Sponsor 3', logo: '/assets/WKCAFE.png' },
+        { id: 4, name: 'Sponsor 4', logo: '/assets/WK.png' },
+        { id: 5, name: 'Sponsor 5', logo: '/assets/PISS.png' },
+        { id: 6, name: 'Sponsor 6', logo: '/assets/SPW.jpeg' },
+        { id: 7, name: 'Sponsor 7', logo: '/assets/THREESANS.PNG' },
     ];
 
     return (
@@ -305,35 +322,27 @@ export default function Welcome({ webSetting }: WelcomeProps) {
                         </div>
 
                         <div className="mb-16 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
-                            <ProjectCard
-                                title="EcoFlow: Identitas Produk"
-                                category="Desain Komunikasi Visual"
-                                grade="Kelas XII"
-                                image="https://images.unsplash.com/photo-1586717791821-3f44a563de4c?q=80&w=800&auto=format&fit=crop"
-                                likes="Prestasi Utama"
-                            />
-                            <ProjectCard
-                                title="Sintesis Alam dalam Lensa"
-                                category="Fotografi Broadcast"
-                                grade="Kelas XI"
-                                image="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop"
-                                likes="840"
-                            />
-                            <ProjectCard
-                                title="Nebula: Sistem Kasir Digital"
-                                category="Pengembangan Perangkat Lunak"
-                                grade="Kelas XII"
-                                image="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop"
-                                likes="3.4k"
-                            />
+                            {featuredKaryas.map((karya) => (
+                                <ProjectCard
+                                    key={karya.id}
+                                    title={karya.title}
+                                    category={karya.user.major || 'Umum'}
+                                    grade={karya.user.name}
+                                    image={karya.media_path}
+                                    mediaType={karya.media_type}
+                                    likes={karya.likes_count.toString()}
+                                    nisn={karya.user.nisn}
+                                />
+                            ))}
                         </div>
 
                         <div className="flex justify-center">
                             <Button
+                                asChild
                                 variant="outline"
                                 className="h-14 rounded-2xl border-gray-200 px-10 text-xs font-bold uppercase tracking-widest hover:bg-white hover:shadow-xl transition-all"
                             >
-                                Lihat Semua Karya Siswa
+                                <Link href="/siswa/karya">Jelajahi Semua Inspirasi</Link>
                             </Button>
                         </div>
                     </div>
@@ -347,7 +356,7 @@ export default function Welcome({ webSetting }: WelcomeProps) {
                         </p>
                         <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-40 grayscale transition-all hover:grayscale-0">
                             {sponsors.map((sponsor) => (
-                                <div key={sponsor.id} className="h-12 flex items-center justify-center transition-transform hover:scale-110">
+                                <div key={sponsor.id} className="h-22 flex items-center justify-center transition-transform hover:scale-110">
                                     {/* Replace src with your actual sponsor logo paths */}
                                     <img 
                                         src={sponsor.logo} 
@@ -685,45 +694,84 @@ function ProjectCard({
     grade,
     image,
     likes,
+    nisn,
+    mediaType,
 }: {
     title: string;
     category: string;
     grade: string;
-    image: string;
+    image: string | null;
     likes: string;
+    nisn: string;
+    mediaType: string;
 }) {
+    const placeholders = {
+        link: {
+            bg: 'from-blue-500 to-indigo-600',
+            icon: <LinkIcon className="size-16 text-white/40" />,
+            label: 'External Link'
+        },
+        video: {
+            bg: 'from-rose-500 to-red-600',
+            icon: <Music className="size-16 text-white/40" />, // Using Music as Video placeholder if no Video icon
+            label: 'Video Project'
+        },
+        document: {
+            bg: 'from-amber-500 to-orange-600',
+            icon: <FileText className="size-16 text-white/40" />,
+            label: 'Document'
+        },
+        image: {
+            bg: 'from-emerald-500 to-teal-600',
+            icon: <Palette className="size-16 text-white/40" />,
+            label: 'Image Project'
+        }
+    };
+
+    const typeKey = mediaType as keyof typeof placeholders;
+    const config = placeholders[typeKey] || placeholders.link;
+
     return (
-        <div className="group cursor-pointer">
+        <Link href={`/p/${nisn}`} className="group cursor-pointer block">
             <div className="relative mb-6 aspect-4/3 overflow-hidden rounded-2xl">
-                <img
-                    src={image}
-                    alt={title}
-                    className="size-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+                {image ? (
+                    <img
+                        src={image}
+                        alt={title}
+                        className="size-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                ) : (
+                    <div className={cn(
+                        "size-full bg-linear-to-br flex flex-col items-center justify-center transition-transform duration-500 group-hover:scale-110",
+                        config.bg
+                    )}>
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
+                        {config.icon}
+                        <span className="mt-4 text-[10px] font-black uppercase tracking-[0.3em] text-white/60">
+                            {config.label}
+                        </span>
+                    </div>
+                )}
                 <div className="absolute top-4 right-4">
                     <Badge className="flex items-center gap-1.5 border-none bg-white/90 px-3 py-1 text-[10px] font-bold text-[#1b1b18] shadow-sm backdrop-blur-md hover:bg-white/90">
-                        {likes === 'Top Merit' ? (
-                            <Quote className="size-3 fill-orange-400 text-orange-400" />
-                        ) : (
-                            <Heart className="size-3 fill-rose-500 text-rose-500" />
-                        )}
+                        <Heart className="size-3 fill-rose-500 text-rose-500" />
                         {likes}
                     </Badge>
                 </div>
             </div>
             <div className="flex flex-col">
                 <div className="mb-2 flex items-center justify-between">
-                    <h4 className="text-xl font-medium text-[#1b1b18] transition-colors group-hover:text-[#003366]">
+                    <h4 className="text-xl font-bold text-[#1b1b18] transition-colors group-hover:text-[#003366] line-clamp-1">
                         {title}
                     </h4>
                 </div>
-                <div className="flex items-center gap-2 text-xs font-medium tracking-widest text-gray-400 uppercase">
-                    <span>{grade}</span>
+                <div className="flex items-center gap-2 text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+                    <span className="text-[#003366]">{grade}</span>
                     <span className="size-1 rounded-full bg-gray-200" />
                     <span>{category}</span>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 }
 

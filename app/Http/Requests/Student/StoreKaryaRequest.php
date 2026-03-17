@@ -21,11 +21,22 @@ class StoreKaryaRequest extends FormRequest
             'media_type' => ['required', 'string', 'in:image,video,document,link'],
             'media_url' => ['required_if:media_type,link', 'nullable', 'url', 'max:2000'],
             'file' => [
-                'required_unless:media_type,link',
-                'nullable',
+                'required',
                 'file',
                 function ($attribute, $value, $fail) {
                     $type = $this->input('media_type');
+                    
+                    // If type is link, the file MUST be an image (thumbnail)
+                    if ($type === 'link') {
+                        if (! in_array($value->getMimeType(), ['image/jpeg', 'image/png', 'image/webp'])) {
+                            $fail('If providing a link, you must upload an image as a thumbnail (jpeg, png, webp).');
+                        }
+                        if ($value->getSize() > 2 * 1024 * 1024) {
+                            $fail('The thumbnail image may not be greater than 2MB.');
+                        }
+                        return;
+                    }
+
                     if ($type === 'image' && ! in_array($value->getMimeType(), ['image/jpeg', 'image/png', 'image/webp'])) {
                         $fail('The file must be an image (jpeg, png, webp).');
                     }

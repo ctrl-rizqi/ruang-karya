@@ -15,9 +15,7 @@ use App\Http\Controllers\Student\StudentProfileController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
-Route::inertia('/', 'welcome', [
-    'canRegister' => Features::enabled(Features::registration()),
-])->name('home');
+Route::get('/', [PublicPageController::class, 'index'])->name('home');
 
 Route::get('tentang', [PublicPageController::class, 'about'])->name('about');
 Route::get('daftar-siswa', [PublicPageController::class, 'studentDirectory'])->name('student-directory');

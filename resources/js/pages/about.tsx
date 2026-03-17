@@ -169,7 +169,7 @@ export default function About({
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
                         {ItemMember.map((member) => {
                             const memberName = member.name?.trim() || 'Unknown Member';
-                            const memberRole = 'Pendamping Sekolah';
+                            const memberRole = member.title?.trim() || 'Unknown Role';
 
                             return (
                                 <Card

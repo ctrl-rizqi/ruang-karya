@@ -3,6 +3,7 @@ export const ItemMember = [
         id: 1,
         name: 'Bhima Erlangga Sukma Prayoga, M.Pd',
         img: '/assets/person1.jpeg',
+        title: 'Koordinator Program',
         description: `
         Saya adalah seorang tenaga pendidik yang mengajar mata pelajaran manajemen
 perkantoran di SMK PGRI Sooko Mojokerto. Saya lahir di Blitar, 26 November 1989.
@@ -22,6 +23,7 @@ dokumentasi perjalanan pembelajaran mereka di bidang manajemen perkantoran.`
         id: 2,
         name: 'Deri Candra Rakhmadani, S.T',
         img: '/assets/person4.jpeg',
+        title: 'Content Creator',
         description: `Saya adalah seorang tenaga pendidik yang mengajar mata pelajaran desain komunikasi
 visual dan informatika di SMK PGRI Sooko Mojokerto. Saya lahir di Mojokerto, 20 Desember 2000.
 Menyelesaikan pendidikan S1 pada tahun 2023 dengan gelar S.T Multimedia Broadcasting. Dalam
@@ -39,6 +41,7 @@ proses pembelajaran.`
         id: 3,
         name: 'Muhimatul Aliyah, S.Pd',
         img: '/assets/person2.jpeg',
+        title: 'Pengembang Data',
         description: `Saya adalah seorang tenaga pendidik yang mengajar mata pelajaran desain komunikasi
 visual dan di SMK PGRI Sooko Mojokerto. Saya lahir di Mojokerto, 24 Maret 1999. Menyelesaikan
 pendidikan S1 pada tahun 2023 dengan gelar S.Pd Teknologi Pendidikan di Universitas Negeri
@@ -58,6 +61,7 @@ belajar mereka di bidang desain komunikasi visual.`
         id: 4,
         name: 'Qori’atul Khusna S.Pd',
         img: '/assets/person3.jpeg',
+        title: 'Branding',
         description: `Saya adalah seorang tenaga pendidik yang mengajar mata pelajaran desain komunikasi
 visual dan di SMK PGRI Sooko Mojokerto. Saya lahir di Mojokerto, 22 Septembeer 1994.
 Menyelesaikan pendidikan S1 pada tahun 2016 dengan gelar S.Pd Teknologi Pendidikan di
@@ -76,6 +80,7 @@ bidang desain komunikasi visual.`
         id: 5,
         name: 'Sella Rodiana, S.Pd',
         img: '/assets/person5.jpeg',
+        title: 'Manajemen Data',
         description: `Saya adalah seorang tenaga pendidik yang mengajar mata pelajaran manajemen
 perkantoran dan di SMK PGRI Sooko Mojokerto. Saya lahir di Jombang, 09 Februari 1998.
 Menyelesaikan pendidikan S1 pada tahun 2016 dengan gelar S.Pd Pendidikan Administrasi
