@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Student\UpdateProfileRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -51,6 +52,10 @@ class ProfileController extends Controller
 
             $path = $request->file('avatar')->store('avatars', 'public');
             $data['avatar_url'] = $path;
+        }
+
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
         }
 
         $student->update($data);

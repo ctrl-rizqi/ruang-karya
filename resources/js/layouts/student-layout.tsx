@@ -15,7 +15,7 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { UserMenuContent } from '@/components/user-menu-content';
+import { StudentMenuContent } from '@/components/student-menu-content';
 import { useInitials } from '@/hooks/use-initials';
 import { cn } from '@/lib/utils';
 import type { User } from '@/types';
@@ -57,8 +57,9 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
                         </div>
                     </Link>
 
-                    {/* Desktop Center Navigation */}
-                    <nav className="hidden items-center gap-1 md:flex">
+
+                    {/* Right Actions */}
+                    <div className="flex items-center gap-2 md:gap-4">
                         <NavLink
                             href="/siswa"
                             active={url === '/siswa'}
@@ -73,25 +74,6 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
                         >
                             Inspirasi
                         </NavLink>
-                    </nav>
-
-                    {/* Right Actions */}
-                    <div className="flex items-center gap-2 md:gap-4">
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            className="size-10 rounded-full text-muted-foreground hover:bg-gray-100 hover:text-foreground dark:hover:bg-white/5"
-                        >
-                            <Search className="size-5" />
-                        </Button>
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            className="relative size-10 rounded-full text-muted-foreground hover:bg-gray-100 hover:text-foreground dark:hover:bg-white/5"
-                        >
-                            <Bell className="size-5" />
-                            <span className="absolute top-2.5 right-2.5 size-2 rounded-full border-2 border-white bg-rose-500 dark:border-[#050505]" />
-                        </Button>
 
                         <div className="mx-1 hidden h-6 w-px bg-gray-100 sm:block dark:bg-white/5" />
 
@@ -128,7 +110,7 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
                                     className="mt-2 w-56 rounded-2xl border-gray-100 shadow-xl dark:border-white/5"
                                     align="end"
                                 >
-                                    <UserMenuContent user={user} />
+                                    <StudentMenuContent user={user} />
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         ) : (

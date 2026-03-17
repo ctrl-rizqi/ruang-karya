@@ -35,6 +35,8 @@ class UpdateProfileRequest extends FormRequest
             'tiktok' => ['nullable', 'url', 'max:255'],
             'linkedin' => ['nullable', 'url', 'max:255'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'current_password' => ['nullable', 'string', 'current_password'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed', 'required_with:current_password'],
         ];
     }
 }

@@ -10,7 +10,7 @@ class LoginResponse implements LoginResponseContract
 {
     public function toResponse($request)
     {
-        return redirect()->intended($this->resolveRedirectPath($request));
+        return redirect($this->resolveRedirectPath($request));
     }
 
     private function resolveRedirectPath(Request $request): string

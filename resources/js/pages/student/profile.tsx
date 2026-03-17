@@ -7,6 +7,7 @@ import {
     Lock,
     MapPin,
     Save,
+    ShieldCheck,
     Sparkles,
     Trophy,
     User,
@@ -102,6 +103,9 @@ export default function StudentProfile({ student }: StudentProfileProps) {
         tiktok: student.tiktok ?? '',
         linkedin: student.linkedin ?? '',
         avatar: null as File | null,
+        current_password: '',
+        password: '',
+        password_confirmation: '',
         _method: 'PATCH',
     });
 
@@ -177,6 +181,7 @@ export default function StudentProfile({ student }: StudentProfileProps) {
             forceFormData: true,
             onSuccess: () => {
                 setPreview(null);
+                form.reset('current_password', 'password', 'password_confirmation');
 
                 if (fileInput.current) {
                     fileInput.current.value = '';
@@ -645,6 +650,105 @@ export default function StudentProfile({ student }: StudentProfileProps) {
                                             </div>
                                         ),
                                     )}
+                                </CardContent>
+                            </Card>
+
+                            <Card className="rounded-4xl border-none bg-white shadow-sm dark:bg-[#161615]">
+                                <CardHeader className="px-8 pt-8 pb-4">
+                                    <CardTitle className="flex items-center gap-3 text-xl font-bold">
+                                        <ShieldCheck className="size-6 text-orange-500" />{' '}
+                                        Keamanan Akun
+                                    </CardTitle>
+                                    <CardDescription>
+                                        Perbarui kata sandi Anda untuk menjaga keamanan akun. Kosongkan jika tidak ingin mengubah.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-4 p-8 pt-0">
+                                    <div className="space-y-2">
+                                        <Label
+                                            htmlFor="current_password"
+                                            className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase"
+                                        >
+                                            Kata Sandi Saat Ini
+                                        </Label>
+                                        <div className="relative">
+                                            <Lock className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+                                            <Input
+                                                id="current_password"
+                                                type="password"
+                                                autoComplete="current-password"
+                                                className="h-12 rounded-xl border-transparent bg-gray-50/50 pl-10 transition-all focus:bg-white dark:bg-accent/50 dark:focus:bg-accent/40"
+                                                value={form.data.current_password}
+                                                onChange={(event) =>
+                                                    form.setData(
+                                                        'current_password',
+                                                        event.target.value,
+                                                    )
+                                                }
+                                            />
+                                        </div>
+                                        <InputError
+                                            message={form.errors.current_password}
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-4 md:grid-cols-2">
+                                        <div className="space-y-2">
+                                            <Label
+                                                htmlFor="password"
+                                                className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase"
+                                            >
+                                                Kata Sandi Baru
+                                            </Label>
+                                            <div className="relative">
+                                                <Lock className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+                                                <Input
+                                                    id="password"
+                                                    type="password"
+                                                    autoComplete="new-password"
+                                                    className="h-12 rounded-xl border-transparent bg-gray-50/50 pl-10 transition-all focus:bg-white dark:bg-accent/50 dark:focus:bg-accent/40"
+                                                    value={form.data.password}
+                                                    onChange={(event) =>
+                                                        form.setData(
+                                                            'password',
+                                                            event.target.value,
+                                                        )
+                                                    }
+                                                />
+                                            </div>
+                                            <InputError
+                                                message={form.errors.password}
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label
+                                                htmlFor="password_confirmation"
+                                                className="ml-1 text-xs font-bold tracking-widest text-muted-foreground uppercase"
+                                            >
+                                                Konfirmasi Kata Sandi
+                                            </Label>
+                                            <div className="relative">
+                                                <Lock className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+                                                <Input
+                                                    id="password_confirmation"
+                                                    type="password"
+                                                    autoComplete="new-password"
+                                                    className="h-12 rounded-xl border-transparent bg-gray-50/50 pl-10 transition-all focus:bg-white dark:bg-accent/50 dark:focus:bg-accent/40"
+                                                    value={form.data.password_confirmation}
+                                                    onChange={(event) =>
+                                                        form.setData(
+                                                            'password_confirmation',
+                                                            event.target.value,
+                                                        )
+                                                    }
+                                                />
+                                            </div>
+                                            <InputError
+                                                message={form.errors.password_confirmation}
+                                            />
+                                        </div>
+                                    </div>
                                 </CardContent>
                             </Card>
 

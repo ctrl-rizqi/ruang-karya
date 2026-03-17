@@ -126,7 +126,7 @@ export default function PortfolioShow({ student, karyas }: PortfolioShowProps) {
                 <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12">
                     {/* Left Sidebar: Student Info */}
                     <div className="space-y-8 lg:col-span-4">
-                        <Card className="overflow-hidden rounded-[2.5rem] border-none bg-white shadow-[0_20px_50px_rgba(0,51,102,0.04)]">
+                        <Card className="overflow-hidden rounded-xl pt-0 border-none bg-white shadow-[0_20px_50px_rgba(0,51,102,0.04)]">
                             <div className="h-24 bg-linear-to-br from-blue-600 to-indigo-700" />
                             <CardContent className="-mt-12 px-8 pb-10 text-center">
                                 <Avatar className="mx-auto mb-6 size-32 rounded-2xl border-4 border-white shadow-xl">
@@ -138,7 +138,7 @@ export default function PortfolioShow({ student, karyas }: PortfolioShowProps) {
                                         {initials}
                                     </AvatarFallback>
                                 </Avatar>
-                                <h1 className="mb-2 text-2xl font-black tracking-tight">
+                                <h1 className="mb-2 text-2xl font-black tracking-tight text-blue-900">
                                     {student.name}
                                 </h1>
                                 <div className="mb-8 flex flex-col gap-2">
@@ -163,14 +163,14 @@ export default function PortfolioShow({ student, karyas }: PortfolioShowProps) {
                                         </span>
                                         <span className="flex items-center gap-2 text-sm font-bold">
                                             <Trophy className="size-4 text-orange-400" />{' '}
-                                            NISN: {student.nisn}
+                                            <span className='text-gray-400'>NISN: {student.nisn}</span>
                                         </span>
                                     </div>
                                     <div className="flex flex-col gap-1">
                                         <span className="text-[10px] font-black tracking-[0.2em] text-gray-400 uppercase">
                                             Kelahiran
                                         </span>
-                                        <span className="flex items-center gap-2 text-sm font-bold">
+                                        <span className="flex items-center gap-2 text-sm font-bold text-gray-400">
                                             <Calendar className="size-4 text-emerald-500" />
                                             {student.birth_place
                                                 ? `${student.birth_place}, `
@@ -194,7 +194,7 @@ export default function PortfolioShow({ student, karyas }: PortfolioShowProps) {
                                             <span className="text-[10px] font-black tracking-[0.2em] text-gray-400 uppercase">
                                                 Kelas
                                             </span>
-                                            <span className="flex items-center gap-2 text-sm font-bold">
+                                            <span className="flex items-center gap-2 text-sm font-bold text-gray-400">
                                                 <School className="size-4 text-blue-600" />{' '}
                                                 {student.classroom}
                                             </span>
@@ -205,7 +205,7 @@ export default function PortfolioShow({ student, karyas }: PortfolioShowProps) {
                                             <span className="text-[10px] font-black tracking-[0.2em] text-gray-400 uppercase">
                                                 Domisili
                                             </span>
-                                            <span className="flex items-center gap-2 text-sm font-bold">
+                                            <span className="flex items-center gap-2 text-sm font-bold text-gray-400">
                                                 <MapPin className="size-4 text-rose-500" />{' '}
                                                 {student.address}
                                             </span>
@@ -216,7 +216,7 @@ export default function PortfolioShow({ student, karyas }: PortfolioShowProps) {
                                             <span className="text-[10px] font-black tracking-[0.2em] text-gray-400 uppercase">
                                                 Kontak
                                             </span>
-                                            <span className="flex items-center gap-2 text-sm font-bold">
+                                            <span className="flex items-center gap-2 text-sm font-bold text-gray-400">
                                                 <Phone className="size-4 text-indigo-500" />{' '}
                                                 {student.phone}
                                             </span>
@@ -321,7 +321,7 @@ export default function PortfolioShow({ student, karyas }: PortfolioShowProps) {
                             <div className="mb-6 inline-flex items-center gap-2 text-[10px] font-black tracking-[0.2em] text-blue-600 uppercase">
                                 <Quote className="size-3" /> Professional Bio
                             </div>
-                            <div className="rounded-[3rem] border border-gray-50 bg-white p-10 shadow-[0_20px_50px_rgba(0,51,102,0.04)]">
+                            <div className="rounded-xl border border-gray-50 bg-white p-10 shadow-[0_20px_50px_rgba(0,51,102,0.04)]">
                                 <p className="text-xl leading-relaxed font-medium text-muted-foreground italic">
                                     {student.bio ||
                                         `Halo! Saya adalah siswa yang antusias dalam belajar hal-hal baru dan ingin berbagi inspirasi melalui karya-karya saya di platform Ruang Karya. Berfokus pada kompetensi ${student.major || ''} untuk membangun masa depan yang lebih baik.`}
@@ -383,7 +383,7 @@ export default function PortfolioShow({ student, karyas }: PortfolioShowProps) {
                                 {karyas.map((karya) => (
                                     <Card
                                         key={karya.id}
-                                        className="group overflow-hidden rounded-[2.5rem] border-none bg-white shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(0,51,102,0.08)]"
+                                        className="group overflow-hidden pt-0 rounded-xl border-none bg-white shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(0,51,102,0.08)]"
                                     >
                                         <div className="relative aspect-16/10 overflow-hidden bg-gray-50">
                                             {karya.media_type === 'image' &&
@@ -423,7 +423,7 @@ export default function PortfolioShow({ student, karyas }: PortfolioShowProps) {
                                             </div>
                                         </div>
                                         <CardContent className="p-8">
-                                            <h3 className="mb-3 line-clamp-1 text-xl leading-tight font-black transition-colors group-hover:text-blue-600">
+                                            <h3 className="mb-3 line-clamp-1 text-xl leading-tight font-black transition-colors group-hover:text-blue-600 text-blue-900">
                                                 {karya.title}
                                             </h3>
                                             <p className="mb-8 line-clamp-2 text-sm leading-relaxed font-medium text-muted-foreground">
