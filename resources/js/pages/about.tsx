@@ -205,10 +205,10 @@ export default function About({
 
                 {/* Team Member Dialog */}
                 <Dialog open={!!selectedMember} onOpenChange={(open) => !open && setSelectedMember(null)}>
-                    <DialogContent className="rounded-xl sm:max-w-3xl p-0 overflow-hidden border-none bg-white dark:bg-[#161615]">
+                    <DialogContent className="rounded-xl sm:max-w-3xl h-screen md:h-auto p-0 overflow-hidden border-none bg-white dark:bg-[#161615]">
                         {selectedMember && (
                             <div className="flex flex-col md:flex-row h-full">
-                                <div className="md:w-2/4 relative md:flex-1 overflow-hidden">
+                                <div className="md:w-2/4 h-[40%] md:h-auto relative md:flex-1 overflow-hidden">
                                     <img 
                                         src={selectedMember.img} 
                                         alt={selectedMember.name} 
@@ -217,7 +217,7 @@ export default function About({
                                     <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
                                     <div className="absolute bottom-6 left-6 right-6 text-white">
                                         <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-[8px] font-bold tracking-widest uppercase backdrop-blur-md">
-                                            Pendamping Sekolah
+                                            {selectedMember.title}
                                         </div>
                                         <h3 className="text-xl font-black leading-tight">
                                             {selectedMember.name}
