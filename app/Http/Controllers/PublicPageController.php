@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
+use Laravel\Fortify\Features;
 
 class PublicPageController extends Controller
 {
@@ -38,6 +39,7 @@ class PublicPageController extends Controller
 
         return Inertia::render('welcome', [
             'featuredKaryas' => $featuredKaryas,
+            'canRegister' => Features::enabled(Features::registration()),
         ]);
     }
 

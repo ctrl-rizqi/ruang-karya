@@ -21,7 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { dashboard, login, register } from '@/routes';
+import { dashboard, login } from '@/routes';
 import student from '@/routes/student';
 import { cn } from '@/lib/utils';
 
@@ -80,7 +80,7 @@ interface WelcomeProps {
 }
 
 export default function Welcome({ webSetting = {} as any, featuredKaryas = [] }: WelcomeProps) {
-    const { auth } = usePage().props as any;
+    const { auth, canRegister } = usePage().props as any;
 
     const sponsors = [
         { id: 1, name: 'Sponsor 1', logo: '/assets/HONDA.png' },
@@ -161,25 +161,7 @@ export default function Welcome({ webSetting = {} as any, featuredKaryas = [] }:
                                 Masuk Portal
                             </Link>
                         )}
-                        <Button
-                            asChild
-                            className="rounded-xl bg-[#003366] px-6 text-white hover:bg-[#002244] shadow-lg shadow-blue-900/20 font-bold uppercase tracking-widest text-[10px] h-11"
-                        >
-                            <Link
-                                href={
-                                    auth.user
-                                        ? auth.user.role === 'SISWA'
-                                            ? student.home()
-                                            : dashboard()
-                                        : register()
-                                }
-                            >
-                                {auth.user
-                                    ? 'Kirim Karya'
-                                    : 'Daftar Sekarang'}{' '}
-                                <ArrowUpRight className="ml-2 size-4" />
-                            </Link>
-                        </Button>
+                        
                     </div>
                 </div>
             </header>
@@ -188,7 +170,7 @@ export default function Welcome({ webSetting = {} as any, featuredKaryas = [] }:
                 {/* Hero Section */}
                 <section className="mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-24">
                     <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
-                        <div className="lg:col-span-7">
+                        <div className="lg:col-span-12">
                             <div className="mb-6 flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] text-blue-600 uppercase">
                                 <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse" />
                                 Galeri Resmi Karya Siswa • {webSetting.site_title}
@@ -252,28 +234,6 @@ export default function Welcome({ webSetting = {} as any, featuredKaryas = [] }:
                                     Siswa Terverifikasi Telah Bergabung
                                 </p>
                             </div>
-                        </div>
-
-                        <div className="lg:col-span-5 relative">
-                            <div className="absolute -inset-4 bg-blue-600/5 rounded-[3rem] -z-10 blur-2xl" />
-                            <Card className="overflow-hidden rounded-[2.5rem] border-none bg-white shadow-[0_30px_100px_rgba(0,51,102,0.08)] relative">
-                                <div className="aspect-square relative">
-                                    <img 
-                                        src="https://images.unsplash.com/photo-1523050335392-93851179ae22?q=80&w=1000&auto=format&fit=crop" 
-                                        className="size-full object-cover" 
-                                        alt="School Atmosphere" 
-                                    />
-                                    <div className="absolute inset-0 bg-linear-to-t from-[#003366]/80 via-transparent to-transparent" />
-                                    <div className="absolute bottom-8 left-8 right-8 text-white">
-                                        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-[8px] font-bold tracking-widest uppercase backdrop-blur-md">
-                                            Visi Sekolah
-                                        </div>
-                                        <p className="text-lg font-medium leading-relaxed italic">
-                                            "Mencetak generasi yang kompeten, kreatif, dan berakhlak mulia di era digital."
-                                        </p>
-                                    </div>
-                                </div>
-                            </Card>
                         </div>
                     </div>
                 </section>
@@ -536,6 +496,7 @@ export default function Welcome({ webSetting = {} as any, featuredKaryas = [] }:
                                         Masuk Sekarang
                                     </Link>
                                 </Button>
+                                
                                 <Button
                                     variant="outline"
                                     size="lg"

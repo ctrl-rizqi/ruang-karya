@@ -34,16 +34,8 @@ class DatabaseSeeder extends Seeder
             Classroom::firstOrCreate(['name' => $classroom]);
         }
 
-        // Create Admin/Teacher
-        User::firstOrCreate(
-            ['email' => 'guru@ruangkarya.local'],
-            [
-                'name' => 'Guru Pengampu',
-                'nisn' => '1234567890',
-                'role' => UserRole::Guru,
-                'password' => Hash::make('password'),
-            ]
-        );
+        // Run GuruSeeder
+        $this->call(GuruSeeder::class);
 
         // Create Student
         User::firstOrCreate(
